@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt — Direction D: Literary Paper</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=Caveat:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEDE;
+    --paper-shade:#E8DFC9;
+    --ink:#16233B;
+    --ink-soft:#3C4A64;
+    --ink-dim:#7D8296;
+    --rule:#CEC2A5;
+    --accent:#A8451D;    /* rust ink */
+    --accent-blue:#1E3A5F;
+    --hand:#5A2E1E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4',serif;
+    font-size:17px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  /* Paper texture */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:
+      radial-gradient(circle at 15% 25%,rgba(90,70,30,0.04) 0%,transparent 35%),
+      radial-gradient(circle at 85% 75%,rgba(90,70,30,0.04) 0%,transparent 35%),
+      radial-gradient(circle at 50% 50%,rgba(0,0,0,0.02) 0%,transparent 50%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.3  0 0 0 0 0.15  0 0 0 0.035 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity:0.6;mix-blend-mode:multiply;
+  }
+  main{position:relative;z-index:2}
+
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim)}
+  .hand{font-family:'Caveat',cursive;color:var(--hand);font-weight:500}
+
+  /* Top */
+  .masthead{
+    max-width:1280px;margin:0 auto;padding:40px 64px 24px;
+    display:grid;grid-template-columns:1fr auto 1fr;
+    align-items:baseline;border-bottom:2px solid var(--ink);
+  }
+  .masthead .left{font-family:'Source Serif 4',serif;font-style:italic;font-size:14px;color:var(--ink-soft)}
+  .masthead .mast{font-family:'Source Serif 4',serif;font-weight:500;font-size:28px;letter-spacing:0.02em;text-align:center}
+  .masthead .right{text-align:right;font-size:12px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;letter-spacing:0.08em}
+
+  .issue-line{max-width:1280px;margin:0 auto;padding:10px 64px;display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim)}
+
+  /* Main layout with sidebar ToC */
+  .wrap{max-width:1280px;margin:0 auto;padding:64px 64px 120px;display:grid;grid-template-columns:200px 1fr 200px;gap:64px}
+
+  /* Table of contents */
+  .toc{position:sticky;top:40px;align-self:start;padding-top:8px;border-top:1px solid var(--ink)}
+  .toc .title{font-family:'Source Serif 4',serif;font-style:italic;font-size:14px;margin-bottom:16px;color:var(--ink-soft)}
+  .toc ol{list-style:none;counter-reset:toc;font-family:'Source Serif 4',serif;font-size:13px;line-height:1.8}
+  .toc ol li{counter-increment:toc;display:grid;grid-template-columns:24px 1fr;gap:8px;padding:4px 0;border-bottom:1px dotted var(--rule)}
+  .toc ol li::before{content:counter(toc,lower-roman) ".";font-style:italic;color:var(--ink-dim)}
+  .toc a{color:var(--ink);text-decoration:none;transition:color .2s}
+  .toc a:hover{color:var(--accent)}
+
+  /* Main article column */
+  article{max-width:660px;margin:0 auto}
+
+  .hero-head{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--rule);position:relative}
+  .hero-head .kicker{font-family:'Source Serif 4',serif;font-style:italic;font-size:15px;color:var(--ink-soft);margin-bottom:24px;text-align:center;letter-spacing:0.02em}
+  .hero-head h1{
+    font-family:'Source Serif 4',serif;font-weight:400;
+    font-size:clamp(40px,5vw,64px);
+    line-height:1.02;letter-spacing:-0.02em;text-align:center;
+    font-variation-settings:"opsz" 60;
+  }
+  .hero-head h1 em{font-style:italic;color:var(--accent);font-weight:400}
+  .hero-head .sub{font-family:'Source Serif 4',serif;font-style:italic;font-size:19px;color:var(--ink-soft);text-align:center;margin-top:24px;line-height:1.5;max-width:560px;margin-left:auto;margin-right:auto}
+  .hero-head .stamp{position:absolute;right:-120px;top:40px;transform:rotate(-8deg);font-family:'Caveat',cursive;font-size:22px;color:var(--accent);border:2px solid var(--accent);padding:6px 14px;border-radius:4px;opacity:0.85}
+
+  /* Chapters */
+  .chapter{margin-bottom:80px;scroll-margin-top:100px}
+  .chapter-header{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:baseline;margin-bottom:32px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+  .chapter-num{font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;font-size:42px;color:var(--accent)}
+  .chapter-title{font-family:'Source Serif 4',serif;font-weight:500;font-size:32px;letter-spacing:-0.015em;line-height:1.1}
+
+  .dropcap{position:relative;margin-bottom:20px}
+  .dropcap::first-letter{
+    font-family:'Source Serif 4',serif;font-weight:400;font-size:78px;
+    float:left;line-height:0.85;padding:8px 10px 0 0;color:var(--accent);
+    font-variation-settings:"opsz" 60;
+  }
+  p{margin-bottom:18px;max-width:62ch}
+  p strong{font-weight:600}
+  blockquote{
+    font-family:'Source Serif 4',serif;font-style:italic;font-weight:300;
+    font-size:24px;line-height:1.4;margin:36px 0;padding-left:28px;
+    border-left:3px solid var(--accent);color:var(--ink);max-width:540px;
+  }
+
+  /* Marginalia - hang in the left column */
+  .margin-note{
+    position:absolute;left:-232px;width:200px;
+    font-family:'Caveat',cursive;font-size:18px;line-height:1.35;color:var(--hand);
+    text-align:right;
+  }
+  .margin-note.right{left:auto;right:-232px;text-align:left}
+  .margin-note .ref{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);display:block;margin-bottom:6px;letter-spacing:0.1em}
+  .margin-note .arrow{display:inline-block;font-family:serif;color:var(--hand);margin:0 4px}
+
+  /* Footnote superscript */
+  .fn{font-family:'Source Serif 4',serif;font-feature-settings:"sups";font-size:0.8em;color:var(--accent);cursor:pointer;vertical-align:super;line-height:0}
+  .footnotes{margin-top:48px;padding-top:24px;border-top:1px solid var(--rule);font-size:13px;line-height:1.6;color:var(--ink-soft)}
+  .footnotes ol{padding-left:20px}
+  .footnotes li{margin-bottom:8px}
+  .footnotes li::marker{color:var(--accent)}
+
+  /* Dialog aside */
+  .example{background:rgba(168,69,29,0.05);border-left:2px solid var(--accent);padding:20px 28px;margin:32px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;max-width:560px}
+  .example .who{color:var(--ink-dim);display:inline-block;min-width:140px}
+  .example .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:10px}
+
+  /* Figure captions */
+  .caption{font-family:'Source Serif 4',serif;font-style:italic;font-size:13px;color:var(--ink-soft);text-align:center;margin-top:8px}
+
+  /* Chapter rule */
+  .ornament{text-align:center;margin:60px 0;font-size:20px;color:var(--rule);letter-spacing:1em}
+
+  /* Also built as cards */
+  .also-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px}
+  .also-grid .item h3{font-family:'Source Serif 4',serif;font-weight:500;font-size:22px;margin-bottom:10px}
+  .also-grid .item .tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);display:block;margin-bottom:8px}
+
+  /* Colophon footer */
+  .colophon{max-width:660px;margin:80px auto 0;padding-top:40px;border-top:2px solid var(--ink);text-align:center;font-family:'Source Serif 4',serif;font-style:italic;font-size:14px;color:var(--ink-soft);line-height:1.6}
+  .colophon .contact{font-family:'JetBrains Mono',monospace;font-size:12px;font-style:normal;color:var(--ink);letter-spacing:0.06em;margin-top:20px;display:inline-block;border-bottom:1px solid var(--accent);padding-bottom:2px}
+
+  .right-rail{position:sticky;top:40px;align-self:start;padding-top:8px;border-top:1px solid var(--ink);font-size:12px;line-height:1.7;color:var(--ink-soft)}
+  .right-rail .block{margin-bottom:28px}
+  .right-rail h4{font-family:'Source Serif 4',serif;font-style:italic;font-size:14px;margin-bottom:10px;color:var(--ink)}
+
+  @media (max-width:1100px){
+    .wrap{grid-template-columns:1fr;padding:48px 32px}
+    .toc,.right-rail{position:static}
+    .margin-note{position:static;width:auto;text-align:left;margin:8px 0;border-left:2px dashed var(--hand);padding-left:12px}
+    .margin-note.right{text-align:left}
+    .hero-head .stamp{right:-16px;top:-12px}
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header class="masthead">
+  <div class="left">Essays &amp; projects · <span class="hand" style="font-size:20px">notebook of a teacher who builds</span></div>
+  <div class="mast">SVENJA BORGWARDT</div>
+  <div class="right">Cologne · Vol. I · 2026</div>
+</header>
+<div class="issue-line">
+  <span>No. 01</span>
+  <span>English · Economics · Agents</span>
+  <span>Corrections welcome</span>
+</div>
+
+<div class="wrap">
+
+  <!-- Left sidebar: table of contents -->
+  <aside class="toc">
+    <div class="title">Index</div>
+    <ol>
+      <li><a href="#kaleido">Kaleido — on giving feedback that lands</a></li>
+      <li><a href="#compass">Compass — on direction, not destination</a></li>
+      <li><a href="#ute">UTE — on the AI that disappears</a></li>
+      <li><a href="#also">Also built</a></li>
+      <li><a href="#other">The other parts</a></li>
+      <li><a href="#colophon">Colophon &amp; contact</a></li>
+    </ol>
+  </aside>
+
+  <!-- Main article column -->
+  <article>
+
+    <div class="hero-head">
+      <div class="kicker">A teacher, a builder, and the space between</div>
+      <h1>On teaching, and building tools that <em>notice things</em> a teacher can't.</h1>
+      <p class="sub">A notebook of work-in-progress, addressed to readers who care about what happens when AI meets a classroom of real students.</p>
+      <div class="stamp">In progress</div>
+    </div>
+
+    <!-- Kaleido -->
+    <section class="chapter" id="kaleido">
+      <div class="chapter-header">
+        <div class="chapter-num">i.</div>
+        <div class="chapter-title">Kaleido, or: on feedback that lands</div>
+      </div>
+
+      <p class="dropcap" style="position:relative">Kaleido is a tool for giving individual feedback on student writing. It came out of a frustration I had no answer for: with 240 students a week, proper individual feedback on written work was simply not possible. I started vibe coding in early 2025, and this was my first big project. It began as a simple pipeline and grew. I added plagiarism detection, student progress analytics — all the things that seemed useful in theory — before subtracting most of it again.<span class="fn">1</span>
+        <span class="margin-note"><span class="ref">Note, in hand</span>the subtraction was the hard part<span class="arrow">→</span></span>
+      </p>
+
+      <p>What's left is a GDPR and EU AI Act compliant pipeline that gives individual feedback to my students and generates targeted exercises for the specific mistakes they make, so they can actually improve.</p>
+
+      <p>Here's how it works. A student hands in their paper. Their name is stripped out locally and replaced with a code. An anonymisation agent removes every remaining personal detail from the text. A set of agents then analyses the work along separate dimensions: structure, evidence, language, coherence, grammar, content. A final agent writes the feedback, <em>addressed to the student rather than about them.</em></p>
+
+      <blockquote>Students came to me afterwards with questions about their own essays. Not about the mark. About the essay itself.</blockquote>
+
+      <p style="position:relative">They'd read the feedback because it was addressed to them, in language that treated them as the authors of something real, and they wanted to know more. They finally knew what to change to improve, instead of just seeing where they'd gone wrong.<span class="fn">2</span>
+        <span class="margin-note right"><span class="ref">Stack</span><span class="hand">Python · Mistral<br>regex anonymisation<br>HTML output</span></span>
+      </p>
+
+      <p>I called it Kaleido because a kaleidoscope turns the same fragments into a different pattern every time you look. That's what I want feedback to do: take a student's writing and let them see it from an angle they couldn't see on their own.</p>
+
+      <div class="footnotes">
+        <ol>
+          <li>Plagiarism detection turned out to be a distraction. If the feedback is addressed properly, the plagiarism question solves itself.</li>
+          <li>Mistral specifically because EU jurisdiction matters when you're handling German school data.</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="ornament">§ · · · §</div>
+
+    <!-- Compass -->
+    <section class="chapter" id="compass">
+      <div class="chapter-header">
+        <div class="chapter-num">ii.</div>
+        <div class="chapter-title">Compass, or: on direction</div>
+      </div>
+
+      <p class="dropcap">Watching how people use AI, I keep noticing one thing: people tend to take the path of least resistance. In learning contexts, that worries me. AI creates a specific failure of self-assessment: the student produces a good output and reads the quality of the output as evidence of their own learning. Cognitive science calls this <em>the illusion of fluency</em>, the gap between how something feels to process and whether any of it has actually stuck.<span class="fn">3</span></p>
+
+      <p style="position:relative">For something to be learned, it has to be slightly harder than easy — this is the idea behind Robert Bjork's <em>desirable difficulties</em>. What I see in the classroom is the opposite: students handing in well-written AI work they didn't understand themselves.
+        <span class="margin-note"><span class="hand">the most vulnerable<br>group is the one that<br>most needs direction,<br>not answers</span></span>
+      </p>
+
+      <p>Socratic agents are the obvious counter-move. I've tried them, and if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
+
+      <div class="example">
+        <span class="label">Example · a coding bug</span>
+        <div><span class="who">Student:</span>"My Python code doesn't work: for i in range(10) print(i)"</div>
+        <div><span class="who">Standard model:</span>"You're missing a colon. Here's the fix."</div>
+        <div><span class="who">Socratic model:</span>"What is a for loop? What is syntax?"</div>
+        <div><span class="who">What I want:</span>"Read the error message again, then look at the end of line 1."</div>
+      </div>
+
+      <p>So I started building a tool that removes the AI's ability to give the answer directly — the interaction layer never sees the whole task. I tried to handcuff the model into being helpful. But the better the models got, the harder it became. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level. That made the whole thing hard to transfer.</p>
+
+      <p>So I came to the conclusion that I had to fine-tune the model itself. Right now I'm using Compass to fine-tune Mistral 7B with LoRA and DPO. The goal is to make the model genuinely useful for my English classes — specifically for debating.</p>
+
+      <blockquote>A compass points the way. It doesn't hand you the map.</blockquote>
+
+      <div class="footnotes">
+        <ol start="3">
+          <li>Robert A. Bjork, <em>Desirable Difficulties</em>. The older I get the more I think this is the most important idea in education.</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="ornament">§ · · · §</div>
+
+    <!-- UTE -->
+    <section class="chapter" id="ute">
+      <div class="chapter-header">
+        <div class="chapter-num">iii.</div>
+        <div class="chapter-title">UTE — an AI that disappears</div>
+      </div>
+
+      <p class="dropcap">UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
+
+      <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop — the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, your allergies, the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+
+      <p style="position:relative">UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. <strong>Nothing gets clicked.</strong>
+        <span class="margin-note right"><span class="hand">this is the one I'm<br>most proud of —<br>the one where AI<br>does less, not more</span></span>
+      </p>
+
+      <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+
+      <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, writes a summary afterwards. Point it at a bakery counter, and you get UTE.</p>
+
+      <p style="color:var(--ink-soft);font-size:15px">UTE stands for <em>Unkomplizierte Theken-Eingabe</em> — uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
+    </section>
+
+    <div class="ornament">§ · · · §</div>
+
+    <!-- Also built -->
+    <section class="chapter" id="also">
+      <div class="chapter-header">
+        <div class="chapter-num">iv.</div>
+        <div class="chapter-title">Also built</div>
+      </div>
+      <div class="also-grid">
+        <div class="item">
+          <span class="tag">Multi-agent · Mac Mini</span>
+          <h3>Claudia</h3>
+          <p style="font-size:15px">My multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat. By day she orchestrates the agents behind Kaleido. The rest of the time she runs my home automation. Same framework, different endpoints. Most of what I know about agent design, memory, and orchestration I learned by building her and watching her break in interesting ways.</p>
+        </div>
+        <div class="item">
+          <span class="tag">Classroom · market economics</span>
+          <h3>Investor Game</h3>
+          <p style="font-size:15px">A platform where participants develop product ideas, pitch them to a group, and invest play money into each other's pitches. Scoring is part quality-of-pitch, part performance-of-portfolio. Deployed in a market economics class where I've never seen the topic taken more seriously.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ornament">§ · · · §</div>
+
+    <!-- Other parts -->
+    <section class="chapter" id="other">
+      <div class="chapter-header">
+        <div class="chapter-num">v.</div>
+        <div class="chapter-title">The other parts</div>
+      </div>
+      <p style="position:relative">Eleven years at a German savings bank before this work. It wasn't always what I wanted, but it taught me to think in terms of <em>risk, compliance, and long feedback loops</em>. That turns out to be surprisingly useful the moment you start building anything that touches student data.
+        <span class="margin-note"><span class="hand">the slow work<br>underneath the<br>fast work</span></span>
+      </p>
+      <p>First violin in the Ford Symphony Orchestra here in Cologne. PADI Divemaster. SKS sailing licence. I love adventures and getting to know new cultures.</p>
+    </section>
+
+    <div class="colophon" id="colophon">
+      <p>Typeset in Source Serif 4 and JetBrains Mono, with marginalia in Caveat. Written and maintained by the author. Corrections, collaborations, and kind words welcome.</p>
+      <a class="contact" href="mailto:s.borgwardt@gso.schule.koeln">s.borgwardt@gso.schule.koeln</a>
+    </div>
+
+  </article>
+
+  <!-- Right rail: meta / now -->
+  <aside class="right-rail">
+    <div class="block">
+      <h4>At present</h4>
+      <p>Fine-tuning Mistral 7B<br>with LoRA &amp; DPO for<br>the debating class.</p>
+    </div>
+    <div class="block">
+      <h4>Open to</h4>
+      <p>Talks, workshops, collaborations on tools that serve a real classroom.</p>
+    </div>
+    <div class="block">
+      <h4>Cologne</h4>
+      <p class="hand" style="font-size:17px">first violin<br>divemaster<br>sailing licence</p>
+    </div>
+  </aside>
+
+</div>
+
+</main>
+</body>
+</html>

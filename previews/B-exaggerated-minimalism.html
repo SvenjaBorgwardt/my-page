@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt — Direction B: Exaggerated Minimalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B;
+    --bg-soft:#131316;
+    --ink:#EEEAE1;
+    --ink-soft:#A8A39A;
+    --ink-dim:#55525A;
+    --rule:#26242A;
+    --accent:#E9B26C;   /* warm brass */
+    --accent-soft:rgba(233,178,108,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim)}
+  .serif{font-family:'Cormorant Garamond',serif}
+
+  /* Fixed frame */
+  .frame{position:fixed;inset:0;pointer-events:none;border:1px solid var(--rule);margin:16px;z-index:20}
+  .top-left,.top-right,.bot-left,.bot-right{
+    position:fixed;z-index:30;pointer-events:auto;
+  }
+  .top-left{top:32px;left:32px}
+  .top-right{top:32px;right:32px;text-align:right}
+  .bot-left{bottom:32px;left:32px}
+  .bot-right{bottom:32px;right:32px;text-align:right}
+  .top-right a{color:var(--ink-soft);text-decoration:none;font-size:12px;margin-left:24px;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;transition:color .3s}
+  .top-right a:hover{color:var(--accent)}
+
+  /* Cursor trail */
+  .trail{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:50;mix-blend-mode:screen;opacity:0;transition:opacity .4s;filter:blur(1px)}
+
+  /* Hero - huge empty canvas */
+  .hero{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:120px 48px;position:relative;
+  }
+  .hero-inner{max-width:1100px;width:100%}
+  .hero-tag{display:flex;gap:12px;align-items:center;margin-bottom:48px}
+  .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .hero-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(72px,14vw,220px);
+    font-weight:300;line-height:0.88;
+    letter-spacing:-0.04em;color:var(--ink);
+  }
+  .hero-title em{font-style:italic;color:var(--accent);font-weight:300}
+  .hero-title .shimmer{display:inline-block;position:relative}
+  .hero-title .shimmer span{display:inline-block;transition:transform .6s cubic-bezier(.3,.8,.3,1),color .4s}
+  .hero-title .shimmer:hover span{color:var(--accent)}
+  .hero-title .shimmer:hover span:nth-child(1){transform:translateY(-8px) rotate(-4deg)}
+  .hero-title .shimmer:hover span:nth-child(2){transform:translateY(-4px) rotate(2deg)}
+  .hero-title .shimmer:hover span:nth-child(3){transform:translateY(-10px) rotate(-2deg)}
+  .hero-title .shimmer:hover span:nth-child(4){transform:translateY(-6px) rotate(3deg)}
+  .hero-title .shimmer:hover span:nth-child(5){transform:translateY(-8px) rotate(-1deg)}
+  .hero-title .shimmer:hover span:nth-child(6){transform:translateY(-4px) rotate(2deg)}
+  .hero-title .shimmer:hover span:nth-child(7){transform:translateY(-6px) rotate(-3deg)}
+  .hero-sub{margin-top:56px;font-size:18px;line-height:1.6;max-width:460px;color:var(--ink-soft)}
+  .scroll-hint{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:0.2em;text-transform:uppercase;animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+  /* Sections - generous padding */
+  .section{padding:200px 48px;max-width:1200px;margin:0 auto}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  .chapter-mark{display:grid;grid-template-columns:100px 1fr;gap:48px;align-items:baseline;margin-bottom:80px}
+  .chapter-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--accent);line-height:1;font-style:italic}
+  .chapter-head{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:56px;line-height:1.05;letter-spacing:-0.03em;max-width:900px}
+  .chapter-head em{font-style:italic;color:var(--accent)}
+
+  /* Project: big type, restrained */
+  .project{display:grid;grid-template-columns:1fr;gap:64px;margin-bottom:200px;max-width:840px}
+  .project:nth-child(even){margin-left:auto;margin-right:0}
+  .project h3{font-family:'Cormorant Garamond',serif;font-size:96px;font-weight:300;letter-spacing:-0.035em;line-height:0.95;margin-bottom:16px;color:var(--ink)}
+  .project h3 em{font-style:italic;color:var(--accent)}
+  .project .kicker{margin-bottom:40px}
+  .project p{font-size:19px;line-height:1.65;color:var(--ink-soft);margin-bottom:24px;max-width:56ch;font-weight:300}
+  .project p strong{color:var(--ink);font-weight:400}
+  .project .pull{
+    font-family:'Cormorant Garamond',serif;font-size:34px;font-style:italic;font-weight:300;
+    color:var(--ink);line-height:1.25;margin:48px 0;max-width:640px;
+    padding-left:32px;border-left:1px solid var(--accent);
+  }
+
+  .lineup{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--rule);color:var(--ink-soft);border-radius:2px}
+
+  /* Dialog aside */
+  .dialog{background:var(--bg-soft);padding:40px;margin:48px 0;border-left:2px solid var(--accent);max-width:720px}
+  .dialog .mono{color:var(--accent);margin-bottom:16px;display:block}
+  .dialog .line{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:var(--ink-soft)}
+  .dialog .line .who{color:var(--ink-dim);display:inline-block;min-width:150px}
+
+  /* Also built - horizontal strip */
+  .strip{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:64px}
+  .strip h4{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;margin-bottom:16px;letter-spacing:-0.025em}
+  .strip p{color:var(--ink-soft);font-size:16px;line-height:1.65;max-width:48ch}
+
+  /* Other parts */
+  .parts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
+  .part-card{border:1px solid var(--rule);padding:32px 24px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .4s,transform .4s}
+  .part-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .part-card .num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:0.12em}
+  .part-card .label{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;line-height:1.1;color:var(--ink)}
+  .part-card .note{font-size:12px;color:var(--ink-dim);line-height:1.5}
+
+  /* Footer */
+  footer{border-top:1px solid var(--rule);margin-top:120px;padding:96px 48px 64px;text-align:center}
+  footer .cta{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,7vw,96px);font-weight:300;font-style:italic;line-height:1;letter-spacing:-0.03em;margin-bottom:32px}
+  footer .cta em{color:var(--accent)}
+  footer a.mail{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:4px;transition:color .3s,border-color .3s}
+  footer a.mail:hover{color:var(--accent);border-color:var(--accent)}
+  footer .meta{margin-top:80px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:0.14em;text-transform:uppercase}
+
+  @media (max-width:860px){
+    .section{padding:120px 24px}
+    .chapter-mark{grid-template-columns:1fr;gap:16px;margin-bottom:48px}
+    .chapter-num{font-size:48px}
+    .chapter-head{font-size:36px}
+    .project h3{font-size:56px}
+    .parts-grid{grid-template-columns:1fr 1fr}
+    .strip{grid-template-columns:1fr}
+    .top-left,.top-right{position:static;text-align:left;margin:16px}
+    .top-right a{margin-left:0;margin-right:16px;display:inline-block}
+  }
+</style>
+</head>
+<body>
+
+<div class="frame"></div>
+<div class="trail" id="trail"></div>
+
+<div class="top-left">
+  <span class="mono">Svenja · MMXXVI</span>
+</div>
+<div class="top-right">
+  <a href="#work">Work</a>
+  <a href="#also">Also</a>
+  <a href="#other">Other</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="dot"></span><span class="mono">Teacher &amp; Builder · Cologne</span></div>
+    <h1 class="hero-title">I teach,<br>and I make things<br>that <em>notice</em>.</h1>
+    <p class="hero-sub">240 students a week. One classroom and one Mac Mini. Between the two I try to build tools that pay attention the way a good teacher would — individually, and without taking over the thinking.</p>
+  </div>
+  <div class="scroll-hint">Scroll · ↓</div>
+</section>
+
+<section class="section" id="work">
+  <div class="chapter-mark reveal">
+    <div class="chapter-num">I.</div>
+    <h2 class="chapter-head">Three projects, each one an answer to <em>a problem I actually had.</em></h2>
+  </div>
+
+  <article class="project reveal">
+    <div>
+      <div class="kicker"><span class="mono">No. 01 · Kaleido</span></div>
+      <h3 class="serif"><span class="shimmer"><span>K</span><span>a</span><span>l</span><span>e</span><span>i</span><span>d</span><span>o</span></span></h3>
+      <p><strong>A tool for giving individual feedback on student writing.</strong> With 240 students a week, proper individual feedback on written work was simply not possible. Kaleido is what I made instead.</p>
+      <p>A student hands in their paper. Their name is stripped out locally and replaced with a code. An anonymisation agent removes every remaining personal detail. A set of agents analyses the work along separate dimensions — structure, evidence, language, coherence, grammar, content. A final agent writes the feedback, addressed to the student rather than about them.</p>
+      <p class="pull">Students came to me afterwards with questions about their own essays. Not about the mark. About the essay itself.</p>
+      <p>Kaleido works for English and Economics because I trained the agents on my specific tasks. The whole thing is GDPR and EU AI Act compliant — which is the only reason I could actually use it on real student data.</p>
+      <div class="lineup">
+        <span class="chip">Python</span><span class="chip">Mistral</span><span class="chip">Regex Anonymisation</span><span class="chip">GDPR · EU AI Act</span><span class="chip">HTML Output</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="project reveal">
+    <div>
+      <div class="kicker"><span class="mono">No. 02 · Compass</span></div>
+      <h3 class="serif">Compass</h3>
+      <p>Watching how people use AI, I keep noticing one thing: people tend to take the path of least resistance. In learning, that worries me.</p>
+      <p>AI creates a specific failure of self-assessment: the student produces a good output and reads the quality of the output as evidence of their own learning. Cognitive science calls this <em>the illusion of fluency</em>. For something to be learned, it has to be slightly harder than easy — Robert Bjork's <em>desirable difficulties</em>.</p>
+      <div class="dialog">
+        <span class="mono">Example · A coding bug</span>
+        <div class="line"><span class="who">Student</span>"My code doesn't work: for i in range(10) print(i)"</div>
+        <div class="line"><span class="who">Standard model</span>"You're missing a colon. Here's the fix."</div>
+        <div class="line"><span class="who">Socratic model</span>"What is a for loop? What is syntax?"</div>
+        <div class="line"><span class="who">What I want</span>"Read the error message again, then look at the end of line 1."</div>
+      </div>
+      <p>Right now I'm fine-tuning Mistral 7B with LoRA and DPO. The goal is to make the model genuinely useful for my English classes, specifically for debating.</p>
+      <p class="pull">A compass points the way. It doesn't hand you the map.</p>
+    </div>
+  </article>
+
+  <article class="project reveal">
+    <div>
+      <div class="kicker"><span class="mono">No. 03 · UTE</span></div>
+      <h3 class="serif">UTE</h3>
+      <p><strong>A voice-first ordering system for bakery counters.</strong> Built at the BÄKO Hackathon with three other women. We won first place.</p>
+      <p>Germany's local bakery is a place of conversation. The assistant knows your family, your allergies, the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The warmth is gone, interrupted by technology.</p>
+      <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked.</p>
+      <p class="pull">What if the best way for an AI to be useful is to disappear?</p>
+      <p style="font-size:14px;color:var(--ink-dim);font-style:italic">UTE stands for Unkomplizierte Theken-Eingabe — uncomplicated counter input. It's also a common German name.</p>
+    </div>
+  </article>
+</section>
+
+<section class="section" id="also">
+  <div class="chapter-mark reveal">
+    <div class="chapter-num">II.</div>
+    <h2 class="chapter-head">Also built, <em>still mine.</em></h2>
+  </div>
+  <div class="strip reveal">
+    <div>
+      <h4>Claudia</h4>
+      <p>Multi-agent infrastructure on a Mac Mini that's always on in my flat. By day she orchestrates the agents behind Kaleido. The rest of the time she runs my home automation. Same framework, different endpoints. Most of what I know about agents I learned from watching her break.</p>
+    </div>
+    <div>
+      <h4>Investor Game</h4>
+      <p>A platform where students develop product ideas, pitch them to a group, and invest play money into each other's pitches. Scoring is part pitch, part portfolio performance. Deployed in a market economics class — I've never seen the topic taken more seriously.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="other">
+  <div class="chapter-mark reveal">
+    <div class="chapter-num">III.</div>
+    <h2 class="chapter-head">The other parts — <em>before this work, and beside it.</em></h2>
+  </div>
+  <div class="parts-grid reveal">
+    <div class="part-card">
+      <span class="num">01</span>
+      <div>
+        <div class="label">Eleven years</div>
+        <div class="note" style="margin-top:8px">At a German savings bank. Risk, compliance, long feedback loops.</div>
+      </div>
+    </div>
+    <div class="part-card">
+      <span class="num">02</span>
+      <div>
+        <div class="label">First violin</div>
+        <div class="note" style="margin-top:8px">Ford Symphony Orchestra, Cologne.</div>
+      </div>
+    </div>
+    <div class="part-card">
+      <span class="num">03</span>
+      <div>
+        <div class="label">PADI Divemaster</div>
+        <div class="note" style="margin-top:8px">Underwater navigation, emergency procedures.</div>
+      </div>
+    </div>
+    <div class="part-card">
+      <span class="num">04</span>
+      <div>
+        <div class="label">SKS</div>
+        <div class="note" style="margin-top:8px">Sailing licence. I love adventures and new cultures.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="cta">Let's <em>talk</em>.</div>
+  <a class="mail" href="mailto:s.borgwardt@gso.schule.koeln">s.borgwardt@gso.schule.koeln</a>
+  <div class="meta">Cologne · Cormorant &amp; Inter · Set in the dark</div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Subtle cursor trail
+  const trail = document.getElementById('trail');
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; trail.style.opacity = '0.5'; });
+  document.addEventListener('mouseleave', () => { trail.style.opacity = '0'; });
+  function tick(){
+    cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+    trail.style.transform = `translate(${cx-3}px, ${cy-3}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+</script>
+
+</body>
+</html>

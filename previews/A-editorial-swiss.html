@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt — Direction A: Editorial Swiss</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3EC;
+    --paper-warm:#EDE6D7;
+    --ink:#0D1F3C;
+    --ink-soft:#2A3B5C;
+    --ink-dim:#6B7489;
+    --rule:#D9CDB5;
+    --accent:#B04A2C;
+    --accent-soft:rgba(176,74,44,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"ss01","cv11";
+  }
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim)}
+  .serif{font-family:'Fraunces',serif}
+
+  /* Top bar */
+  .topbar{
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;
+    padding:24px 48px;border-bottom:1px solid var(--rule);
+    position:sticky;top:0;background:var(--paper);z-index:10;
+  }
+  .topbar .mono{font-size:10px}
+  .mark{font-family:'Fraunces',serif;font-weight:500;font-size:20px;letter-spacing:-0.02em;text-align:center}
+  .nav{display:flex;gap:28px;justify-content:flex-end}
+  .nav a{color:var(--ink);text-decoration:none;font-size:13px;border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .3s}
+  .nav a:hover{border-bottom-color:var(--accent)}
+
+  /* Hero */
+  .hero{
+    padding:120px 48px 80px;
+    display:grid;grid-template-columns:1fr 2fr;gap:64px;
+    border-bottom:1px solid var(--rule);
+  }
+  .hero-left .mono{margin-bottom:28px;display:block}
+  .hero-left .byline{
+    border-top:1px solid var(--rule);padding-top:18px;margin-top:32px;
+    font-size:13px;color:var(--ink-soft);line-height:1.6;max-width:260px;
+  }
+  .hero-title{
+    font-family:'Fraunces',serif;
+    font-size:clamp(56px,7vw,108px);
+    font-weight:400;
+    line-height:0.98;
+    letter-spacing:-0.035em;
+    font-variation-settings:"opsz" 144,"SOFT" 50;
+  }
+  .hero-title em{font-style:italic;font-weight:300;color:var(--accent)}
+  .hero-sub{
+    margin-top:32px;font-size:22px;line-height:1.45;color:var(--ink-soft);
+    max-width:640px;font-weight:300;
+  }
+
+  /* Drop cap */
+  .dropcap::first-letter{
+    font-family:'Fraunces',serif;font-weight:500;font-size:68px;
+    float:left;line-height:0.9;padding:6px 10px 0 0;color:var(--accent);
+  }
+
+  /* Featured section */
+  .section{padding:96px 48px;border-bottom:1px solid var(--rule)}
+  .section-head{
+    display:grid;grid-template-columns:1fr 3fr;gap:64px;align-items:baseline;
+    margin-bottom:64px;
+  }
+  .section-head h2{
+    font-family:'Fraunces',serif;font-weight:400;font-size:48px;
+    letter-spacing:-0.025em;line-height:1.05;
+  }
+  .section-head h2 em{font-style:italic;color:var(--accent)}
+
+  .project{
+    display:grid;grid-template-columns:1fr 3fr;gap:64px;
+    padding:56px 0;border-top:1px dashed var(--rule);
+  }
+  .project:first-of-type{border-top:1px solid var(--ink)}
+  .project-meta .num{
+    font-family:'Fraunces',serif;font-size:72px;font-weight:300;
+    color:var(--ink);line-height:1;letter-spacing:-0.04em;
+  }
+  .project-meta .stack{margin-top:28px;font-size:12px;color:var(--ink-dim);line-height:1.7}
+  .project-meta .stack strong{color:var(--ink);display:block;margin-bottom:4px;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase}
+
+  .project-body h3{
+    font-family:'Fraunces',serif;font-size:40px;font-weight:500;
+    letter-spacing:-0.025em;line-height:1.05;margin-bottom:24px;
+  }
+  .project-body .lede{font-size:19px;line-height:1.55;color:var(--ink-soft);margin-bottom:24px;font-weight:300}
+  .project-body p{margin-bottom:20px;font-size:16px;color:var(--ink);max-width:62ch}
+  .project-body p.quote{
+    border-left:2px solid var(--accent);padding-left:24px;
+    font-style:italic;font-family:'Fraunces',serif;font-size:22px;
+    color:var(--ink-soft);max-width:55ch;margin:32px 0;
+  }
+  .project-body .aside{
+    background:var(--paper-warm);padding:24px 28px;margin:32px 0;
+    border-left:3px solid var(--accent);
+  }
+  .project-body .aside .mono{margin-bottom:8px;color:var(--accent)}
+  .project-body .aside .lines{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;color:var(--ink)}
+  .project-body .aside .lines .speaker{color:var(--ink-dim)}
+
+  /* Footer */
+  footer{padding:80px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;background:var(--paper-warm)}
+  footer h4{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin-bottom:16px}
+  footer a{color:var(--ink);text-decoration:none;display:block;padding:4px 0;border-bottom:1px solid transparent;transition:border-color .2s;font-size:14px}
+  footer a:hover{border-bottom-color:var(--accent)}
+  footer .colophon{font-size:12px;color:var(--ink-dim);line-height:1.7}
+
+  /* Micro-interaction: underline sweep on project titles */
+  .project-body h3{position:relative;display:inline-block;cursor:default}
+  .project-body h3::after{
+    content:"";position:absolute;left:0;bottom:-4px;width:0;height:2px;
+    background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .project:hover .project-body h3::after{width:100%}
+
+  /* Also built - smaller strip */
+  .sidegrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:32px}
+  .sideproj{padding:28px;background:var(--paper-warm);border:1px solid var(--rule)}
+  .sideproj h4{font-family:'Fraunces',serif;font-size:24px;font-weight:500;margin-bottom:10px}
+  .sideproj p{font-size:14px;color:var(--ink-soft);line-height:1.6}
+
+  /* Other parts */
+  .other-parts{display:grid;grid-template-columns:1fr 3fr;gap:64px}
+  .other-parts p{font-size:18px;line-height:1.65;max-width:60ch;margin-bottom:18px;color:var(--ink)}
+  .other-parts p:first-child{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:22px;color:var(--ink-soft)}
+
+  @media (max-width:860px){
+    .topbar{padding:16px 24px;grid-template-columns:1fr}
+    .nav{display:none}
+    .hero,.section{padding:64px 24px}
+    .hero,.section-head,.project,.other-parts{grid-template-columns:1fr;gap:32px}
+    footer{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="mono">No. 01 — Cologne</span>
+  <span class="mark">Svenja Borgwardt</span>
+  <nav class="nav">
+    <a href="#work">Work</a>
+    <a href="#other">Also Built</a>
+    <a href="#parts">Other Parts</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-left">
+    <span class="mono">Teacher · Builder · Cologne</span>
+    <p class="byline">A personal index of work that sits between the classroom and the machine. Updated occasionally, read closely.</p>
+  </div>
+  <div class="hero-right">
+    <h1 class="hero-title">Teaching, and<br>building tools that<br><em>notice things</em> a<br>teacher can't.</h1>
+    <p class="hero-sub">I teach English and Economics to about 240 students a week. In my other hours I build — mostly small tools that try to solve a problem I actually have, usually something about feedback, attention, or the space between a student and a sentence.</p>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="section-head">
+    <span class="mono">Featured Work</span>
+    <h2>Three projects, each <em>addressed</em> to a specific failure I kept seeing.</h2>
+  </div>
+
+  <article class="project">
+    <div class="project-meta">
+      <div class="num">01</div>
+      <div class="stack">
+        <strong>Kaleido</strong>
+        Python · Mistral<br>
+        Regex anonymisation<br>
+        HTML output<br>
+        GDPR &amp; EU AI Act
+      </div>
+    </div>
+    <div class="project-body">
+      <h3>Kaleido</h3>
+      <p class="lede">A tool for giving individual feedback on student writing — the thing I had no answer for, with 240 students a week.</p>
+      <p class="dropcap">A student hands in their paper. Their name is stripped locally and replaced with a code. An anonymisation agent removes every remaining personal detail. A set of agents then analyses the work along separate dimensions: structure, evidence, language, coherence, grammar, content. A final agent writes the feedback, addressed to the student rather than about them.</p>
+      <p class="quote">The first time I handed back Kaleido feedback instead of the usual red-penned pages, students came to me afterwards with questions about their own essays. Not about the mark. About the essay itself.</p>
+      <p>The output is an HTML page they can read on their phone, with a progress view that shows how their writing has developed over the year. It works well for English and Economics because I trained the agents on my specific types of tasks. Publishing a version that fits other subjects is on my list.</p>
+      <p style="color:var(--ink-dim);font-size:14px;margin-top:28px;font-style:italic;">A kaleidoscope turns the same fragments into a different pattern every time you look. That's what I want feedback to do.</p>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="project-meta">
+      <div class="num">02</div>
+      <div class="stack">
+        <strong>Compass</strong>
+        Mistral 7B<br>
+        LoRA · DPO<br>
+        Fine-tuned<br>
+        For debating class
+      </div>
+    </div>
+    <div class="project-body">
+      <h3>Compass</h3>
+      <p class="lede">Watching how people use AI, I keep noticing one thing: people tend to take the path of least resistance. In learning, that worries me.</p>
+      <p>AI creates a specific failure of self-assessment: the student produces a good output and reads the quality of the output as evidence of their own learning. Cognitive science calls this the illusion of fluency. For something to be learned, it has to be slightly harder than easy — Robert Bjork's desirable difficulties.</p>
+      <div class="aside">
+        <span class="mono">Example · A coding bug</span>
+        <div class="lines">
+          <div><span class="speaker">Student:</span> "My code doesn't work: for i in range(10) print(i)"</div>
+          <div><span class="speaker">Standard model:</span> "You're missing a colon."</div>
+          <div><span class="speaker">Socratic model:</span> "What is a for loop? What is syntax?"</div>
+          <div><span class="speaker">What I want:</span> "Read the error message again, then look at the end of line 1."</div>
+        </div>
+      </div>
+      <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. So I'm fine-tuning Mistral 7B with LoRA and DPO to make the model genuinely useful — without giving the answer outright.</p>
+      <p style="color:var(--ink-dim);font-size:14px;margin-top:28px;font-style:italic;">A compass points the way. It doesn't hand you the map.</p>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="project-meta">
+      <div class="num">03</div>
+      <div class="stack">
+        <strong>UTE</strong>
+        Voice-first<br>
+        Real-time transcription<br>
+        Catalogue matching<br>
+        BÄKO Hackathon · 1st
+      </div>
+    </div>
+    <div class="project-body">
+      <h3>UTE — Unkomplizierte Theken-Eingabe</h3>
+      <p class="lede">A voice-first ordering system for bakery counters. Built in a weekend at the BÄKO Hackathon with three other women. We won first place.</p>
+      <p>Germany's local bakery is a place where the assistant knows your family, your allergies, the cake last week was for your daughter. What holds it together is conversation. Then the order has to go into the register, and the conversation breaks.</p>
+      <p>UTE listens while the assistant talks. Transcribes in real time. Matches items against the bakery's catalogue. Builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked.</p>
+      <p class="quote">What if the best way for an AI to be useful is to disappear?</p>
+    </div>
+  </article>
+</section>
+
+<section class="section" id="other">
+  <div class="section-head">
+    <span class="mono">Also Built</span>
+    <h2>Smaller things, still <em>mine</em>.</h2>
+  </div>
+  <div class="sidegrid">
+    <div class="sideproj">
+      <h4>Claudia</h4>
+      <p>A multi-agent infrastructure on a Mac Mini that's always on in my flat. By day she orchestrates the agents behind Kaleido. The rest of the time she runs my home automation. Same framework, different endpoints. Most of what I know about agent design I learned by building her and watching her break in interesting ways.</p>
+    </div>
+    <div class="sideproj">
+      <h4>Investor Game</h4>
+      <p>A platform where participants develop product ideas, pitch them to a group, and invest play money into each other's pitches. Scoring is part quality-of-pitch, part performance-of-portfolio. Deployed in a market economics class — I've never seen the topic taken more seriously.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="parts">
+  <div class="section-head">
+    <span class="mono">The Other Parts</span>
+    <h2>Before this work, <em>and beside it</em>.</h2>
+  </div>
+  <div class="other-parts">
+    <div>
+      <span class="mono">Biography</span>
+    </div>
+    <div>
+      <p>Eleven years at a German savings bank before this work. It wasn't always what I wanted, but it taught me to think in terms of risk, compliance, and long feedback loops — surprisingly useful the moment you start building anything that touches student data.</p>
+      <p>First violin in the Ford Symphony Orchestra here in Cologne. PADI Divemaster. SKS sailing licence. I love adventures and getting to know new cultures.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div>
+    <h4>Say hello</h4>
+    <a href="mailto:s.borgwardt@gso.schule.koeln">s.borgwardt@gso.schule.koeln</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">GitHub</a>
+  </div>
+  <div>
+    <h4>Elsewhere</h4>
+    <a href="#">Talks &amp; writing</a>
+    <a href="#">Kaleido (soon, for other subjects)</a>
+    <a href="#">A longer bio</a>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim)">Colophon</h4>
+    <p class="colophon">Typeset in Fraunces and Inter. Set on an off-white paper palette that tries not to remind you of a dashboard. Built by hand, revised often.</p>
+  </div>
+</footer>
+
+</body>
+</html>
