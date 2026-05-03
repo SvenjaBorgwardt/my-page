@@ -75,7 +75,7 @@
     font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
     margin-bottom:0.3em;
   }
-  .masthead-intro:first-of-type{margin-top:1.4em}
+  .masthead-intro:first-of-type{margin-top:2.4em}
 
   .photo-frame{
     width:7.8em;height:10.4em;position:relative;flex-shrink:0;
@@ -344,7 +344,9 @@
 
   <p>So I asked myself: how can we make AI usable for learning without letting it take over the thinking of the most vulnerable group? I started building a tool that removes the AI's ability to give the answer directly, because the interaction layer never sees the whole task. Basically, I tried to handcuff the model into being helpful. But the better the models got, the harder it became to keep them from understanding the overall task. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level of that step. That made the whole thing hard to transfer to other topics and not particularly time-saving.</p>
 
-  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them.</p>
+  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them. That's Compass — not a product, more of a direction. Everything I build for learning follows from this idea.</p>
+
+  <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
 
   <div class="example">
     <span class="lbl">An example of my Economics class</span>
@@ -354,29 +356,6 @@
     <div class="row"><span class="who">What I want</span><span>"You're treating prices as the problem. What if they're the symptom?"</span></div>
   </div>
 
-  <blockquote>I called it Compass because it's meant to give direction, not a destination. A compass points the way. It doesn't hand you the map.</blockquote>
-
-  <figure class="project-example reveal">
-    <div class="frame">
-      <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
-        <rect width="720" height="320" fill="#FCFBF7"/>
-        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">COMPASS · FINE-TUNED RESPONSE</text>
-        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">ECONOMICS · INTEREST RATES</text>
-        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
-
-        <text x="32" y="86" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#8A8493">&gt; LEARNER</text>
-        <text x="32" y="114" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#141018">"I don't understand why central banks raise</text>
-        <text x="32" y="138" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#141018">interest rates during inflation."</text>
-
-        <line x1="32" y1="168" x2="688" y2="168" stroke="#D4C9AF" stroke-width="1" stroke-dasharray="2 2"/>
-
-        <text x="32" y="196" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#9F3A1F">&gt; COMPASS</text>
-        <text x="32" y="232" font-family="Cormorant Garamond" font-size="22" fill="#141018">You're treating prices as the problem.</text>
-        <text x="32" y="264" font-family="Cormorant Garamond" font-size="22" fill="#141018">What if they're the symptom?</text>
-      </svg>
-    </div>
-    <figcaption>Compass: <strong>direction, not destination</strong> — a model fine-tuned to point rather than answer.</figcaption>
-  </figure>
 </section>
 
 <hr class="hr-soft">
