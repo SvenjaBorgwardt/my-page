@@ -267,6 +267,58 @@
     color:var(--ink-dim);letter-spacing:0.2em;text-transform:uppercase;
   }
 
+  /* ========== COMPASS DEMO ========== */
+  .compass-demo{margin:2.4em 0 1.6em}
+  .compass-label{
+    font-style:italic;font-weight:300;
+    font-size:0.9em;color:var(--rust);display:block;margin-bottom:0.5em;letter-spacing:0.02em;
+  }
+  .compass-question{
+    font-size:1em;line-height:1.72;font-weight:400;max-width:64ch;
+    min-height:1.5em;
+  }
+  .compass-question .cursor{
+    display:inline-block;width:1px;height:1.1em;background:var(--ink);
+    vertical-align:text-bottom;margin-left:1px;
+    animation:blink .7s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){
+    .compass-question .cursor{animation:none;opacity:0}
+  }
+  .compass-options{
+    display:flex;gap:1.2em;margin:1.4em 0 0;opacity:0;
+    transition:opacity .4s ease;
+  }
+  .compass-options.visible{opacity:1}
+  @media(prefers-reduced-motion:reduce){
+    .compass-options{transition:none}
+  }
+  .compass-opt{
+    font-family:'Cormorant Garamond',serif;font-size:0.95em;font-style:italic;
+    background:none;border:none;padding:0;cursor:pointer;
+    color:var(--ink-dim);position:relative;
+    transition:color .2s;
+  }
+  .compass-opt::after{
+    content:"";display:block;width:0;height:1px;background:var(--rust);
+    transition:width .25s ease;margin-top:2px;
+  }
+  .compass-opt:hover{color:var(--ink)}
+  .compass-opt:hover::after{width:100%}
+  .compass-opt:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .compass-opt.active{color:var(--rust)}
+  .compass-opt.active::after{width:100%;background:var(--rust)}
+  .compass-response{
+    font-style:italic;font-size:1em;line-height:1.72;
+    color:var(--ink-soft);max-width:64ch;margin-top:1em;
+    min-height:0;opacity:0;transition:opacity .35s ease;
+  }
+  .compass-response.visible{opacity:1}
+  @media(prefers-reduced-motion:reduce){
+    .compass-response{transition:none}
+  }
+
   @media (max-width:32em){
     main{padding:2em 1em 4em}
     .masthead{grid-template-columns:1fr;gap:1.2em;padding-bottom:1.4em;margin-bottom:2.8em}
@@ -348,12 +400,15 @@
 
   <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
 
-  <div class="example">
-    <span class="lbl">An example of my Economics class</span>
-    <div class="row"><span class="who">Student</span><span>"I don't understand why central banks raise interest rates during inflation. Higher rates make loans more expensive, so how does that help people afford things?"</span></div>
-    <div class="row"><span class="who">Standard</span><span>"Higher rates cool demand by making borrowing more expensive. Less demand against the same supply slows price increases. That's how rate hikes fight inflation."</span></div>
-    <div class="row"><span class="who">Socratic</span><span>"What is inflation? What causes prices to rise? What role does demand play? How do interest rates affect consumer behaviour?"</span></div>
-    <div class="row"><span class="who">What I want</span><span>"You're treating prices as the problem. What if they're the symptom?"</span></div>
+  <div class="compass-demo" id="compass-demo">
+    <span class="compass-label">Student</span>
+    <p class="compass-question" aria-live="polite"></p>
+    <div class="compass-options" aria-label="Choose a response approach">
+      <button class="compass-opt" data-key="standard">Standard AI</button>
+      <button class="compass-opt" data-key="socratic">Socratic</button>
+      <button class="compass-opt" data-key="vision">My Vision</button>
+    </div>
+    <p class="compass-response" aria-live="polite"></p>
   </div>
 
 </section>
