@@ -325,7 +325,8 @@
     var cartEl    = document.getElementById('ute-cart');
     var cartWrap  = document.getElementById('ute-cart-wrap');
     var totalVal  = document.getElementById('ute-total-val');
-    var dotsEl    = document.getElementById('ute-dots');
+    var recEl     = document.getElementById('ute-rec');
+    var customerEl = document.getElementById('ute-customer');
     var runningTotal = 0;
 
     var PRODUCTS = [
@@ -343,57 +344,59 @@
       {name:'Lemon tart',     price:'3.50', img:'img/lemon-tart.png',      vegan:false, sesame:false},
     ];
 
-    var PHASES = [
+    // Each scene: dialog exchange → POS actions → annotation → fade
+    var SCENES = [
       {
-        steps: [
-          {type:'msg',who:'assistant',text:'Good morning, Mrs. Schmidt! How are you today?',kw:['Mrs. Schmidt']},
-          {type:'msg',who:'customer',text:'Good morning! I\'m doing well, thank you.'},
-          {type:'status',text:'Mrs. Schmidt · regular · sesame allergy'},
-          {type:'filter',rule:'sesame'},
-          {type:'alert',text:'⚠ Attention: Sesame allergy — affected items hidden'},
-          {type:'cart',name:'2× Rye bread',price:'6.40'},
-          {type:'cart',name:'1× Sourdough',price:'3.80'},
-        ]
+        dialog: [
+          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt']},
+          {who:'customer',  text:'Good morning! I\'m doing well, thank you.'},
+        ],
+        actions: [
+          {type:'status', text:'Mrs. Schmidt · regular · sesame allergy'},
+          {type:'filter', rule:'sesame'},
+          {type:'alert',  text:'⚠ Sesame allergy — affected items hidden'},
+          {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
+          {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
+        ],
+        note: 'Customer recognised. Sesame products filtered. Regular order prefilled.'
       },
       {
-        steps: [
-          {type:'msg',who:'customer',text:'My sister is visiting — she\'d like something vegan.',kw:['vegan']},
-          {type:'msg',who:'assistant',text:'Of course! Let me show you the vegan options.',kw:['vegan options']},
-          {type:'filter',rule:'vegan'},
-        ]
+        dialog: [
+          {who:'customer',  text:'My sister is visiting — she\'d like something vegan.', kw:['vegan']},
+          {who:'assistant', text:'Of course! Let me show you the vegan options.', kw:['vegan options']},
+        ],
+        actions: [
+          {type:'filter', rule:'vegan'},
+        ],
+        note: 'Non-vegan items faded. Only suitable products remain.'
       },
       {
-        steps: [
-          {type:'msg',who:'customer',text:'The apple turnover, please.',kw:['apple turnover']},
-          {type:'select',name:'Apple turnover'},
-          {type:'cart',name:'1× Apple turnover',price:'2.50'},
-          {type:'msg',who:'assistant',text:'Something savory too? The vegan quiche goes well with it.',kw:['vegan quiche']},
-          {type:'highlight',name:'Vegan quiche'},
-        ]
+        dialog: [
+          {who:'customer',  text:'The apple turnover, please.', kw:['apple turnover']},
+          {who:'assistant', text:'Something savory too? The vegan quiche goes well with it.', kw:['vegan quiche']},
+        ],
+        actions: [
+          {type:'select',    name:'Apple turnover'},
+          {type:'cart',      name:'1\xD7 Apple turnover', price:'2.50'},
+          {type:'highlight', name:'Vegan quiche'},
+        ],
+        note: 'Item matched and added. Cross-sell suggestion surfaces.'
       },
       {
-        steps: [
-          {type:'msg',who:'customer',text:'Good idea — yes!'},
-          {type:'select',name:'Vegan quiche'},
-          {type:'cart',name:'1× Vegan quiche',price:'3.90'},
-          {type:'msg',who:'assistant',text:'That\'s everything. Have a lovely day!'},
+        dialog: [
+          {who:'customer',  text:'Good idea — yes!'},
+          {who:'assistant', text:'That\'s everything. Have a lovely day!'},
+        ],
+        actions: [
+          {type:'select', name:'Vegan quiche'},
+          {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
-        ]
+        ],
+        note: 'Order complete. Conversation never interrupted.'
       }
     ];
 
     var tileEls = [];
-
-    function buildDots(active) {
-      dotsEl.innerHTML = '';
-      for (var i = 0; i < PHASES.length; i++) {
-        var s = document.createElement('span');
-        if (i === active) s.className = 'active';
-        dotsEl.appendChild(s);
-      }
-    }
-
-    var MAX_VISIBLE = 3;
 
     function addMsg(who, text, keywords) {
       var d = document.createElement('div');
@@ -401,24 +404,64 @@
       var rendered = text;
       if (keywords) {
         for (var k = 0; k < keywords.length; k++) {
-          rendered = rendered.replace(keywords[k], '<span class=”kw”>' + keywords[k] + '</span>');
+          rendered = rendered.replace(keywords[k], '<span class="kw">' + keywords[k] + '</span>');
         }
       }
-      d.innerHTML = '<div class=”dm-label”>' + who + '</div><div class=”dm-text”>”' + rendered + '”</div>';
+      var fullHTML = '"' + rendered + '"';
+      d.innerHTML = '<div class="dm-label">' + who + '</div><div class="dm-text"></div>';
       chatEl.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
-      // fade out older messages, keep only last MAX_VISIBLE
-      var msgs = chatEl.querySelectorAll('.dm');
-      if (msgs.length > MAX_VISIBLE) {
-        for (var m = 0; m < msgs.length - MAX_VISIBLE; m++) {
-          msgs[m].classList.add('fade-out');
+
+      // Typewriter: strip tags to get plain text, type char by char
+      var textEl = d.querySelector('.dm-text');
+      var plain = fullHTML.replace(/<[^>]+>/g, '');
+      var i = 0;
+      return new Promise(function(resolve) {
+        function tick() {
+          if (i >= plain.length) {
+            textEl.innerHTML = fullHTML;
+            resolve();
+            return;
+          }
+          i++;
+          textEl.textContent = plain.substring(0, i);
+          setTimeout(tick, 28);
         }
+        tick();
+      });
+    }
+
+    function addNote(text) {
+      // Add annotation to the last .dm in chat
+      var msgs = chatEl.querySelectorAll('.dm');
+      var last = msgs[msgs.length - 1];
+      if (!last) return;
+      var n = document.createElement('div');
+      n.className = 'dm-note';
+      n.textContent = text;
+      last.appendChild(n);
+      void n.offsetHeight;
+      n.classList.add('show');
+    }
+
+    function fadeAllMessages() {
+      var msgs = chatEl.querySelectorAll('.dm');
+      for (var m = 0; m < msgs.length; m++) {
+        msgs[m].classList.add('fade-out');
       }
     }
 
     function setStatus(text) {
-      statusEl.textContent = text;
+      // Highlight "sesame allergy" in rust
+      var html = text.replace(/(sesame allergy)/i, '<span class="status-warn">$1</span>');
+      statusEl.innerHTML = html;
+      statusEl.classList.add('active');
+      // Show customer bar
+      if (customerEl) {
+        customerEl.innerHTML = '<span class="cust-name">Mrs. Schmidt</span><span class="cust-badge">Sesame allergy</span>';
+        customerEl.classList.add('show');
+      }
     }
 
     function buildTiles() {
@@ -475,16 +518,24 @@
       var d = document.createElement('div');
       d.className = 'pos-alert';
       d.textContent = text;
-      cartWrap.appendChild(d);
+      // Insert alert before the footer inside the sidebar
+      var footer = cartWrap.querySelector('.pos-footer');
+      if (footer) {
+        cartWrap.insertBefore(d, footer);
+      } else {
+        cartWrap.appendChild(d);
+      }
       void d.offsetHeight;
       d.classList.add('show');
     }
 
     function showComplete() {
+      var footer = cartWrap.querySelector('.pos-footer');
+      if (!footer) return;
       var d = document.createElement('div');
       d.className = 'pos-complete';
       d.textContent = 'Complete order';
-      cartWrap.appendChild(d);
+      footer.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
     }
@@ -493,73 +544,144 @@
       return new Promise(function(resolve) { setTimeout(resolve, ms); });
     }
 
-    async function runPhase(idx) {
-      buildDots(idx);
-      var phase = PHASES[idx];
-      for (var i = 0; i < phase.steps.length; i++) {
-        var step = phase.steps[i];
-        await sleep(1100);
-        if (step.type === 'msg')            addMsg(step.who, step.text, step.kw);
-        else if (step.type === 'status')    setStatus(step.text);
-        else if (step.type === 'filter')    filterBy(step.rule);
-        else if (step.type === 'alert')     addAlert(step.text);
-        else if (step.type === 'select')    selectTile(step.name);
-        else if (step.type === 'highlight') highlightTile(step.name);
-        else if (step.type === 'cart')      addCartItem(step.name, step.price);
-        else if (step.type === 'complete')  showComplete();
+    async function runScene(idx) {
+      var scene = SCENES[idx];
+
+      // 1. Dialog: type out each message
+      for (var d = 0; d < scene.dialog.length; d++) {
+        var line = scene.dialog[d];
+        await addMsg(line.who, line.text, line.kw);
+        await sleep(600);
+      }
+
+      // 2. POS actions
+      for (var a = 0; a < scene.actions.length; a++) {
+        var act = scene.actions[a];
+        await sleep(400);
+        if (act.type === 'status')         setStatus(act.text);
+        else if (act.type === 'filter')    filterBy(act.rule);
+        else if (act.type === 'alert')     addAlert(act.text);
+        else if (act.type === 'select')    selectTile(act.name);
+        else if (act.type === 'highlight') highlightTile(act.name);
+        else if (act.type === 'cart')      addCartItem(act.name, act.price);
+        else if (act.type === 'complete')  showComplete();
+      }
+
+      // 3. Annotation
+      if (scene.note) {
+        await sleep(500);
+        addNote(scene.note);
+      }
+
+      // 4. Let reader absorb
+      await sleep(3000);
+
+      // 5. Fade out messages (except last scene)
+      if (idx < SCENES.length - 1) {
+        fadeAllMessages();
+        await sleep(600);
       }
     }
 
     function resetAll() {
+      running = false;
+      tileEls = [];
+      buildTiles();
+      resetToIdle();
+    }
+
+    function showPrompt() {
+      chatEl.innerHTML =
+        '<div class="chat-prompt">' +
+          '<div class="chat-prompt-text">Press record<br>to try UTE</div>' +
+          '<div class="chat-prompt-arrow">→</div>' +
+        '</div>';
+    }
+
+    function resetToIdle() {
       chatEl.innerHTML = '';
-      statusEl.textContent = 'ute · bakery pos';
+      statusEl.textContent = 'ready';
+      statusEl.classList.remove('active');
+      if (customerEl) {
+        customerEl.innerHTML = '';
+        customerEl.classList.remove('show');
+      }
       cartWrap.querySelectorAll('.pos-alert,.pos-complete').forEach(function(el) { el.remove(); });
       cartEl.innerHTML = '';
       runningTotal = 0;
       totalVal.textContent = '€0.00';
-      tileEls = [];
-      buildTiles();
-    }
-
-    async function loop() {
-      buildTiles();
-      while (true) {
-        chatEl.innerHTML = '';
-        statusEl.textContent = 'ute · bakery pos';
-        cartWrap.querySelectorAll('.pos-alert,.pos-complete').forEach(function(el) { el.remove(); });
-        cartEl.innerHTML = '';
-        runningTotal = 0;
-        totalVal.textContent = '€0.00';
-        for (var j = 0; j < tileEls.length; j++) {
-          tileEls[j].classList.remove('disabled','selected','suggest');
-        }
-        for (var i = 0; i < PHASES.length; i++) {
-          await runPhase(i);
-          await sleep(1800);
-        }
-        await sleep(3500);
+      for (var j = 0; j < tileEls.length; j++) {
+        tileEls[j].classList.remove('disabled','selected','suggest');
       }
+      if (recEl) {
+        recEl.classList.remove('on');
+        recEl.classList.add('idle');
+        recEl.querySelector('.pos-rec-label').textContent = 'Record';
+      }
+      showPrompt();
     }
 
-    var started = false;
-    function startOnce() {
-      if (started) return;
-      started = true;
-      loop();
+    var running = false;
+
+    async function runDemo() {
+      if (running) return;
+      running = true;
+
+      // activate recording
+      chatEl.innerHTML = '';
+      if (recEl) {
+        recEl.classList.remove('idle');
+        recEl.classList.add('on');
+        recEl.querySelector('.pos-rec-label').textContent = 'Listening';
+      }
+      await sleep(800);
+
+      // run all scenes
+      for (var i = 0; i < SCENES.length; i++) {
+        await runScene(i);
+      }
+
+      // stop recording
+      if (recEl) {
+        recEl.classList.remove('on');
+      }
+
+      // hold final state, then reset
+      await sleep(4000);
+      resetToIdle();
+      running = false;
+    }
+
+    // Click handler on record button
+    if (recEl) {
+      recEl.addEventListener('click', function() {
+        if (recEl.classList.contains('idle')) {
+          runDemo();
+        }
+      });
+    }
+
+    // Show initial state when demo scrolls into view
+    var inited = false;
+    function initOnce() {
+      if (inited) return;
+      inited = true;
+      buildTiles();
+      showPrompt();
     }
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function(entries) {
         for (var i = 0; i < entries.length; i++) {
           if (entries[i].isIntersecting) {
-            startOnce();
+            initOnce();
             obs.disconnect();
             break;
           }
         }
-      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+      }, { rootMargin: '-20% 0px -20% 0px', threshold: 0 });
       obs.observe(demo);
     } else {
-      startOnce();
+      initOnce();
     }
   }
 

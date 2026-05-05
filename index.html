@@ -191,7 +191,7 @@
 
   /* ========== UTE ANIMATED DEMO ========== */
   .ute-demo{
-    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:320px auto;
+    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:340px;
     margin:2.4em 0 0.4em;overflow:hidden;
   }
   .ute-demo-chat{
@@ -203,101 +203,242 @@
   .ute-demo .dm{opacity:0;transform:translateY(4px)}
   .ute-demo .dm.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
   .ute-demo .dm.fade-out{opacity:0;max-height:0;margin:0;padding:0;overflow:hidden;transition:opacity .4s ease,max-height .4s ease,margin .4s ease}
+  .ute-demo .chat-prompt{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;gap:0.4em;opacity:0;animation:prompt-fade-in .8s ease .3s forwards;
+  }
+  .ute-demo .chat-prompt-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.8em;color:var(--ink-dim);text-align:center;line-height:1.5;
+  }
+  .ute-demo .chat-prompt-arrow{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);
+    animation:prompt-bounce 2s ease-in-out infinite;
+  }
+  @keyframes prompt-fade-in{to{opacity:1}}
+  @keyframes prompt-bounce{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
   .ute-demo .dm-label{
     font-family:'JetBrains Mono',monospace;font-size:0.55em;
     letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
   }
   .ute-demo .dm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85em;line-height:1.5;color:var(--ink)}
   .ute-demo-pos{
-    background:#fff;
-    border:1px solid var(--rule);border-radius:12px;
+    background:var(--paper);
+    border:1px solid var(--rule);border-radius:4px;
     grid-row:1;grid-column:2;
     display:flex;flex-direction:column;
-    max-height:320px;overflow:hidden;
-    box-shadow:0 1px 4px rgba(0,0,0,0.04);
+    max-height:340px;overflow:hidden;
   }
+  /* ── title bar (window chrome) ── */
   .ute-demo .pos-head{
-    font-family:'JetBrains Mono',monospace;font-size:0.5em;
-    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
-    padding:0.5em 0.8em;border-bottom:1px solid var(--rule);
-    background:#fafaf8;flex:0 0 auto;
-    border-radius:12px 12px 0 0;
+    font-family:'JetBrains Mono',monospace;
+    padding:7px 10px;border-bottom:1px solid var(--rule);
+    background:var(--paper);flex:0 0 auto;
+    border-radius:4px 4px 0 0;
+    display:flex;align-items:center;gap:8px;
   }
-  .ute-demo .pos-mid{
-    display:grid;grid-template-columns:3fr 2fr;
+  .ute-demo .pos-head-dots{display:flex;gap:4px;flex:0 0 auto}
+  .ute-demo .pos-head-dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+  .ute-demo .pos-head-title{
+    font-size:9px;font-weight:700;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--ink);flex:1;
+  }
+  .ute-demo .pos-head-status{
+    font-size:7px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--ink-dim);
+    display:flex;align-items:center;gap:4px;
+  }
+  .ute-demo .pos-head-status::before{
+    content:'';width:5px;height:5px;border-radius:50%;
+    background:var(--ink-dim);opacity:0.4;
+    transition:background .4s ease,opacity .4s ease;
+  }
+  .ute-demo .pos-head-status.active::before{
+    background:var(--rust);opacity:1;
+  }
+  /* ── customer bar ── */
+  .ute-demo .pos-customer{
+    font-family:'JetBrains Mono',monospace;font-size:7px;
+    letter-spacing:0.06em;color:var(--ink-soft);
+    padding:4px 10px;background:var(--paper);
+    border-bottom:1px solid var(--rule);
+    flex:0 0 auto;min-height:0;
+    display:none;align-items:center;gap:5px;
+  }
+  .ute-demo .pos-customer.show{display:flex}
+  .ute-demo .pos-customer .cust-name{font-weight:600;color:var(--ink)}
+  .ute-demo .pos-customer .cust-badge{
+    font-size:6px;letter-spacing:0.06em;
+    padding:1px 4px;border-radius:3px;
+    background:rgba(159,58,31,0.1);color:var(--rust);
+    border:1px solid rgba(159,58,31,0.2);
+  }
+  /* ── body: grid + sidebar ── */
+  .ute-demo .pos-body{
+    display:grid;grid-template-columns:1fr 120px;
     flex:1 1 0;min-height:0;overflow:hidden;
   }
+  /* ── product grid ── */
   .ute-demo .pos-grid{
     display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
-    gap:1px;background:var(--rule);
-    border-right:1px solid var(--rule);
+    gap:1px;
+    background:var(--rule);
     min-height:0;
   }
   .ute-demo .pos-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:'JetBrains Mono',monospace;font-size:9px;
-    text-align:center;line-height:1.15;
-    padding:1px;background:#fff;min-height:0;overflow:hidden;
-    transition:background .4s ease,opacity .4s ease;
+    font-family:'JetBrains Mono',monospace;font-size:0.4em;
+    text-align:center;line-height:1.2;
+    padding:0.15em;background:var(--paper);min-height:0;overflow:hidden;
+    transition:background .5s ease,box-shadow .4s ease;
+    position:relative;
   }
-  .ute-demo .pos-tile.disabled{background:#f8f6f0;opacity:0.4}
-  .ute-demo .pos-tile.selected{background:rgba(159,58,31,0.06)}
-  .ute-demo .pos-tile.suggest{background:rgba(47,120,79,0.05)}
-  .ute-demo .pos-tile .tile-icon{width:28px;height:28px;object-fit:contain;display:block;margin-bottom:1px}
-  .ute-demo .pos-tile .tile-name{display:block;color:var(--ink-soft)}
-  .ute-demo .pos-tile .tile-price{display:block;color:var(--ink-dim);font-size:0.9em}
-  .ute-demo .pos-cart{
-    display:flex;flex-direction:column;padding:6px 8px;overflow:hidden;min-height:0;
+  .ute-demo .pos-tile .tile-icon{
+    width:43px;height:43px;object-fit:contain;display:block;margin-bottom:0.1em;
+    transition:filter .5s ease,opacity .5s ease;
+  }
+  .ute-demo .pos-tile .tile-name{
+    display:block;color:var(--ink-soft);letter-spacing:0.01em;
+    font-size:1em;
+    transition:color .4s ease;
+  }
+  .ute-demo .pos-tile .tile-price{
+    display:block;color:var(--ink-dim);font-size:0.95em;
+    transition:color .4s ease;
+  }
+  /* disabled */
+  .ute-demo .pos-tile.disabled{background:var(--paper)}
+  .ute-demo .pos-tile.disabled .tile-icon{filter:grayscale(1) brightness(1.1) contrast(0.9);opacity:0.45}
+  .ute-demo .pos-tile.disabled .tile-name{color:var(--rule)}
+  .ute-demo .pos-tile.disabled .tile-price{color:var(--rule)}
+  /* selected */
+  .ute-demo .pos-tile.selected{background:var(--paper-deep);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+  .ute-demo .pos-tile.selected::after{
+    content:'';position:absolute;bottom:2px;left:20%;right:20%;
+    height:2px;background:var(--rust);border-radius:1px;
+  }
+  .ute-demo .pos-tile.selected .tile-name{color:var(--ink)}
+  /* suggest */
+  .ute-demo .pos-tile.suggest{background:var(--paper-deep);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+  .ute-demo .pos-tile.suggest::after{
+    content:'';position:absolute;bottom:2px;left:20%;right:20%;
+    height:2px;background:var(--ink-dim);border-radius:1px;
+    animation:suggest-pulse 1.5s ease-in-out infinite;
+  }
+  .ute-demo .pos-tile.suggest .tile-name{color:var(--ink)}
+  @keyframes suggest-pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+  /* ── sidebar / order panel ── */
+  .ute-demo .pos-sidebar{
+    display:flex;flex-direction:column;
+    background:var(--paper);
+    border-left:1px solid var(--rule);
+    overflow:hidden;min-height:0;
   }
   .ute-demo .pos-cart-head{
-    font-family:'JetBrains Mono',monospace;font-size:9px;
+    font-family:'JetBrains Mono',monospace;font-size:7.5px;
     letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
-    padding-bottom:4px;margin-bottom:4px;border-bottom:1px solid var(--rule);
+    padding:6px 8px 5px;
+    border-bottom:1px dashed var(--rule);
     flex:0 0 auto;
+    display:flex;align-items:center;gap:4px;
+  }
+  .ute-demo .pos-cart-icon{width:10px;height:10px;stroke:var(--ink-dim)}
+  .ute-demo .pos-cart-items{
+    flex:1 1 0;overflow:hidden;min-height:0;
+    padding:4px 8px;
   }
   .ute-demo .pos-cart-item{
-    font-family:'JetBrains Mono',monospace;font-size:9px;
+    font-family:'JetBrains Mono',monospace;font-size:8px;
     display:flex;justify-content:space-between;gap:4px;
     padding:2px 0;opacity:0;flex:0 0 auto;
+    color:var(--ink);
   }
   .ute-demo .pos-cart-item.show{opacity:1;transition:opacity .3s ease}
-  .ute-demo .pos-cart-item .cart-price{color:var(--ink-dim);white-space:nowrap}
+  .ute-demo .pos-cart-item .cart-price{color:var(--ink-soft);white-space:nowrap}
   .ute-demo .pos-alert{
-    font-family:'JetBrains Mono',monospace;font-size:8px;
-    color:var(--rust);letter-spacing:0.04em;
-    padding:3px 6px;flex:0 0 auto;opacity:0;
-    background:rgba(159,58,31,0.07);border-radius:3px;margin:3px 0 1px;
+    font-family:'JetBrains Mono',monospace;font-size:7px;
+    color:var(--rust);letter-spacing:0.02em;
+    padding:3px 8px;flex:0 0 auto;opacity:0;
+    border-left:2px solid var(--rust);
+    margin:2px 8px;line-height:1.4;
   }
   .ute-demo .pos-alert.show{opacity:1;transition:opacity .3s ease}
   .ute-demo .dm-text .kw{
     color:var(--rust);font-style:normal;font-weight:600;
     border-bottom:1.5px solid rgba(159,58,31,0.3);
   }
+  .ute-demo .dm-note{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.04em;color:var(--rust);
+    line-height:1.5;padding:0.3em 0 0;
+    opacity:0;transform:translateY(2px);
+  }
+  .ute-demo .dm-note.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
+  .ute-demo .dm-note::before{content:'→ '}
+  .ute-demo .dm.fade-out .dm-note{opacity:0}
+  /* ── footer: total + complete ── */
+  .ute-demo .pos-footer{
+    flex:0 0 auto;padding:0 8px 6px;margin-top:auto;
+  }
   .ute-demo .pos-total{
     display:flex;justify-content:space-between;
-    font-family:'JetBrains Mono',monospace;font-size:10px;
-    padding:4px 0 0;border-top:1px solid var(--rule);margin-top:auto;
-    flex:0 0 auto;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;
+    padding:6px 0 0;border-top:1.5px solid var(--ink);
+    color:var(--ink);letter-spacing:0.02em;font-weight:700;
   }
   .ute-demo .pos-complete{
-    font-family:'JetBrains Mono',monospace;font-size:9px;
-    letter-spacing:0.06em;text-transform:uppercase;text-align:center;
-    padding:4px;margin-top:3px;border-radius:6px;
-    background:var(--ink-soft);color:#fff;flex:0 0 auto;opacity:0;
+    font-family:'JetBrains Mono',monospace;font-size:7.5px;
+    letter-spacing:0.08em;text-transform:uppercase;text-align:center;
+    padding:5px;margin-top:4px;border-radius:3px;
+    background:var(--ink);color:var(--paper);flex:0 0 auto;opacity:0;
+    border:none;
   }
   .ute-demo .pos-complete.show{opacity:1;transition:opacity .35s ease}
-  .ute-demo .progress-dots{
-    display:flex;gap:4px;justify-content:center;align-items:center;
-    grid-column:1/-1;grid-row:2;padding:0.3em 0;
+  /* ── record bar ── */
+  .ute-demo .pos-rec{
+    flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:6px 10px;
+    border-top:1px solid var(--rule);
+    background:var(--paper);
+    border-radius:0 0 4px 4px;
+    cursor:default;
   }
-  .ute-demo .progress-dots span{
-    width:4px;height:4px;border-radius:50%;background:var(--rule);transition:background .3s;
+  .ute-demo .pos-rec-icon{
+    width:13px;height:13px;color:var(--ink-dim);
+    transition:color .4s ease;
   }
-  .ute-demo .progress-dots span.active{background:var(--ink-dim)}
+  .ute-demo .pos-rec-label{
+    font-family:'JetBrains Mono',monospace;font-size:7.5px;
+    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+    transition:color .4s ease;
+  }
+  .ute-demo .pos-rec-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--rule);
+    transition:background .4s ease;
+  }
+  /* idle: prominent red button */
+  .ute-demo .pos-rec.idle{
+    background:var(--rust);cursor:pointer;
+  }
+  .ute-demo .pos-rec.idle .pos-rec-icon{color:#fff}
+  .ute-demo .pos-rec.idle .pos-rec-label{color:#fff;font-weight:600}
+  .ute-demo .pos-rec.idle .pos-rec-dot{background:rgba(255,255,255,0.4)}
+  /* on: listening state */
+  .ute-demo .pos-rec.on .pos-rec-icon{color:var(--rust)}
+  .ute-demo .pos-rec.on .pos-rec-label{color:var(--ink-soft)}
+  .ute-demo .pos-rec.on .pos-rec-dot{
+    background:var(--rust);
+    animation:rec-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes rec-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  /* ── sesame allergy highlight in status ── */
+  .ute-demo .pos-head-status .status-warn{color:var(--rust);font-weight:600}
   @media(max-width:600px){
-    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto auto;height:auto;max-height:30em}
+    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto;max-height:30em}
     .ute-demo-pos{border:1px solid var(--rule);grid-row:2;grid-column:1}
-    .ute-demo .progress-dots{grid-row:3}
   }
 
   /* ========== STICKY TOP NAV ========== */
@@ -550,17 +691,28 @@
   <div class="ute-demo reveal" id="ute-demo">
     <div class="ute-demo-chat" id="ute-chat"></div>
     <div class="ute-demo-pos">
-      <div class="pos-head" id="ute-status">ute · bakery pos</div>
-      <div class="pos-mid">
+      <div class="pos-head">
+        <span class="pos-head-dots"><i></i><i></i><i></i></span>
+        <span class="pos-head-title">ute</span>
+        <span class="pos-head-status" id="ute-status">ready</span>
+      </div>
+      <div class="pos-customer" id="ute-customer"></div>
+      <div class="pos-body">
         <div class="pos-grid" id="ute-grid"></div>
-        <div class="pos-cart" id="ute-cart-wrap">
-          <div class="pos-cart-head">order</div>
-          <div id="ute-cart"></div>
-          <div class="pos-total"><span>Total</span><span id="ute-total-val">€0.00</span></div>
+        <div class="pos-sidebar" id="ute-cart-wrap">
+          <div class="pos-cart-head"><svg class="pos-cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l1.5 9h8L14 3.5H4"/><circle cx="5.5" cy="13" r="1"/><circle cx="11.5" cy="13" r="1"/></svg> Order</div>
+          <div class="pos-cart-items" id="ute-cart"></div>
+          <div class="pos-footer">
+            <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
+          </div>
         </div>
       </div>
+      <div class="pos-rec idle" id="ute-rec">
+        <svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        <span class="pos-rec-label">Record</span>
+        <span class="pos-rec-dot"></span>
+      </div>
     </div>
-    <div class="progress-dots" id="ute-dots"></div>
   </div>
 </section>
 
@@ -773,6 +925,6 @@
 
 </main>
 
-<script defer src="scripts/effects.js?v=16"></script>
+<script defer src="scripts/effects.js?v=33"></script>
 </body>
 </html>
