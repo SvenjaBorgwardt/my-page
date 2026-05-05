@@ -49,8 +49,8 @@
   .masthead h1 em{font-style:italic;font-weight:300}
   /* Split-flap overlay — positioned over individual chars, transparent background */
   .name-block{position:relative}
-  .flip-overlay{position:absolute;overflow:hidden;clip-path:inset(0);z-index:10;pointer-events:none}
-  .flip-overlay div{text-align:center}
+  .flip-overlay{position:absolute;overflow:hidden;clip-path:inset(0);z-index:10;pointer-events:none;will-change:transform;isolation:isolate}
+  .flip-overlay>div{text-align:center;position:relative}
 
   /* Pronunciation — clickable line below the name */
   .pronounce{
@@ -189,6 +189,117 @@
   }
   .project-example figcaption strong{color:var(--ink);font-weight:400;font-style:normal}
 
+  /* ========== UTE ANIMATED DEMO ========== */
+  .ute-demo{
+    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:320px auto;
+    margin:2.4em 0 0.4em;overflow:hidden;
+  }
+  .ute-demo-chat{
+    padding:0 1.2em 0 0;display:flex;flex-direction:column;gap:0.5em;
+    grid-row:1;grid-column:1;overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .ute-demo-chat::-webkit-scrollbar{display:none}
+  .ute-demo .dm{opacity:0;transform:translateY(4px)}
+  .ute-demo .dm.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
+  .ute-demo .dm.fade-out{opacity:0;max-height:0;margin:0;padding:0;overflow:hidden;transition:opacity .4s ease,max-height .4s ease,margin .4s ease}
+  .ute-demo .dm-label{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  .ute-demo .dm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85em;line-height:1.5;color:var(--ink)}
+  .ute-demo-pos{
+    background:#fff;
+    border:1px solid var(--rule);border-radius:12px;
+    grid-row:1;grid-column:2;
+    display:flex;flex-direction:column;
+    max-height:320px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  }
+  .ute-demo .pos-head{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+    padding:0.5em 0.8em;border-bottom:1px solid var(--rule);
+    background:#fafaf8;flex:0 0 auto;
+    border-radius:12px 12px 0 0;
+  }
+  .ute-demo .pos-mid{
+    display:grid;grid-template-columns:3fr 2fr;
+    flex:1 1 0;min-height:0;overflow:hidden;
+  }
+  .ute-demo .pos-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
+    gap:1px;background:var(--rule);
+    border-right:1px solid var(--rule);
+    min-height:0;
+  }
+  .ute-demo .pos-tile{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    text-align:center;line-height:1.15;
+    padding:1px;background:#fff;min-height:0;overflow:hidden;
+    transition:background .4s ease,opacity .4s ease;
+  }
+  .ute-demo .pos-tile.disabled{background:#f8f6f0;opacity:0.4}
+  .ute-demo .pos-tile.selected{background:rgba(159,58,31,0.06)}
+  .ute-demo .pos-tile.suggest{background:rgba(47,120,79,0.05)}
+  .ute-demo .pos-tile .tile-icon{font-size:14px;line-height:1;margin-bottom:1px;display:block}
+  .ute-demo .pos-tile .tile-name{display:block;color:var(--ink-soft)}
+  .ute-demo .pos-tile .tile-price{display:block;color:var(--ink-dim);font-size:0.9em}
+  .ute-demo .pos-cart{
+    display:flex;flex-direction:column;padding:6px 8px;overflow:hidden;min-height:0;
+  }
+  .ute-demo .pos-cart-head{
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+    padding-bottom:4px;margin-bottom:4px;border-bottom:1px solid var(--rule);
+    flex:0 0 auto;
+  }
+  .ute-demo .pos-cart-item{
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    display:flex;justify-content:space-between;gap:4px;
+    padding:2px 0;opacity:0;flex:0 0 auto;
+  }
+  .ute-demo .pos-cart-item.show{opacity:1;transition:opacity .3s ease}
+  .ute-demo .pos-cart-item .cart-price{color:var(--ink-dim);white-space:nowrap}
+  .ute-demo .pos-alert{
+    font-family:'JetBrains Mono',monospace;font-size:8px;
+    color:var(--rust);letter-spacing:0.04em;
+    padding:3px 6px;flex:0 0 auto;opacity:0;
+    background:rgba(159,58,31,0.07);border-radius:3px;margin:3px 0 1px;
+  }
+  .ute-demo .pos-alert.show{opacity:1;transition:opacity .3s ease}
+  .ute-demo .dm-text .kw{
+    color:var(--rust);font-style:normal;font-weight:600;
+    border-bottom:1.5px solid rgba(159,58,31,0.3);
+  }
+  .ute-demo .pos-total{
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    padding:4px 0 0;border-top:1px solid var(--rule);margin-top:auto;
+    flex:0 0 auto;
+  }
+  .ute-demo .pos-complete{
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:0.06em;text-transform:uppercase;text-align:center;
+    padding:4px;margin-top:3px;border-radius:6px;
+    background:var(--ink-soft);color:#fff;flex:0 0 auto;opacity:0;
+  }
+  .ute-demo .pos-complete.show{opacity:1;transition:opacity .35s ease}
+  .ute-demo .progress-dots{
+    display:flex;gap:4px;justify-content:center;align-items:center;
+    grid-column:1/-1;grid-row:2;padding:0.3em 0;
+  }
+  .ute-demo .progress-dots span{
+    width:4px;height:4px;border-radius:50%;background:var(--rule);transition:background .3s;
+  }
+  .ute-demo .progress-dots span.active{background:var(--ink-dim)}
+  @media(max-width:600px){
+    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto auto;height:auto;max-height:30em}
+    .ute-demo-pos{border:1px solid var(--rule);grid-row:2;grid-column:1}
+    .ute-demo .progress-dots{grid-row:3}
+  }
+
   /* ========== STICKY TOP NAV ========== */
   .topnav{
     position:sticky;top:0;z-index:30;
@@ -287,7 +398,8 @@
     .compass-question .cursor{animation:none;opacity:0}
   }
   .compass-options{
-    display:flex;gap:1.2em;margin:1.4em 0 0;opacity:0;
+    display:flex;gap:1.8em;margin:1.8em 0 0;opacity:0;
+    justify-content:center;max-width:64ch;
     transition:opacity .4s ease;
   }
   .compass-options.visible{opacity:1}
@@ -295,20 +407,21 @@
     .compass-options{transition:none}
   }
   .compass-opt{
-    font-family:'Cormorant Garamond',serif;font-size:0.95em;font-style:italic;
-    background:none;border:none;padding:0;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;
+    background:none;border:none;padding:0.4em 0;cursor:pointer;
     color:var(--ink-dim);position:relative;
     transition:color .2s;
   }
-  .compass-opt::after{
-    content:"";display:block;width:0;height:1px;background:var(--rust);
-    transition:width .25s ease;margin-top:2px;
+  .compass-opt::before{
+    content:"►";margin-right:0.5em;font-size:0.7em;color:var(--rust);
+    opacity:0;transition:opacity .2s;
   }
   .compass-opt:hover{color:var(--ink)}
-  .compass-opt:hover::after{width:100%}
+  .compass-opt:hover::before{opacity:1}
   .compass-opt:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
   .compass-opt.active{color:var(--rust)}
-  .compass-opt.active::after{width:100%;background:var(--rust)}
+  .compass-opt.active::before{opacity:1}
   .compass-response{
     font-style:italic;font-size:1em;line-height:1.72;
     color:var(--ink-soft);max-width:64ch;margin-top:1em;
@@ -394,12 +507,6 @@
 
   <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
 
-  <p>So I asked myself: how can we make AI usable for learning without letting it take over the thinking of the most vulnerable group? I started building a tool that removes the AI's ability to give the answer directly, because the interaction layer never sees the whole task. Basically, I tried to handcuff the model into being helpful. But the better the models got, the harder it became to keep them from understanding the overall task. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level of that step. That made the whole thing hard to transfer to other topics and not particularly time-saving.</p>
-
-  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them. That's Compass — not a product, more of a direction. Everything I build for learning follows from this idea.</p>
-
-  <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
-
   <div class="compass-demo" id="compass-demo">
     <span class="compass-label">Student</span>
     <p class="compass-question" aria-live="polite"></p>
@@ -411,6 +518,50 @@
     <p class="compass-response" aria-live="polite"></p>
   </div>
 
+  <p>So I asked myself: how can we make AI usable for learning without letting it take over the thinking of the most vulnerable group? I started building a tool that removes the AI's ability to give the answer directly, because the interaction layer never sees the whole task. Basically, I tried to handcuff the model into being helpful. But the better the models got, the harder it became to keep them from understanding the overall task. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level of that step. That made the whole thing hard to transfer to other topics and not particularly time-saving.</p>
+
+  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them. That's Compass — not a product, more of a direction. Everything I build for learning follows from this idea.</p>
+
+  <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
+
+</section>
+
+<hr class="hr-soft">
+
+<!-- UTE -->
+<section class="chapter" id="ute">
+  <header class="chapter-head reveal">
+    <span class="chapter-num">II.</span>
+    <h2 class="chapter-title"><em>UTE</em></h2>
+  </header>
+
+  <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
+
+  <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+
+  <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
+
+  <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+
+  <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
+
+  <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
+
+  <div class="ute-demo reveal" id="ute-demo">
+    <div class="ute-demo-chat" id="ute-chat"></div>
+    <div class="ute-demo-pos">
+      <div class="pos-head" id="ute-status">ute · bakery pos</div>
+      <div class="pos-mid">
+        <div class="pos-grid" id="ute-grid"></div>
+        <div class="pos-cart" id="ute-cart-wrap">
+          <div class="pos-cart-head">order</div>
+          <div id="ute-cart"></div>
+          <div class="pos-total"><span>Total</span><span id="ute-total-val">€0.00</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-dots" id="ute-dots"></div>
+  </div>
 </section>
 
 <hr class="hr-soft">
@@ -418,7 +569,7 @@
 <!-- KALEIDO -->
 <section class="chapter" id="kaleido">
   <header class="chapter-head reveal">
-    <span class="chapter-num">II.</span>
+    <span class="chapter-num">III.</span>
     <h2 class="chapter-title"><em>Kaleido</em></h2>
   </header>
 
@@ -480,78 +631,6 @@
 </section>
 
 <hr class="hr-soft">
-
-<!-- UTE -->
-<section class="chapter" id="ute">
-  <header class="chapter-head reveal">
-    <span class="chapter-num">III.</span>
-    <h2 class="chapter-title"><em>UTE</em></h2>
-  </header>
-
-  <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
-
-  <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
-
-  <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
-
-  <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
-
-  <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
-
-  <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
-
-  <figure class="project-example reveal">
-    <div class="frame">
-      <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
-        <rect width="720" height="400" fill="#FCFBF7"/>
-        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">UTE · COUNTER · LIVE</text>
-        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">09:42 · TUESDAY</text>
-        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
-
-        <line x1="376" y1="68" x2="376" y2="384" stroke="#D4C9AF" stroke-width="1" stroke-dasharray="2 2"/>
-
-        <!-- LEFT: conversation transcript -->
-        <text x="32" y="82" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">TRANSCRIPT</text>
-
-        <text x="32" y="108" font-family="JetBrains Mono" font-size="9" letter-spacing="1" fill="#8A8493">assistant · 09:42:04</text>
-        <text x="32" y="130" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">"Hallo Frau Schmitt, schön</text>
-        <text x="32" y="150" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">dass Sie da sind."</text>
-
-        <text x="32" y="178" font-family="JetBrains Mono" font-size="9" letter-spacing="1" fill="#8A8493">customer · 09:42:11</text>
-        <text x="32" y="200" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">"Guten Morgen. Zwei Vollkorn-</text>
-        <text x="32" y="220" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">brötchen bitte, und den</text>
-        <text x="32" y="240" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">Streuselkuchen wie immer."</text>
-
-        <text x="32" y="268" font-family="JetBrains Mono" font-size="9" letter-spacing="1" fill="#8A8493">assistant · 09:42:19</text>
-        <text x="32" y="290" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">"Gerne. Zwei Stück für Sophia</text>
-        <text x="32" y="310" font-family="Cormorant Garamond" font-style="italic" font-size="15" fill="#141018">— das passt."</text>
-
-        <!-- RIGHT: order silently built -->
-        <text x="408" y="82" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#9F3A1F">ORDER · BUILDING</text>
-
-        <text x="408" y="114" font-family="JetBrains Mono" font-size="13" fill="#141018">2× Vollkornbrötchen</text>
-        <text x="688" y="114" text-anchor="end" font-family="JetBrains Mono" font-size="13" fill="#141018">2.40 €</text>
-
-        <text x="408" y="140" font-family="JetBrains Mono" font-size="13" fill="#141018">2× Streuselkuchen</text>
-        <text x="688" y="140" text-anchor="end" font-family="JetBrains Mono" font-size="13" fill="#141018">5.80 €</text>
-        <text x="408" y="156" font-family="Cormorant Garamond" font-style="italic" font-size="12" fill="#8A8493">regular customer — pre-filled</text>
-
-        <line x1="408" y1="180" x2="688" y2="180" stroke="#D4C9AF" stroke-width="1"/>
-
-        <text x="408" y="202" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#8A8493">SUBTOTAL</text>
-        <text x="688" y="202" text-anchor="end" font-family="JetBrains Mono" font-size="14" fill="#141018">8.20 €</text>
-
-        <text x="408" y="246" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#9F3A1F">✓ CONFIRMED VIA REPEAT-BACK</text>
-        <text x="408" y="266" font-family="Cormorant Garamond" font-style="italic" font-size="13" fill="#8A8493">"zwei Stück für Sophia — das passt."</text>
-
-        <line x1="408" y1="296" x2="688" y2="296" stroke="#D4C9AF" stroke-width="1" stroke-dasharray="2 2"/>
-        <text x="408" y="318" font-family="Cormorant Garamond" font-style="italic" font-size="14" fill="#8A8493">— nothing clicked —</text>
-      </svg>
-    </div>
-    <figcaption>UTE at work: the conversation on the left keeps flowing, <strong>the order on the right builds itself</strong>, confirmation arrives via the repeat-back the assistant would have said anyway.</figcaption>
-  </figure>
-</section>
-
 
 <!-- ALSO BUILT -->
 <div class="section-title reveal">Also Built</div>
@@ -694,6 +773,6 @@
 
 </main>
 
-<script defer src="scripts/effects.js"></script>
+<script defer src="scripts/effects.js?v=15"></script>
 </body>
 </html>
