@@ -329,18 +329,18 @@
     var runningTotal = 0;
 
     var PRODUCTS = [
-      {name:'Rye roll',      price:'0.85', icon:'\u{1F35E}', vegan:true,  sesame:false},
-      {name:'Spelt bread',   price:'3.20', icon:'\u{1F956}', vegan:true,  sesame:false},
-      {name:'Sourdough',     price:'3.80', icon:'\u{1FAD3}', vegan:true,  sesame:false},
-      {name:'Sesame bagel',  price:'1.40', icon:'\u{1F96F}', vegan:true,  sesame:true},
-      {name:'Sesame pretzel',price:'1.60', icon:'\u{1F968}', vegan:false, sesame:true},
-      {name:'Croissant',     price:'1.90', icon:'\u{1F950}', vegan:false, sesame:false},
-      {name:'Multigrain',    price:'1.10', icon:'\u{1F33E}', vegan:true,  sesame:false},
-      {name:'Apple turnover',price:'2.50', icon:'\u{1F96E}', vegan:true,  sesame:false},
-      {name:'Cinnamon roll', price:'2.80', icon:'\u{1F365}', vegan:false, sesame:false},
-      {name:'Cheese quiche', price:'3.80', icon:'\u{1F967}', vegan:false, sesame:false},
-      {name:'Vegan quiche',  price:'3.90', icon:'\u{1F957}', vegan:true,  sesame:false},
-      {name:'Poppy seed',    price:'0.95', icon:'\u{1F95E}', vegan:true,  sesame:false},
+      {name:'Sourdough',      price:'3.80', img:'img/sourdough.png',       vegan:true,  sesame:false},
+      {name:'Rye bread',      price:'3.20', img:'img/rye-bread.png',       vegan:true,  sesame:false},
+      {name:'Sesame bagel',   price:'1.40', img:'img/sesame-bagel.png',    vegan:true,  sesame:true},
+      {name:'Pretzel',        price:'1.60', img:'img/pretzel.png',         vegan:false, sesame:true},
+      {name:'Croissant',      price:'1.90', img:'img/croissant.png',       vegan:false, sesame:false},
+      {name:'Apple turnover', price:'2.50', img:'img/apple-turnover.png',  vegan:true,  sesame:false},
+      {name:'Vegan quiche',   price:'3.90', img:'img/vegan-quiche.png',    vegan:true,  sesame:false},
+      {name:'Ciabatta',       price:'2.80', img:'img/ciabatta.png',        vegan:true,  sesame:false},
+      {name:'Cinnamon roll',  price:'2.80', img:'img/cinnamon-roll.png',   vegan:false, sesame:false},
+      {name:'Blueberry muffin',price:'2.40',img:'img/blueberry-muffin.png',vegan:true,  sesame:false},
+      {name:'Pain au chocolat',price:'2.20',img:'img/pain-au-chocolat.png',vegan:false, sesame:false},
+      {name:'Lemon tart',     price:'3.50', img:'img/lemon-tart.png',      vegan:false, sesame:false},
     ];
 
     var PHASES = [
@@ -351,8 +351,8 @@
           {type:'status',text:'Mrs. Schmidt · regular · sesame allergy'},
           {type:'filter',rule:'sesame'},
           {type:'alert',text:'⚠ Attention: Sesame allergy — affected items hidden'},
-          {type:'cart',name:'2× Rye roll',price:'1.70'},
-          {type:'cart',name:'1× Spelt bread',price:'3.20'},
+          {type:'cart',name:'2× Rye bread',price:'6.40'},
+          {type:'cart',name:'1× Sourdough',price:'3.80'},
         ]
       },
       {
@@ -432,7 +432,7 @@
         d.dataset.vegan = p.vegan ? '1' : '0';
         d.dataset.sesame = p.sesame ? '1' : '0';
         d.innerHTML =
-          '<span class="tile-icon">' + p.icon + '</span>' +
+          '<img class="tile-icon" src="' + p.img + '" alt="' + p.name + '">' +
           '<span class="tile-name">' + p.name + '</span>' +
           '<span class="tile-price">€' + p.price + '</span>';
         gridEl.appendChild(d);
