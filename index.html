@@ -243,6 +243,11 @@
   .ute-demo .pos-head-title{
     font-size:9px;font-weight:700;letter-spacing:0.12em;
     text-transform:uppercase;color:var(--ink);flex:1;
+    display:flex;align-items:baseline;gap:6px;
+  }
+  .ute-demo .pos-head-title .pos-subtitle{
+    font-size:6.5px;font-weight:400;letter-spacing:0.06em;
+    color:var(--ink-dim);text-transform:uppercase;
   }
   .ute-demo .pos-head-status{
     font-size:7px;letter-spacing:0.08em;text-transform:uppercase;
@@ -282,8 +287,8 @@
   /* ── product grid ── */
   .ute-demo .pos-grid{
     display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
-    gap:1px;
-    background:var(--rule);
+    gap:0;
+    background:var(--paper);
     min-height:0;
   }
   .ute-demo .pos-tile{
@@ -291,9 +296,12 @@
     font-family:'JetBrains Mono',monospace;font-size:0.4em;
     text-align:center;line-height:1.2;
     padding:0.15em;background:var(--paper);min-height:0;overflow:hidden;
-    transition:background .5s ease,box-shadow .4s ease;
+    transition:background .5s ease;
     position:relative;
+    border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
   }
+  .ute-demo .pos-tile:nth-child(3n){border-right:none}
+  .ute-demo .pos-tile:nth-child(n+10){border-bottom:none}
   .ute-demo .pos-tile .tile-icon{
     width:43px;height:43px;object-fit:contain;display:block;margin-bottom:0.1em;
     transition:filter .5s ease,opacity .5s ease;
@@ -313,21 +321,12 @@
   .ute-demo .pos-tile.disabled .tile-name{color:var(--rule)}
   .ute-demo .pos-tile.disabled .tile-price{color:var(--rule)}
   /* selected */
-  .ute-demo .pos-tile.selected{background:var(--paper-deep);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-  .ute-demo .pos-tile.selected::after{
-    content:'';position:absolute;bottom:2px;left:20%;right:20%;
-    height:2px;background:var(--rust);border-radius:1px;
-  }
+  .ute-demo .pos-tile.selected{background:var(--paper-deep);border-left:2px solid var(--rust)}
   .ute-demo .pos-tile.selected .tile-name{color:var(--ink)}
   /* suggest */
-  .ute-demo .pos-tile.suggest{background:var(--paper-deep);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-  .ute-demo .pos-tile.suggest::after{
-    content:'';position:absolute;bottom:2px;left:20%;right:20%;
-    height:2px;background:var(--ink-dim);border-radius:1px;
-    animation:suggest-pulse 1.5s ease-in-out infinite;
-  }
+  .ute-demo .pos-tile.suggest{background:var(--paper-deep);border-left:2px solid var(--ink-dim);animation:suggest-pulse 1.5s ease-in-out infinite}
   .ute-demo .pos-tile.suggest .tile-name{color:var(--ink)}
-  @keyframes suggest-pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+  @keyframes suggest-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
   /* ── sidebar / order panel ── */
   .ute-demo .pos-sidebar{
     display:flex;flex-direction:column;
@@ -419,13 +418,13 @@
     background:var(--rule);
     transition:background .4s ease;
   }
-  /* idle: prominent red button */
+  /* idle: editorial record button */
   .ute-demo .pos-rec.idle{
-    background:var(--rust);cursor:pointer;
+    cursor:pointer;
   }
-  .ute-demo .pos-rec.idle .pos-rec-icon{color:#fff}
-  .ute-demo .pos-rec.idle .pos-rec-label{color:#fff;font-weight:600}
-  .ute-demo .pos-rec.idle .pos-rec-dot{background:rgba(255,255,255,0.4)}
+  .ute-demo .pos-rec.idle .pos-rec-icon{color:var(--rust)}
+  .ute-demo .pos-rec.idle .pos-rec-label{color:var(--rust);font-weight:600}
+  .ute-demo .pos-rec.idle .pos-rec-dot{background:var(--rust)}
   /* on: listening state */
   .ute-demo .pos-rec.on .pos-rec-icon{color:var(--rust)}
   .ute-demo .pos-rec.on .pos-rec-label{color:var(--ink-soft)}
@@ -693,7 +692,7 @@
     <div class="ute-demo-pos">
       <div class="pos-head">
         <span class="pos-head-dots"><i></i><i></i><i></i></span>
-        <span class="pos-head-title">ute</span>
+        <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span></span>
         <span class="pos-head-status" id="ute-status">ready</span>
       </div>
       <div class="pos-customer" id="ute-customer"></div>
@@ -925,6 +924,6 @@
 
 </main>
 
-<script defer src="scripts/effects.js?v=33"></script>
+<script defer src="scripts/effects.js?v=35"></script>
 </body>
 </html>
