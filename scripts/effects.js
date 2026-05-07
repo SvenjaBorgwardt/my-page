@@ -348,38 +348,41 @@
     var SCENES = [
       {
         dialog: [
-          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt']},
-          {who:'customer',  text:'Good morning! I\'m doing well, thank you.'},
+          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?'},
         ],
         actions: [
           {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
           {type:'filter', rule:'sesame'},
-          {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
-          {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
         ],
-        note: 'Customer recognised. Sesame products filtered. Regular order prefilled.'
       },
       {
         dialog: [
-          {who:'customer',  text:'My sister is visiting — she\'d like something vegan.', kw:['vegan']},
-          {who:'assistant', text:'Of course! Let me show you the vegan options.', kw:['vegan options']},
+          {who:'customer',  text:'Good morning! The usual, please.'},
+        ],
+        actions: [
+          {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
+          {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
+        ],
+      },
+      {
+        dialog: [
+          {who:'customer',  text:'My sister is visiting — she\'d like something vegan.'},
+          {who:'assistant', text:'Of course! Let me show you the vegan options.'},
         ],
         actions: [
           {type:'filter', rule:'vegan'},
         ],
-        note: 'Non-vegan items faded. Only suitable products remain.'
       },
       {
         dialog: [
-          {who:'customer',  text:'The apple turnover, please.', kw:['apple turnover']},
-          {who:'assistant', text:'Something savory too? The vegan quiche goes well with it.', kw:['vegan quiche']},
+          {who:'customer',  text:'The apple turnover, please.'},
+          {who:'assistant', text:'Something savory too? The vegan quiche goes well with it.'},
         ],
         actions: [
           {type:'select',    name:'Apple turnover'},
           {type:'cart',      name:'1\xD7 Apple turnover', price:'2.50'},
           {type:'highlight', name:'Vegan quiche'},
         ],
-        note: 'Item matched and added. Cross-sell suggestion surfaces.'
       },
       {
         dialog: [
@@ -391,7 +394,6 @@
           {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
         ],
-        note: 'Order complete. Conversation never interrupted.'
       }
     ];
 

@@ -231,16 +231,19 @@
     max-height:380px;overflow:hidden;
     box-shadow:0 2px 16px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);
   }
-  /* ── title bar (window chrome) ── */
+  /* ── title bar (register style) ── */
   .ute-demo .pos-head{
     font-family:'JetBrains Mono',monospace;
     padding:7px 10px;border-bottom:1px solid var(--rule);
-    background:var(--paper);flex:0 0 auto;
+    background:var(--paper-warm);flex:0 0 auto;
     border-radius:4px 4px 0 0;
     display:flex;align-items:center;gap:8px;
+    position:relative;
   }
-  .ute-demo .pos-head-dots{display:flex;gap:4px;flex:0 0 auto}
-  .ute-demo .pos-head-dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+  .ute-demo .pos-head::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--rust);opacity:0.35;border-radius:4px 4px 0 0;
+  }
   .ute-demo .pos-head-title{
     font-size:9px;font-weight:700;letter-spacing:0.12em;
     text-transform:uppercase;color:var(--ink);flex:1;
@@ -250,6 +253,13 @@
     font-family:'Cormorant Garamond',serif;font-style:italic;
     font-size:9px;font-weight:400;letter-spacing:0.02em;
     color:var(--ink-dim);text-transform:none;
+  }
+  .ute-demo .pos-head-title .pos-divider{
+    color:var(--rule);font-size:10px;margin:0 2px;
+  }
+  .ute-demo .pos-head-terminal{
+    font-size:8px;letter-spacing:0.05em;
+    color:var(--ink-dim);text-transform:uppercase;
   }
   .ute-demo .pos-head-status{
     font-family:'Cormorant Garamond',serif;
@@ -690,7 +700,7 @@
     <div class="ute-demo-chat" id="ute-chat"></div>
     <div class="ute-demo-pos">
       <div class="pos-head">
-        <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span></span>
+        <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span><span class="pos-divider">│</span><span class="pos-head-terminal">Register 01</span></span>
         <span class="pos-head-status" id="ute-status">ready</span>
       </div>
       <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
