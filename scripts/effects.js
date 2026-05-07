@@ -352,9 +352,8 @@
           {who:'customer',  text:'Good morning! I\'m doing well, thank you.'},
         ],
         actions: [
-          {type:'status', text:'Mrs. Schmidt · regular · sesame allergy'},
+          {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
           {type:'filter', rule:'sesame'},
-          {type:'alert',  text:'⚠ Sesame allergy — affected items hidden'},
           {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
           {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
         ],
@@ -452,15 +451,11 @@
       }
     }
 
-    function setStatus(text) {
-      // Highlight "sesame allergy" in rust
-      var html = text.replace(/(sesame allergy)/i, '<span class="status-warn">$1</span>');
-      statusEl.innerHTML = html;
-      statusEl.classList.add('active');
-      // Show customer bar
+    function setCustomer(name, badge) {
       if (customerEl) {
-        customerEl.innerHTML = '<span class="cust-name">Mrs. Schmidt</span><span class="cust-badge">Sesame allergy</span>';
-        customerEl.classList.add('show');
+        var html = '<span class="cust-name">' + name + '</span>';
+        if (badge) html += '<span class="cust-badge">' + badge + '</span>';
+        customerEl.innerHTML = html;
       }
     }
 
@@ -558,9 +553,8 @@
       for (var a = 0; a < scene.actions.length; a++) {
         var act = scene.actions[a];
         await sleep(400);
-        if (act.type === 'status')         setStatus(act.text);
+        if (act.type === 'customer')        setCustomer(act.name, act.badge);
         else if (act.type === 'filter')    filterBy(act.rule);
-        else if (act.type === 'alert')     addAlert(act.text);
         else if (act.type === 'select')    selectTile(act.name);
         else if (act.type === 'highlight') highlightTile(act.name);
         else if (act.type === 'cart')      addCartItem(act.name, act.price);
@@ -603,8 +597,7 @@
       statusEl.textContent = 'ready';
       statusEl.classList.remove('active');
       if (customerEl) {
-        customerEl.innerHTML = '';
-        customerEl.classList.remove('show');
+        customerEl.innerHTML = '<span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span>';
       }
       cartWrap.querySelectorAll('.pos-alert,.pos-complete').forEach(function(el) { el.remove(); });
       cartEl.innerHTML = '';

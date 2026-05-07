@@ -191,7 +191,7 @@
 
   /* ========== UTE ANIMATED DEMO ========== */
   .ute-demo{
-    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:340px;
+    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:380px;
     margin:2.4em 0 0.4em;overflow:hidden;
   }
   .ute-demo-chat{
@@ -228,7 +228,7 @@
     border:1px solid var(--rule);border-radius:4px;
     grid-row:1;grid-column:2;
     display:flex;flex-direction:column;
-    max-height:340px;overflow:hidden;
+    max-height:380px;overflow:hidden;
     box-shadow:0 2px 16px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);
   }
   /* ── title bar (window chrome) ── */
@@ -247,11 +247,13 @@
     display:flex;align-items:baseline;gap:6px;
   }
   .ute-demo .pos-head-title .pos-subtitle{
-    font-size:6.5px;font-weight:400;letter-spacing:0.06em;
-    color:var(--ink-dim);text-transform:uppercase;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:9px;font-weight:400;letter-spacing:0.02em;
+    color:var(--ink-dim);text-transform:none;
   }
   .ute-demo .pos-head-status{
-    font-size:7px;letter-spacing:0.08em;text-transform:uppercase;
+    font-family:'Cormorant Garamond',serif;
+    font-size:10px;letter-spacing:0.02em;
     color:var(--ink-dim);
     display:flex;align-items:center;gap:4px;
   }
@@ -265,18 +267,17 @@
   }
   /* ── customer bar ── */
   .ute-demo .pos-customer{
-    font-family:'JetBrains Mono',monospace;font-size:7px;
-    letter-spacing:0.06em;color:var(--ink-soft);
-    padding:4px 10px;background:var(--paper);
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    color:var(--ink-dim);
+    padding:5px 10px;background:var(--paper);
     border-bottom:1px solid var(--rule);
-    flex:0 0 auto;min-height:0;
-    display:none;align-items:center;gap:5px;
+    flex:0 0 auto;min-height:22px;
+    display:flex;align-items:center;gap:5px;
   }
-  .ute-demo .pos-customer.show{display:flex}
-  .ute-demo .pos-customer .cust-name{font-weight:600;color:var(--ink)}
+  .ute-demo .pos-customer .cust-name{font-weight:500;color:var(--ink)}
   .ute-demo .pos-customer .cust-badge{
-    font-size:6px;letter-spacing:0.06em;
-    padding:1px 4px;border-radius:3px;
+    font-family:'Cormorant Garamond',serif;font-size:10px;
+    padding:1px 6px;border-radius:3px;
     background:rgba(159,58,31,0.1);color:var(--rust);
     border:1px solid rgba(159,58,31,0.2);
   }
@@ -294,7 +295,7 @@
   }
   .ute-demo .pos-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:'JetBrains Mono',monospace;font-size:0.4em;
+    font-family:'Cormorant Garamond',serif;font-size:0.55em;
     text-align:center;line-height:1.2;
     padding:0.15em;background:var(--paper);min-height:0;overflow:hidden;
     transition:background .5s ease;
@@ -310,7 +311,7 @@
     transition:color .4s ease;
   }
   .ute-demo .pos-tile .tile-price{
-    display:block;color:var(--ink-dim);font-size:0.95em;
+    display:block;color:var(--ink-dim);font-size:1.1em;
     transition:color .4s ease;
   }
   /* disabled */
@@ -333,8 +334,8 @@
     overflow:hidden;min-height:0;
   }
   .ute-demo .pos-cart-head{
-    font-family:'JetBrains Mono',monospace;font-size:7.5px;
-    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    font-style:italic;color:var(--ink-dim);
     padding:6px 8px 5px;
     border-bottom:1px dashed var(--rule);
     flex:0 0 auto;
@@ -346,7 +347,7 @@
     padding:4px 8px;
   }
   .ute-demo .pos-cart-item{
-    font-family:'JetBrains Mono',monospace;font-size:8px;
+    font-family:'Cormorant Garamond',serif;font-size:11px;
     display:flex;justify-content:space-between;gap:4px;
     padding:2px 0;opacity:0;flex:0 0 auto;
     color:var(--ink);
@@ -354,8 +355,8 @@
   .ute-demo .pos-cart-item.show{opacity:1;transition:opacity .3s ease}
   .ute-demo .pos-cart-item .cart-price{color:var(--ink-soft);white-space:nowrap}
   .ute-demo .pos-alert{
-    font-family:'JetBrains Mono',monospace;font-size:7px;
-    color:var(--rust);letter-spacing:0.02em;
+    font-family:'Cormorant Garamond',serif;font-size:10px;
+    color:var(--rust);
     padding:3px 8px;flex:0 0 auto;opacity:0;
     border-left:2px solid var(--rust);
     margin:2px 8px;line-height:1.4;
@@ -380,13 +381,13 @@
   }
   .ute-demo .pos-total{
     display:flex;justify-content:space-between;
-    font-family:'JetBrains Mono',monospace;font-size:9.5px;
+    font-family:'Cormorant Garamond',serif;font-size:13px;
     padding:6px 0 0;border-top:1.5px solid var(--ink);
-    color:var(--ink);letter-spacing:0.02em;font-weight:700;
+    color:var(--ink);font-weight:500;
   }
   .ute-demo .pos-complete{
-    font-family:'JetBrains Mono',monospace;font-size:7.5px;
-    letter-spacing:0.08em;text-transform:uppercase;text-align:center;
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    letter-spacing:0.02em;text-align:center;
     padding:5px;margin-top:4px;border-radius:3px;
     background:var(--ink);color:var(--paper);flex:0 0 auto;opacity:0;
     border:none;
@@ -407,8 +408,8 @@
     transition:color .4s ease;
   }
   .ute-demo .pos-rec-label{
-    font-family:'JetBrains Mono',monospace;font-size:7.5px;
-    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    letter-spacing:0.02em;color:var(--ink-dim);
     transition:color .4s ease;
   }
   .ute-demo .pos-rec-dot{
@@ -692,7 +693,7 @@
         <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span></span>
         <span class="pos-head-status" id="ute-status">ready</span>
       </div>
-      <div class="pos-customer" id="ute-customer"></div>
+      <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
       <div class="pos-body">
         <div class="pos-grid" id="ute-grid"></div>
         <div class="pos-sidebar" id="ute-cart-wrap">
