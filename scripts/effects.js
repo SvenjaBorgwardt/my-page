@@ -327,7 +327,22 @@
     var totalVal  = document.getElementById('ute-total-val');
     var recEl     = document.getElementById('ute-rec');
     var customerEl = document.getElementById('ute-customer');
+    var posEl     = demo.querySelector('.ute-demo-pos');
     var runningTotal = 0;
+
+    // ── Eye guidance: focus one side, blur the other ──
+    function focusChat() {
+      chatEl.classList.remove('inactive');
+      posEl.classList.add('inactive');
+    }
+    function focusPos() {
+      posEl.classList.remove('inactive');
+      chatEl.classList.add('inactive');
+    }
+    function focusBoth() {
+      chatEl.classList.remove('inactive');
+      posEl.classList.remove('inactive');
+    }
 
     var PRODUCTS = [
       {name:'Sourdough',      price:'3.80', img:'img/sourdough.png',       vegan:true,  sesame:false},
@@ -370,6 +385,7 @@
           {who:'assistant', text:'Of course! Let me show you the vegan options.'},
         ],
         actions: [
+          {type:'badge', text:'Vegan', cls:'vegan'},
           {type:'filter', rule:'vegan'},
         ],
       },
@@ -461,6 +477,17 @@
       }
     }
 
+    function addBadge(text, cls) {
+      if (!customerEl) return;
+      var b = document.createElement('span');
+      b.className = 'cust-badge badge-enter' + (cls ? ' ' + cls : '');
+      b.textContent = text;
+      customerEl.appendChild(b);
+      void b.offsetHeight;
+      b.classList.remove('badge-enter');
+      b.classList.add('badge-show');
+    }
+
     function buildTiles() {
       tileEls = [];
       gridEl.innerHTML = '';
@@ -543,37 +570,54 @@
 
     async function runScene(idx) {
       var scene = SCENES[idx];
+      var hasDialog  = scene.dialog && scene.dialog.length > 0;
+      var hasActions = scene.actions && scene.actions.length > 0;
 
-      // 1. Dialog: type out each message
-      for (var d = 0; d < scene.dialog.length; d++) {
-        var line = scene.dialog[d];
-        await addMsg(line.who, line.text, line.kw);
-        await sleep(600);
+      // 1. Focus chat side, blur POS — reader watches the dialog
+      if (hasDialog) {
+        focusChat();
+        await sleep(350); // let the blur transition settle
+
+        for (var d = 0; d < scene.dialog.length; d++) {
+          var line = scene.dialog[d];
+          await addMsg(line.who, line.text, line.kw);
+          await sleep(600);
+        }
       }
 
-      // 2. POS actions
-      for (var a = 0; a < scene.actions.length; a++) {
-        var act = scene.actions[a];
-        await sleep(400);
-        if (act.type === 'customer')        setCustomer(act.name, act.badge);
-        else if (act.type === 'filter')    filterBy(act.rule);
-        else if (act.type === 'select')    selectTile(act.name);
-        else if (act.type === 'highlight') highlightTile(act.name);
-        else if (act.type === 'cart')      addCartItem(act.name, act.price);
-        else if (act.type === 'complete')  showComplete();
+      // 2. Switch focus to POS side, blur chat — reader watches the register
+      if (hasActions) {
+        focusPos();
+        await sleep(400); // let the blur transition settle
+
+        for (var a = 0; a < scene.actions.length; a++) {
+          var act = scene.actions[a];
+          await sleep(400);
+          if (act.type === 'customer')        setCustomer(act.name, act.badge);
+          else if (act.type === 'badge')     addBadge(act.text, act.cls);
+          else if (act.type === 'filter')    filterBy(act.rule);
+          else if (act.type === 'select')    selectTile(act.name);
+          else if (act.type === 'highlight') highlightTile(act.name);
+          else if (act.type === 'cart')      addCartItem(act.name, act.price);
+          else if (act.type === 'complete')  showComplete();
+        }
       }
 
-      // 3. Annotation
+      // 3. Annotation — briefly show both sides so reader sees connection
       if (scene.note) {
-        await sleep(500);
+        focusBoth();
+        await sleep(300);
         addNote(scene.note);
+        await sleep(1500);
       }
 
-      // 4. Let reader absorb
-      await sleep(3000);
+      // 4. Let reader absorb the POS state
+      await sleep(2000);
 
       // 5. Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
+        focusBoth();
+        await sleep(200);
         fadeAllMessages();
         await sleep(600);
       }
@@ -595,6 +639,7 @@
     }
 
     function resetToIdle() {
+      focusBoth();
       chatEl.innerHTML = '';
       statusEl.textContent = 'ready';
       statusEl.classList.remove('active');
@@ -636,7 +681,8 @@
         await runScene(i);
       }
 
-      // stop recording
+      // stop recording, reveal both sides for final moment
+      focusBoth();
       if (recEl) {
         recEl.classList.remove('on');
       }
