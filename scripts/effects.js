@@ -369,47 +369,52 @@
           {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
           {type:'filter', rule:'sesame'},
         ],
+        note: 'UTE recognises regular — sesame allergy flagged automatically',
       },
       {
         dialog: [
-          {who:'customer',  text:'Good morning! The usual, please.'},
+          {who:'mrs. schmidt', text:'Morning! Very well, thank you. The usual, please.'},
         ],
         actions: [
           {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
           {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
         ],
+        note: 'Voice-matched to past orders — no clicking needed',
       },
       {
         dialog: [
-          {who:'customer',  text:'My sister is visiting — she\'d like something vegan.'},
-          {who:'assistant', text:'Of course! Let me show you the vegan options.'},
+          {who:'mrs. schmidt', text:'My sister is visiting — she\'d love something vegan.'},
+          {who:'assistant', text:'Of course! Let me show you what we have.'},
         ],
         actions: [
           {type:'badge', text:'Vegan', cls:'vegan'},
           {type:'filter', rule:'vegan'},
         ],
+        note: 'Catalogue filters live — only vegan options remain',
       },
       {
         dialog: [
-          {who:'customer',  text:'The apple turnover, please.'},
-          {who:'assistant', text:'Something savory too? The vegan quiche goes well with it.'},
+          {who:'mrs. schmidt', text:'The apple turnover looks wonderful.'},
         ],
         actions: [
           {type:'select',    name:'Apple turnover'},
           {type:'cart',      name:'1\xD7 Apple turnover', price:'2.50'},
+          {type:'crosssell', product:'Vegan quiche — €3.90', reason:'Pairs well \xB7 vegan-friendly \xB7 popular combo'},
           {type:'highlight', name:'Vegan quiche'},
         ],
+        note: 'UTE surfaces cross-sell — assistant picks it up naturally',
       },
       {
         dialog: [
-          {who:'customer',  text:'Good idea — yes!'},
-          {who:'assistant', text:'That\'s everything. Have a lovely day!'},
+          {who:'assistant', text:'Good choice! Something savory too? The vegan quiche pairs nicely.'},
+          {who:'mrs. schmidt', text:'Oh, good idea — yes please!'},
         ],
         actions: [
           {type:'select', name:'Vegan quiche'},
           {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
         ],
+        note: 'Assistant follows UTE’s suggestion — conversation stays natural',
       }
     ];
 
@@ -474,6 +479,7 @@
         var html = '<span class="cust-name">' + name + '</span>';
         if (badge) html += '<span class="cust-badge">' + badge + '</span>';
         customerEl.innerHTML = html;
+        flashGlow(customerEl);
       }
     }
 
@@ -486,6 +492,18 @@
       void b.offsetHeight;
       b.classList.remove('badge-enter');
       b.classList.add('badge-show');
+      flashGlow(b);
+    }
+
+    function flashGlow(el) {
+      if (!el) return;
+      el.classList.remove('glow');
+      void el.offsetHeight;
+      el.classList.add('glow');
+      el.addEventListener('animationend', function handler() {
+        el.classList.remove('glow');
+        el.removeEventListener('animationend', handler);
+      });
     }
 
     function buildTiles() {
@@ -517,13 +535,19 @@
 
     function selectTile(name) {
       for (var i = 0; i < tileEls.length; i++) {
-        if (tileEls[i].dataset.name === name) tileEls[i].classList.add('selected');
+        if (tileEls[i].dataset.name === name) {
+          tileEls[i].classList.add('selected');
+          flashGlow(tileEls[i]);
+        }
       }
     }
 
     function highlightTile(name) {
       for (var i = 0; i < tileEls.length; i++) {
-        if (tileEls[i].dataset.name === name) tileEls[i].classList.add('suggest');
+        if (tileEls[i].dataset.name === name) {
+          tileEls[i].classList.add('suggest');
+          flashGlow(tileEls[i]);
+        }
       }
     }
 
@@ -534,8 +558,10 @@
       cartEl.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
+      flashGlow(d);
       runningTotal += parseFloat(price);
       totalVal.textContent = '€' + runningTotal.toFixed(2);
+      flashGlow(totalVal.parentNode);
     }
 
     function addAlert(text) {
@@ -551,6 +577,24 @@
       }
       void d.offsetHeight;
       d.classList.add('show');
+    }
+
+    function showCrossSell(product, reason) {
+      var d = document.createElement('div');
+      d.className = 'pos-crosssell';
+      d.innerHTML =
+        '<div class="pos-crosssell-label">Suggestion</div>' +
+        '<div class="pos-crosssell-text">' + product + '</div>' +
+        '<div class="pos-crosssell-reason">' + reason + '</div>';
+      var footer = cartWrap.querySelector('.pos-footer');
+      if (footer) {
+        cartWrap.insertBefore(d, footer);
+      } else {
+        cartWrap.appendChild(d);
+      }
+      void d.offsetHeight;
+      d.classList.add('show');
+      flashGlow(d);
     }
 
     function showComplete() {
@@ -597,6 +641,7 @@
           else if (act.type === 'badge')     addBadge(act.text, act.cls);
           else if (act.type === 'filter')    filterBy(act.rule);
           else if (act.type === 'select')    selectTile(act.name);
+          else if (act.type === 'crosssell') showCrossSell(act.product, act.reason);
           else if (act.type === 'highlight') highlightTile(act.name);
           else if (act.type === 'cart')      addCartItem(act.name, act.price);
           else if (act.type === 'complete')  showComplete();
@@ -646,7 +691,7 @@
       if (customerEl) {
         customerEl.innerHTML = '<span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span>';
       }
-      cartWrap.querySelectorAll('.pos-alert,.pos-complete').forEach(function(el) { el.remove(); });
+      cartWrap.querySelectorAll('.pos-alert,.pos-complete,.pos-crosssell').forEach(function(el) { el.remove(); });
       cartEl.innerHTML = '';
       runningTotal = 0;
       totalVal.textContent = '€0.00';
