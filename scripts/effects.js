@@ -360,6 +360,8 @@
     ];
 
     // Each scene: dialog exchange → POS actions → annotation → fade
+    // KEY: UTE only transcribes the ASSISTANT, never the customer.
+    // The assistant repeats everything — that's the confirmation.
     var SCENES = [
       {
         dialog: [
@@ -369,32 +371,34 @@
           {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
           {type:'filter', rule:'sesame'},
         ],
-        note: 'UTE recognises regular — sesame allergy flagged automatically',
+        note: 'Assistant says the name — UTE matches it against the customer database',
       },
       {
         dialog: [
           {who:'mrs. schmidt', text:'Morning! Very well, thank you. The usual, please.'},
+          {who:'assistant', text:'Two rye breads and a sourdough, right?'},
         ],
         actions: [
           {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
           {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
         ],
-        note: 'Voice-matched to past orders — no clicking needed',
+        note: 'Assistant repeats the order back — UTE transcribes that as confirmation',
       },
       {
         dialog: [
-          {who:'mrs. schmidt', text:'My sister is visiting — she\'d love something vegan.'},
-          {who:'assistant', text:'Of course! Let me show you what we have.'},
+          {who:'mrs. schmidt', text:'Exactly! And my sister is visiting — she\'d love something vegan.'},
+          {who:'assistant', text:'Of course! Let me show you the vegan options.'},
         ],
         actions: [
           {type:'badge', text:'Vegan', cls:'vegan'},
           {type:'filter', rule:'vegan'},
         ],
-        note: 'Catalogue filters live — only vegan options remain',
+        note: 'Keyword "vegan" in the assistant\'s speech — catalogue filters live',
       },
       {
         dialog: [
           {who:'mrs. schmidt', text:'The apple turnover looks wonderful.'},
+          {who:'assistant', text:'One apple turnover — lovely choice.'},
         ],
         actions: [
           {type:'select',    name:'Apple turnover'},
@@ -406,15 +410,15 @@
       },
       {
         dialog: [
-          {who:'assistant', text:'Good choice! Something savory too? The vegan quiche pairs nicely.'},
+          {who:'assistant', text:'Something savory too? The vegan quiche pairs nicely.'},
           {who:'mrs. schmidt', text:'Oh, good idea — yes please!'},
+          {who:'assistant', text:'One vegan quiche as well. That\'s everything — have a wonderful day!'},
         ],
         actions: [
           {type:'select', name:'Vegan quiche'},
           {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
         ],
-        note: 'Assistant follows UTE’s suggestion — conversation stays natural',
       }
     ];
 
