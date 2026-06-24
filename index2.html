@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Svenja Borgwardt</title>
+<title>Svenja Borgwardt · AI for Learning</title>
+<meta name="description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. GemmPen, Compass, UTE, Claudia.">
+<meta property="og:title" content="Svenja Borgwardt">
+<meta property="og:description" content="AI systems for learning: fine-tuned models that help without doing the thinking for you.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
@@ -175,6 +180,8 @@
     text-transform:uppercase;color:var(--ink-dim);line-height:1.9;
   }
   .stack .k{color:var(--rust);margin-right:0.4em}
+  .stack a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rust);transition:color .2s}
+  .stack a:hover{color:var(--rust)}
 
   /* ========== PROJECT EXAMPLES (SVG MOCKUPS) ========== */
   .project-example{margin:2.4em 0 0.4em;position:relative}
@@ -564,6 +571,10 @@
     font-style:italic;font-size:1.05em;line-height:1.75;color:var(--ink-soft);max-width:64ch;
   }
   .other-parts .hobbies .dot{color:var(--rust);margin:0 0.5em}
+  .other-parts .aside-title{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:1.15em;color:var(--rust);margin:1.6em 0 0.5em;letter-spacing:0.01em;
+  }
 
   /* ========== FOOTER ========== */
   footer{
@@ -668,35 +679,39 @@
   /* ========== PROJECT ACCORDION ========== */
   .project-item{border-bottom:1px solid var(--rule)}
   .project-header{
-    display:flex;align-items:baseline;gap:0.8em;
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:0 0.8em;
     width:100%;background:none;border:none;
-    padding:1.2em 0;cursor:pointer;
+    padding:1.7em 0 1.6em;cursor:pointer;
     font-family:inherit;text-align:left;
   }
   .project-header:hover .project-name{color:var(--rust)}
   .project-header:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
   .project-name{
+    order:1;flex-shrink:0;
     font-family:'Cormorant Garamond',serif;
     font-style:italic;font-weight:400;
-    font-size:clamp(26px,3.4vw,38px);
-    color:var(--ink);letter-spacing:0;
-    transition:color 0.2s;flex-shrink:0;
-  }
-  .project-desc{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:0.8em;
-    color:var(--ink-dim);flex:1;
+    font-size:clamp(28px,3.6vw,40px);
+    color:var(--ink);letter-spacing:0;line-height:1.15;
+    transition:color 0.2s;
   }
   .project-arrow{
-    color:var(--rust);font-size:0.65em;
+    order:2;flex-shrink:0;margin-left:auto;align-self:center;
+    color:var(--rust);font-size:0.7em;
     transition:transform 0.3s;
-    flex-shrink:0;margin-left:auto;
+  }
+  .project-desc{
+    order:3;flex-basis:100%;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.15em;line-height:1.6;
+    color:var(--ink-soft);
+    max-width:56ch;margin-top:0.55em;
   }
   .project-item.open .project-arrow{transform:rotate(90deg)}
-  .project-body{display:none;padding:0.5em 0 2em}
+  .project-body{display:none;padding:0.2em 0 2.4em}
   .project-item.open .project-body{display:block;animation:tabFadeIn .35s ease}
   @media(max-width:32em){
-    .project-desc{display:none}
+    .project-header{padding:1.4em 0 1.3em}
+    .project-desc{font-size:1.05em}
   }
 
   /* Link list for Out There */
@@ -759,8 +774,8 @@
       <span class="pronounce-ipa">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
       <span class="pronounce-approx">SVEN-yah BORK-vart</span>
     </button>
+    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. All of them ask the same question: how do we make AI that finds what's strong in people and makes room for them to grow?</p>
     <p class="masthead-intro reveal">Currently based in Cologne, Germany.</p>
-    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. Most of them are about the same question: how do we make AI good for learning, not just efficient?</p>
   </div>
   <figure class="photo-block">
     <div class="photo-frame">
@@ -770,14 +785,14 @@
 </header>
 
 <!-- CHAPTER TABS -->
-<nav class="chapter-tabs">
-  <button class="tab active" data-section="build">
+<nav class="chapter-tabs" role="tablist" aria-label="Site sections">
+  <button class="tab active" data-section="build" role="tab" id="tab-build" aria-selected="true" aria-controls="section-build">
     <span class="tab-name">What I Build</span>
   </button>
-  <button class="tab" data-section="think">
+  <button class="tab" data-section="think" role="tab" id="tab-think" aria-selected="false" aria-controls="section-think">
     <span class="tab-name">What I Think</span>
   </button>
-  <button class="tab" data-section="out">
+  <button class="tab" data-section="out" role="tab" id="tab-out" aria-selected="false" aria-controls="section-out">
     <span class="tab-name">Out There</span>
   </button>
 </nav>
@@ -785,12 +800,12 @@
 <!-- ============================================================ -->
 <!-- TAB: WHAT I BUILD                                            -->
 <!-- ============================================================ -->
-<div class="tab-content active" id="section-build">
+<div class="tab-content active" id="section-build" role="tabpanel" aria-labelledby="tab-build">
 
-<div class="project-item open" id="gemmpen">
-  <button class="project-header" aria-expanded="true">
+<div class="project-item" id="gemmpen">
+  <button class="project-header" aria-expanded="false">
     <span class="project-name">GemmPen</span>
-    <span class="project-desc">Individual exam feedback from a fine-tuned local model.</span>
+    <span class="project-desc">I fine-tuned Gemma 4 to read handwritten exams, evaluate them against my rubric, and write individual feedback with exercises built around each student's actual mistakes. It runs entirely on-device and learns from my corrections.</span>
     <span class="project-arrow">&#x25B8;</span>
   </button>
   <div class="project-body">
@@ -798,7 +813,7 @@
 
     <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
 
-    <p>I'd built a version of this before, a multi-agent pipeline that analysed each exam across separate steps and wrote individual feedback. It worked, but every round cost real money, and student data still had to leave the room, even with EU-based providers. A local model changes both: no cost pressure, and no data goes anywhere.</p>
+    <p>I'd built a version of this before: Kaleido, a multi-agent pipeline that analysed each exam across separate steps and wrote individual feedback. It worked, but every round cost real money, and student data still had to leave the room, even with EU-based providers. A local model changes both: no cost pressure, and no data goes anywhere.</p>
 
     <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
 
@@ -811,13 +826,18 @@
     <p>Exams are an artifact from an old system. Decontextualized knowledge checks that exist because we had no better way to find out whether someone learned something. What do you remember, in this room, right now, under time pressure? In a world with AI, that question matters less every year. What matters more: Can a student apply what they know somewhere else? Can they adjust when the situation changes? Do they notice when their own reasoning stops working? You never see that on an exam. You see it in how someone actually works.</p>
 
     <p>I think we can do better. I want to work toward a version of education where we stop testing knowledge in isolation and start seeing it in what students actually do with it. Where a teacher doesn't need an exam to know what a student understands, because the learning itself makes that visible. We're not there yet. But I think we can get there, and that's the question I want to spend my time on.</p>
+
+    <div class="stack">
+      <span class="k">Stack</span>Gemma 4 + LoRA &middot; runs on-device &middot; retrains from teacher corrections<br>
+      <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a>
+    </div>
   </div>
 </div>
 
 <div class="project-item" id="compass">
   <button class="project-header" aria-expanded="false">
     <span class="project-name">Compass</span>
-    <span class="project-desc">Teaching AI to help without doing the thinking.</span>
+    <span class="project-desc">Helpfulness is great, just not when someone is trying to learn. Compass is a writing tool built to prevent the illusion of understanding students get when the AI has done the thinking for them.</span>
     <span class="project-arrow">&#x25B8;</span>
   </button>
   <div class="project-body">
@@ -843,13 +863,17 @@
     <p>Making AI less helpful is harder than making it more helpful, and I don't think prompting will ever fully solve it. The model needs to learn what good teaching actually looks like: creating the conditions for someone to find the answer themselves. That's a fine-tuning problem.</p>
 
     <p>I called it Compass because it's meant to give direction, not a destination. A compass points the way. It doesn't hand you the map.</p>
+
+    <div class="stack">
+      <span class="k">Links</span><a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">Try it live</a> &middot; <a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Debate Dojo</a>, the same thinking applied to debating
+    </div>
   </div>
 </div>
 
 <div class="project-item" id="ute">
   <button class="project-header" aria-expanded="false">
     <span class="project-name">UTE</span>
-    <span class="project-desc">Voice-first ordering for bakery counters.</span>
+    <span class="project-desc">A voice-first register for bakery counters: it listens while the assistant talks to the customer and builds the order in the background, so the conversation never has to stop. First place at the B&Auml;KO Hackathon.</span>
     <span class="project-arrow">&#x25B8;</span>
   </button>
   <div class="project-body">
@@ -896,31 +920,61 @@
 <div class="project-item" id="claudia">
   <button class="project-header" aria-expanded="false">
     <span class="project-name">Claudia</span>
-    <span class="project-desc">Multi-agent infrastructure on a Mac Mini.</span>
+    <span class="project-desc">My multi-agent infrastructure, running on an always-on Mac Mini in my flat. By day she orchestrates the agents behind my student feedback, the rest of the time she runs my home automation.</span>
     <span class="project-arrow">&#x25B8;</span>
   </button>
   <div class="project-body">
     <p>Claudia is my multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat. During the day she orchestrates the agents I use for student feedback. The rest of the time she runs my home automation. Same framework, different endpoints. I named her Claudia because "the multi-agent framework on the Mac Mini" stopped being charming around the tenth mention.</p>
 
-    <p>Most of what I know about agent design I learned by building her and then watching her break. Agents in a pipeline don't just fail — they fail in ways that are hard to find. One agent misreads something, the next one builds on it, and by the time you see the output, the original mistake is buried three layers deep. I learned to build checkpoints between agents, places where the system pauses and verifies before moving on. I learned that memory is the hardest part — what the system remembers, for how long, and what happens when an old memory stops being true. And I learned that not everything needs an agent. Sometimes a function that does one thing reliably is worth more than an agent that does it creatively. Knowing when to use which is a skill that only comes from getting it wrong a few times.</p>
+    <p>Most of what I know about agent design I learned by building her and then watching her break. Agents in a pipeline don't just fail. They fail in ways that are hard to find. One agent misreads something, the next one builds on it, and by the time you see the output, the original mistake is buried three layers deep. I learned to build checkpoints between agents, places where the system pauses and verifies before moving on. I learned that memory is the hardest part: what the system remembers, for how long, and what happens when an old memory stops being true. And I learned that not everything needs an agent. Sometimes a function that does one thing reliably is worth more than an agent that does it creatively. Knowing when to use which is a skill that only comes from getting it wrong a few times.</p>
 
     <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
   </div>
 </div>
+
+<!-- THE OTHER PARTS -->
+<div class="section-title reveal">The Other Parts</div>
+
+<section class="other-parts reveal">
+  <p>I studied economics, linguistics, and literature and culture studies. After that I worked as a researcher and lecturer at a university chair for vocational education, where I started a PhD. During my studies I taught people in correctional education to earn their school diploma, a context where nothing about learning can be taken for granted. Later I became the EU coordinator at my school, got it certified as a Europaschule, and ran international education projects across Europe. The bank was a side job along the way, but eleven years of thinking in risk and compliance turned out to be surprisingly useful the moment I started building anything that touches student data.</p>
+  <h4 class="aside-title">The Cake Problem</h4>
+  <p>My English classes have one rule. English only. Whoever slips into German owes the class something and can pick: a hundred push-ups, an essay on why we speak English in this course, or cake for everyone. My students pick cake. Almost always. They've turned the whole thing into something of a competition, and that gave us a very real logistics problem: on some days there was far too much cake, and on others we went completely cakeless. So I built them a little booking calendar where everyone reserves their day. Two cakes per lesson, no exceptions. Of all the problems I've ever solved with software, this one is my favourite, mostly because it's entirely self-inflicted.</p>
+  <p class="hobbies">
+    First violin in the Ford Symphony Orchestra here in Cologne.<span class="dot">&middot;</span>PADI Divemaster.<span class="dot">&middot;</span>SKS sailing licence.<span class="dot">&middot;</span>I love adventures and getting to know new cultures.
+  </p>
+</section>
 
 </div><!-- /section-build -->
 
 <!-- ============================================================ -->
 <!-- TAB: WHAT I THINK                                            -->
 <!-- ============================================================ -->
-<div class="tab-content" id="section-think">
-  <p><em>Coming soon.</em></p>
+<div class="tab-content" id="section-think" role="tabpanel" aria-labelledby="tab-think">
+
+  <section class="chapter">
+    <header class="chapter-head">
+      <h2 class="chapter-title">AI in Education: <em>The Wrong Bet</em></h2>
+    </header>
+
+    <p>I spend most of my time on a problem that might sound simple but isn't: Large language models are trained to be helpful, and in the context of learning, this is not always what is best for the person. That's why I started fine-tuning models to realign what helpful means when someone is trying to learn.</p>
+
+    <p>When I first started using AI, it changed how I work, how I think, how I solve problems. I taught myself to code and within months I had built working software for things I'd been stuck on for years. But not everyone uses AI this way. Especially among younger adults, I keep seeing the same pattern: good output, no understanding. The AI gives a perfect answer and the person moves on, mistaking the quality of the result for their own learning.</p>
+
+    <p>Most of what's called AI in education right now is automation of the existing system. Faster grading. Chatbots that answer student questions. Lesson plan generators. All of it takes the current structure as given and just tries to run it more efficiently.</p>
+
+    <p>I think that's the wrong bet. The system we have was designed for scale, not for individuals. Thirty students, one teacher, standardised assessments, a grade at the end. That was never the goal. It was a constraint. The goal was always for each student to be understood individually: what they know, what they struggle with, what they need next. We just never had the tools for it.</p>
+
+    <p>It was also built to transfer knowledge and test whether it stuck. In a world where AI handles information retrieval, synthesis, and even reasoning better than most humans, that model stops making sense. What matters in that world is everything a machine can't replace: judgment, original thinking, the ability to ask a question no one has thought to ask. If we want to prepare students for that, we have to stop optimising for the skills that are about to become cheap and start building the ones that won't be.</p>
+
+    <p>Now we might have the tools for both: a model that runs on a student's device, adapts to how they learn, tracks their progress over time, and does all of this without their data leaving the room. Some of my work still lives inside the old system, because that's the reality I teach in. But the technology underneath points somewhere else.</p>
+  </section>
+
 </div>
 
 <!-- ============================================================ -->
 <!-- TAB: OUT THERE                                               -->
 <!-- ============================================================ -->
-<div class="tab-content" id="section-out">
+<div class="tab-content" id="section-out" role="tabpanel" aria-labelledby="tab-out">
 
   <div class="section-title">Talks</div>
   <ul class="link-list">
@@ -930,6 +984,24 @@
         Vibe Coding Meets the Classroom
       </a>
     </li>
+    <li>
+      <span class="link-label">Podcast · with Josua Waghubinger</span>
+      What happens when you build learning tools on top of models optimised to give answers as fast as possible, and why fine-tuning is where this actually gets solved.
+    </li>
+  </ul>
+
+  <div class="section-title">Hackathons</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
+        <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind</span>
+        GemmPen: handwritten exams into personalised feedback, fully on-device
+      </a>
+    </li>
+    <li>
+      <span class="link-label">B&Auml;KO Hackathon · 1st Place</span>
+      UTE: voice-first ordering for bakery counters, built with a team of four women
+    </li>
   </ul>
 
   <div class="section-title">Live Demos</div>
@@ -938,6 +1010,18 @@
       <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">
         <span class="link-label">GemmPen</span>
         gemmpen.vercel.app
+      </a>
+    </li>
+    <li>
+      <a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">
+        <span class="link-label">Compass · Comment Writing</span>
+        comment-writing-tool.vercel.app
+      </a>
+    </li>
+    <li>
+      <a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">
+        <span class="link-label">Debate Dojo</span>
+        debate-dojo.vercel.app
       </a>
     </li>
     <li>
@@ -1001,40 +1085,71 @@
 
 </main>
 
-<!-- Tab switching + project accordion -->
+<!-- Tab switching + project accordion + hash routing -->
 <script>
 (function(){
-  // Tab switching
   var tabs = document.querySelectorAll('.tab');
   var sections = document.querySelectorAll('.tab-content');
+
+  function activateTab(name, updateHash){
+    var tab = document.querySelector('.tab[data-section="' + name + '"]');
+    var section = document.getElementById('section-' + name);
+    if(!tab || !section) return;
+    tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    sections.forEach(function(s){ s.classList.remove('active'); });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected','true');
+    section.classList.add('active');
+    if(updateHash !== false) history.replaceState(null, '', '#' + name);
+  }
+
   tabs.forEach(function(tab){
-    tab.addEventListener('click', function(){
-      var target = tab.dataset.section;
-      tabs.forEach(function(t){ t.classList.remove('active'); });
-      sections.forEach(function(s){ s.classList.remove('active'); });
-      tab.classList.add('active');
-      document.getElementById('section-' + target).classList.add('active');
-    });
+    tab.addEventListener('click', function(){ activateTab(tab.dataset.section); });
   });
 
   // Project accordion
+  function openProject(item, updateHash){
+    document.querySelectorAll('.project-item').forEach(function(p){
+      p.classList.remove('open');
+      p.querySelector('.project-header').setAttribute('aria-expanded','false');
+    });
+    item.classList.add('open');
+    item.querySelector('.project-header').setAttribute('aria-expanded','true');
+    if(updateHash !== false) history.replaceState(null, '', '#' + item.id);
+  }
+
   document.querySelectorAll('.project-header').forEach(function(btn){
     btn.addEventListener('click', function(){
       var item = btn.closest('.project-item');
       var wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.project-item').forEach(function(p){
-        p.classList.remove('open');
-        p.querySelector('.project-header').setAttribute('aria-expanded','false');
-      });
-      if(!wasOpen){
-        item.classList.add('open');
-        btn.setAttribute('aria-expanded','true');
+      if(wasOpen){
+        item.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        history.replaceState(null, '', '#build');
+      } else {
+        openProject(item);
         setTimeout(function(){
           item.scrollIntoView({behavior:'smooth',block:'nearest'});
         },50);
       }
     });
   });
+
+  // Hash routing: #build / #think / #out switch tabs,
+  // #gemmpen / #compass / #ute / #claudia open a project.
+  function applyHash(){
+    var h = (location.hash || '').replace('#','');
+    if(!h) return;
+    if(h === 'build' || h === 'think' || h === 'out'){ activateTab(h, false); return; }
+    var item = document.getElementById(h);
+    if(item && item.classList.contains('project-item')){
+      activateTab('build', false);
+      openProject(item, false);
+      setTimeout(function(){ item.scrollIntoView({block:'start'}); }, 80);
+    }
+  }
+  window.addEventListener('hashchange', applyHash);
+  applyHash();
 })();
 </script>
 <script defer src="scripts/effects.js?v=40"></script>

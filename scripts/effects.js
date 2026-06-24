@@ -217,7 +217,7 @@
       socratic:
         '“What is inflation? What causes prices to rise? What role does demand play? How do interest rates affect consumer behaviour?”',
       vision:
-        '“You’re treating prices as the problem. What if they’re the symptom?”',
+        '“You’re right that loans get more expensive — that’s exactly the plan. Think about it: if saving suddenly earns you 4% and a loan costs 6%, what do you do — buy the new car on credit now, or wait? And if lots of people do the same, what happens to demand? And to prices, when fewer people want to buy?”',
     };
 
     var typed = false;

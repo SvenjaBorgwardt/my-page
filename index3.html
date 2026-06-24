@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt · AI for Learning (V3 concept)</title>
+<meta name="description" content="The idea first: helpfulness, conditioned on the learner's effort. GemmPen, Compass, Debate Dojo, UTE, Claudia as attempts at it.">
+<meta property="og:title" content="Svenja Borgwardt">
+<meta property="og:description" content="AI systems for learning: fine-tuned models that help without doing the thinking for you.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* Editorial — Svenja Borgwardt. V3 concept: thesis-first. Same type system as index2. */
+  :root{
+    --paper:#F6F1E6;
+    --paper-warm:#EFE6D1;
+    --paper-deep:#E4D8B8;
+    --ink:#141018;
+    --ink-soft:#3A3440;
+    --ink-dim:#8A8493;
+    --rule:#D4C9AF;
+    --rust:#9F3A1F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:20px;line-height:1.7;-webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse at 20% 10%,rgba(240,220,170,0.22) 0%,transparent 45%),
+      radial-gradient(ellipse at 85% 90%,rgba(180,160,120,0.13) 0%,transparent 45%);
+  }
+  main{position:relative;z-index:2;max-width:41em;margin:0 auto;padding:2.8em 1.6em 7em}
+  p{margin-bottom:1.1em;max-width:64ch;font-size:1em;line-height:1.72;font-weight:400}
+  p em{font-style:italic}
+  p strong{font-weight:400}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim)}
+
+  /* ===== top nav ===== */
+  .topnav{
+    position:sticky;top:0;z-index:30;background:var(--paper);
+    border-bottom:1px solid var(--rule);
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.6em;padding:0.7em 1.6em;
+  }
+  .topnav .nav-left{display:flex;gap:1.1em;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase}
+  .topnav .nav-left a{color:var(--ink);text-decoration:none;position:relative;padding-left:0.7em;transition:color .3s}
+  .topnav .nav-left a::before{content:"\25B6";position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--rust);font-size:0.4em;opacity:0;transition:opacity .3s}
+  .topnav .nav-left a:hover{color:var(--rust)}
+  .topnav .nav-left a:hover::before{opacity:1}
+  .topnav .nav-center{display:flex;gap:0.5em}
+  .topnav .nav-center a{display:flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border:1px solid var(--rule);color:var(--ink);transition:border-color .3s,color .3s,background .3s}
+  .topnav .nav-center a:hover{border-color:var(--rust);color:var(--rust);background:rgba(159,58,31,0.04)}
+  .topnav .nav-center svg{width:0.75em;height:0.75em;display:block}
+  .topnav .nav-right{text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase}
+  .topnav .nav-right a{color:var(--ink);text-decoration:none;transition:color .3s}
+  .topnav .nav-right a:hover{color:var(--rust)}
+
+  /* ===== masthead ===== */
+  .masthead{display:grid;grid-template-columns:1fr auto;gap:2.4em;align-items:center;margin-bottom:1.6em;padding-bottom:1.4em;border-bottom:1px solid var(--rule)}
+  .masthead h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(35.2px,5.2vw,60.8px);line-height:1;letter-spacing:0.005em}
+  .masthead h1 em{font-style:italic;font-weight:300}
+  .pronounce{display:inline-flex;gap:0.8em;align-items:baseline;background:none;border:none;cursor:pointer;padding:0;margin-top:0.5em}
+  .pronounce-ipa{font-family:'JetBrains Mono',monospace;font-size:clamp(12px,0.6em,16px);letter-spacing:0.04em;color:var(--rust)}
+  .pronounce-approx{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,0.8em,20px);color:var(--rust)}
+  .masthead-intro{font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);margin-bottom:0.3em}
+  .masthead-intro:first-of-type{margin-top:1.6em}
+  .photo-frame{width:7.8em;height:10.4em;position:relative;flex-shrink:0;border:1px solid var(--rule);box-shadow:4px 4px 0 rgba(0,0,0,0.05);background:var(--paper-warm);overflow:hidden}
+  .photo-frame img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* ===== section titles ===== */
+  .section-title{
+    text-align:center;margin:3.6em 0 1.8em;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.3em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  .section-title::before,.section-title::after{content:"";display:inline-block;width:3em;height:0.05em;background:var(--rule);vertical-align:middle;margin:0 0.9em}
+
+  /* ===== thesis ===== */
+  .thesis-lead{font-size:1.12em;line-height:1.6;margin:2.2em 0 0.4em;max-width:60ch}
+  .thesis-lead em{font-style:italic;color:var(--rust)}
+
+  .ideas{margin:2.4em 0 0;counter-reset:idea}
+  .idea{display:grid;grid-template-columns:2.4em 1fr;gap:1em;padding:1.5em 0;border-top:1px solid var(--rule)}
+  .idea:last-child{border-bottom:1px solid var(--rule)}
+  .idea-num{
+    font-family:'JetBrains Mono',monospace;font-size:0.6em;letter-spacing:0.1em;color:var(--rust);
+    padding-top:0.45em;
+  }
+  .idea-h{font-style:italic;font-weight:400;font-size:1.25em;line-height:1.25;color:var(--ink);margin-bottom:0.45em}
+  .idea-body{font-size:0.98em;line-height:1.7;color:var(--ink-soft);max-width:58ch}
+  .idea-body em{font-style:italic;color:var(--ink)}
+  .idea .term{color:var(--rust);font-style:normal}
+
+  .bridge{font-style:italic;font-size:1.05em;color:var(--ink-soft);margin:2.2em 0 0;max-width:58ch}
+
+  /* ===== three-answer comparison (concrete ECH) ===== */
+  .compare{margin:2em 0 0.6em;border:1px solid var(--rule);background:var(--paper-warm);padding:1.4em 1.4em 1.2em;border-radius:2px}
+  .compare-q-label,.compare-a-label{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-dim);
+    display:block;margin-bottom:0.35em;
+  }
+  .compare-q{font-style:italic;font-size:1em;line-height:1.55;color:var(--ink);max-width:60ch;margin-bottom:1.3em}
+  .compare-row{padding:0.9em 0;border-top:1px dashed var(--rule)}
+  .compare-a-label.ech{color:var(--rust)}
+  .compare-a{font-style:italic;font-size:0.95em;line-height:1.6;color:var(--ink-soft);max-width:60ch}
+  .compare-row.ech .compare-a{color:var(--ink)}
+  .compare-cap{font-style:italic;font-size:0.8em;color:var(--ink-dim);text-align:center;margin-top:1em;line-height:1.5}
+
+  /* ===== evidence (apps) ===== */
+  .evidence{margin-top:0.4em}
+  .ev{padding:2em 0;border-bottom:1px solid var(--rule)}
+  .ev-tag{font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.16em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:0.5em}
+  .ev-name{font-style:italic;font-weight:400;font-size:clamp(26px,3.4vw,36px);line-height:1.1;margin-bottom:0.5em}
+  .ev-name em{font-style:italic}
+  .ev-desc{font-size:1em;line-height:1.65;color:var(--ink-soft);max-width:60ch}
+  .ev-desc em{font-style:italic;color:var(--ink)}
+  .stack{margin-top:1em;font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);line-height:2}
+  .stack .k{color:var(--rust);margin-right:0.4em}
+  .stack a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rust);transition:color .2s}
+  .stack a:hover{color:var(--rust)}
+
+  /* ===== other parts ===== */
+  .other-parts p{font-size:1em;line-height:1.72}
+  .other-parts .hobbies{margin-top:1.2em;padding-top:0.9em;border-top:1px solid var(--rule);font-style:italic;font-size:1.05em;line-height:1.75;color:var(--ink-soft);max-width:64ch}
+  .other-parts .hobbies .dot{color:var(--rust);margin:0 0.5em}
+
+  /* ===== footer ===== */
+  footer{margin-top:6em;padding:2em 0;text-align:center;border-top:1px solid var(--rule)}
+  footer .colophon{font-style:italic;font-size:0.8em;color:var(--ink-dim);max-width:56ch;margin:0 auto 1.2em;line-height:1.6}
+  footer .contact{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.65em;color:var(--ink);letter-spacing:0.1em;text-decoration:none;border-bottom:2px solid var(--rust);padding-bottom:0.1em}
+  footer .contact:hover{color:var(--rust)}
+  footer .ts{display:block;margin-top:1.2em;font-family:'JetBrains Mono',monospace;font-size:0.5em;color:var(--ink-dim);letter-spacing:0.2em;text-transform:uppercase}
+
+  @media (max-width:32em){
+    main{padding:2em 1em 4em}
+    .masthead{grid-template-columns:1fr;gap:1.2em}
+    .photo-frame{width:6.4em;height:8.5em;justify-self:start}
+    .section-title::before,.section-title::after{width:1.5em;margin:0 0.5em}
+    .idea{grid-template-columns:1fr;gap:0.3em}
+    .idea-num{padding-top:0}
+  }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <nav class="nav-left">
+    <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/SvenjaBorgwardt" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="nav-center">
+    <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+    </a>
+    <a href="https://github.com/SvenjaBorgwardt" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.17c-3.34.72-4.04-1.42-4.04-1.42-.55-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.17 0 0 1.01-.32 3.3 1.23.96-.27 1.99-.4 3.01-.41 1.02.01 2.05.14 3.01.41 2.29-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.11 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:svenja@borgwardt.me">Open for Collaboration</a>
+  </div>
+</header>
+
+<main>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="name-block">
+    <h1>Svenja <em>Borgwardt</em></h1>
+    <button class="pronounce" aria-label="Listen to pronunciation: SVEN-yah BORK-vart">
+      <span class="pronounce-ipa">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
+      <span class="pronounce-approx">SVEN-yah BORK-vart</span>
+    </button>
+    <p class="masthead-intro">Currently based in Cologne, Germany.</p>
+    <p class="masthead-intro">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. All of them ask the same question: how do we make AI that finds what's strong in people and makes room for them to grow?</p>
+  </div>
+  <figure class="photo-block">
+    <div class="photo-frame">
+      <img src="svenja.jpg" alt="Svenja Borgwardt">
+    </div>
+  </figure>
+</header>
+
+<!-- ============================================================ -->
+<!-- THE IDEA (thesis first)                                      -->
+<!-- ============================================================ -->
+<div class="section-title">The Idea</div>
+
+<p class="thesis-lead">Large language models are trained to be helpful, and in the context of learning, that is not always what is best for the person. That is why I started fine-tuning models to realign what <em>helpful</em> means when someone is trying to learn.</p>
+
+<div class="ideas">
+
+  <div class="idea">
+    <div class="idea-num">01</div>
+    <div>
+      <div class="idea-h">Helpfulness is the problem.</div>
+      <div class="idea-body">A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That is exactly wrong when someone is trying to learn. For something to be learned, it has to be slightly harder than easy. AI makes everything feel effortless, and students mistake that feeling for understanding.</div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <div class="idea-num">02</div>
+    <div>
+      <div class="idea-h">Condition the help on the student's effort, not on the question.</div>
+      <div class="idea-body">So I am training models to gauge how much they help by the effort the student actually puts in, instead of just answering the question they asked. I call it <span class="term">Effort Conditioned Helpfulness</span>. A model that talks to a struggling student differently than to one who is almost there, and helps just enough to push them forward without doing the thinking for them.</div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <div class="idea-num">03</div>
+    <div>
+      <div class="idea-h">Most of what is called AI in education is the wrong bet.</div>
+      <div class="idea-body">Faster grading. Chatbots that answer student questions. Lesson-plan generators. All of it takes the current structure as given and just tries to run it more efficiently. The system we have was designed for scale, not for individuals. That was never the goal. It was a constraint.</div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <div class="idea-num">04</div>
+    <div>
+      <div class="idea-h">This is a fine-tuning problem, not a prompting problem.</div>
+      <div class="idea-body">Making AI less helpful is harder than making it more helpful, and I do not think prompting will ever fully solve it. The model needs to learn what good teaching actually looks like: creating the conditions for someone to find the answer themselves.</div>
+    </div>
+  </div>
+
+</div>
+
+<p class="bridge">Each project below is an attempt at this, from a different angle. Here is what the idea looks like in practice.</p>
+
+<!-- CONCRETE: three answers to the same question -->
+<div class="compare">
+  <span class="compare-q-label">Student</span>
+  <p class="compare-q">&ldquo;I don't understand why central banks raise interest rates during inflation. Higher rates make loans more expensive, so how does that help people afford things?&rdquo;</p>
+
+  <div class="compare-row">
+    <span class="compare-a-label">Standard AI</span>
+    <p class="compare-a">&ldquo;Higher rates cool demand by making borrowing more expensive. Less demand against the same supply slows price increases. That's how rate hikes fight inflation.&rdquo;</p>
+  </div>
+
+  <div class="compare-row">
+    <span class="compare-a-label">Socratic</span>
+    <p class="compare-a">&ldquo;What is inflation? What causes prices to rise? What role does demand play? How do interest rates affect consumer behaviour?&rdquo;</p>
+  </div>
+
+  <div class="compare-row ech">
+    <span class="compare-a-label ech">Effort Conditioned</span>
+    <p class="compare-a">&ldquo;You're right that loans get more expensive, that's exactly the plan. Think about it: if saving suddenly earns you 4% and a loan costs 6%, what do you do, buy the new car on credit now, or wait? And if lots of people do the same, what happens to demand? And to prices, when fewer people want to buy?&rdquo;</p>
+  </div>
+
+  <p class="compare-cap">Same question, three ways to answer it. Only the third takes the student's own reasoning as the starting point.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- HOW I'M TESTING IT (apps as evidence)                        -->
+<!-- ============================================================ -->
+<div class="section-title">How I'm Testing It</div>
+
+<div class="evidence">
+
+  <div class="ev">
+    <span class="ev-tag">Where the idea started</span>
+    <div class="ev-name">Compass &amp; <em>Debate Dojo</em></div>
+    <p class="ev-desc">Helpfulness is great, just not when someone is trying to learn. Compass is a writing tool built to prevent the illusion of understanding students get when the AI has done the thinking for them. I had to handcuff the model by hand, hardcoding every learning step so it helps just enough. <em>Debate Dojo</em> applies the same thinking to debating, and is where I first fine-tuned a model to do this instead of hardcoding it.</p>
+    <div class="stack">
+      <span class="k">Links</span><a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">Compass, live</a> &middot; <a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Debate Dojo</a>
+    </div>
+  </div>
+
+  <div class="ev">
+    <span class="ev-tag">Realigning what &ldquo;helpful&rdquo; means</span>
+    <div class="ev-name">GemmPen</div>
+    <p class="ev-desc">I fine-tuned Gemma 4 to read handwritten exams, evaluate them against my rubric, and write individual feedback with exercises built around each student's actual mistakes. Any large model can grade, so that is not why I am fine-tuning. I want to change what the model optimises for. It runs entirely on-device and learns from my corrections.</p>
+    <div class="stack">
+      <span class="k">Stack</span>Gemma 4 + LoRA &middot; on-device &middot; retrains from teacher corrections<br>
+      <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a>
+    </div>
+  </div>
+
+  <div class="ev">
+    <span class="ev-tag">Helpfulness by disappearing</span>
+    <div class="ev-name">UTE</div>
+    <p class="ev-desc">A voice-first register for bakery counters. It listens while the assistant talks to the customer and builds the order in the background, so the conversation never has to stop. The same instinct, inverted: what if the best way for an AI to be useful is to disappear? First place at the B&Auml;KO Hackathon.</p>
+  </div>
+
+  <div class="ev">
+    <span class="ev-tag">The infrastructure underneath</span>
+    <div class="ev-name">Claudia</div>
+    <p class="ev-desc">My multi-agent infrastructure, running on an always-on Mac Mini in my flat. By day she orchestrates the agents behind my student feedback, the rest of the time she runs my home automation. Most of what I know about agent design I learned by building her and then watching her break.</p>
+  </div>
+
+</div>
+
+<!-- THE OTHER PARTS -->
+<div class="section-title">The Other Parts</div>
+<section class="other-parts">
+  <p>I studied economics, linguistics, and literature and culture studies. After that I worked as a researcher and lecturer at a university chair for vocational education, where I started a PhD. During my studies I taught people in correctional education to earn their school diploma, a context where nothing about learning can be taken for granted. Later I became the EU coordinator at my school, got it certified as a Europaschule, and ran international education projects across Europe. The bank was a side job along the way, but eleven years of thinking in risk and compliance turned out to be surprisingly useful the moment I started building anything that touches student data.</p>
+  <p class="hobbies">
+    First violin in the Ford Symphony Orchestra here in Cologne.<span class="dot">&middot;</span>PADI Divemaster.<span class="dot">&middot;</span>SKS sailing licence.<span class="dot">&middot;</span>I love adventures and getting to know new cultures.
+  </p>
+</section>
+
+<footer>
+  <p class="colophon">Concept draft, V3 &mdash; thesis first, projects as evidence. The live site stays as it is.</p>
+  <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
+  <span class="ts">Cologne</span>
+</footer>
+
+</main>
+</body>
+</html>
