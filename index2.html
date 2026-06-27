@@ -699,42 +699,8 @@
   @keyframes et-arrow-anim{0%{opacity:1;transform:translateX(0)}5%{transform:translateX(-0.1rem)}100%{transform:translateX(1rem);opacity:0}}
   @keyframes et-arrow-fixed-anim{5%{opacity:0}20%{opacity:0.4}100%{opacity:1}}
 
-  /* Card */
-  .et-card{
-    flex:1;min-width:0;
-    background:var(--paper);border-radius:12px;
-    border:0.5px solid var(--rule);
-    transition:box-shadow 0.4s cubic-bezier(.2,1,.3,1);
-  }
-  .et-card:hover{box-shadow:0 4px 24px rgba(20,16,24,0.06)}
+  /* (Tab/card chrome removed — replaced by the coverflow carousel below) */
 
-  /* Tab navigation inside card */
-  .et-tabs{
-    display:flex;gap:0;border-bottom:1px solid var(--rule);
-    padding:0 1.6em;overflow-x:auto;-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .et-tabs::-webkit-scrollbar{display:none}
-  .et-tab{
-    font-family:'JetBrains Mono',monospace;font-size:0.55em;
-    letter-spacing:0.07em;text-transform:uppercase;
-    background:none;border:none;padding:1em 1.2em;
-    color:var(--ink-dim);cursor:pointer;
-    position:relative;white-space:nowrap;
-    transition:color 0.3s;
-  }
-  .et-tab:hover{color:var(--ink)}
-  .et-tab:focus-visible{outline:2px solid var(--rust);outline-offset:-2px;border-radius:2px}
-  .et-tab.active{color:var(--rust)}
-  .et-tab::after{
-    content:'';position:absolute;bottom:-1px;left:0.6em;right:0.6em;height:2px;
-    background:var(--rust);transform:scaleX(0);transform-origin:center;
-    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
-  }
-  .et-tab.active::after{transform:scaleX(1)}
-
-  /* Hero content area */
-  .et-hero{padding:2em 2em 1.6em;text-align:center}
   .et-ornament{
     color:var(--rule);font-size:0.85em;letter-spacing:0.3em;
     margin-bottom:0.6em;
@@ -767,14 +733,7 @@
     font-size:0.75em;line-height:1.6;color:var(--ink-soft);
   }
 
-  /* Stagger animation on switch */
-  .et-tag,.et-title,.et-teaser-wrap{
-    opacity:0;transform:translateY(6px);
-    transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1),transform 0.5s cubic-bezier(0.16,1,0.3,1);
-  }
-  .et-hero.visible .et-tag{opacity:1;transform:translateY(0);transition-delay:0ms}
-  .et-hero.visible .et-title{opacity:1;transform:translateY(0);transition-delay:60ms}
-  .et-hero.visible .et-teaser-wrap{opacity:1;transform:translateY(0);transition-delay:120ms}
+  /* (Stagger removed — coverflow cards carry their own static content) */
 
   /* CTA button */
   .et-cta{
@@ -806,15 +765,11 @@
     transition:max-height 0.6s cubic-bezier(0.16,1,0.3,1);
   }
   .et-expand-inner{
-    padding:0 2em 2em;
+    padding:1.8em 2em 2em;
     border-top:1px solid var(--rule);
     position:relative;
   }
-  .et-expand-inner::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2em;
-    background:linear-gradient(var(--paper),transparent);
-    pointer-events:none;z-index:1;
-  }
+  /* (top fade overlay removed — the full story starts cleanly below the card) */
   .et-expand-inner p,
   .et-expand-inner blockquote,
   .et-expand-inner .stack,
@@ -857,9 +812,41 @@
     .et-arrow-btn svg{width:20px;height:18px}
     .et-hero{padding:1.4em 1.2em 1.2em}
     .et-title{font-size:clamp(24px,6vw,32px)}
-    .et-expand-inner{padding:0 1.2em 1.4em}
+    .et-expand-inner{padding:1.4em 1.2em 1.4em}
     .et-tabs{padding:0 1em}
     .et-tab{padding:0.8em 0.8em}
+  }
+
+  /* ========== COVERFLOW CAROUSEL ========== */
+  #editorial-theatre{position:relative;overflow:hidden}
+  .cf-viewport{
+    flex:1;min-width:0;position:relative;
+    perspective:1700px;height:22em;outline:none;
+  }
+  .cf-viewport:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:12px}
+  .cf-track{position:absolute;inset:0;transform-style:preserve-3d}
+  .cf-card{
+    position:absolute;top:50%;left:50%;width:20em;
+    background:var(--paper);border:0.5px solid var(--rule);border-radius:12px;
+    box-shadow:0 6px 26px rgba(20,16,24,0.07);
+    padding:1.9em 2em 1.6em;text-align:center;cursor:pointer;
+    display:flex;flex-direction:column;backface-visibility:hidden;
+    transform:translate(-50%,-50%);
+    transition:transform 0.72s cubic-bezier(.16,1,.3,1),opacity 0.72s cubic-bezier(.16,1,.3,1),box-shadow 0.4s cubic-bezier(.2,1,.3,1);
+  }
+  .cf-card.cf-active{cursor:default}
+  .cf-card .et-ornament{align-self:center;width:4.5em;height:1px;margin:0.2em 0 1.1em;background:var(--rule)}
+  .cf-card .et-counter{margin-bottom:1em}
+  .cf-card .et-teaser-wrap{flex:1;min-height:0;margin-top:0.7em;padding-left:0}
+  .cf-card .et-teaser-wrap::before{content:none}
+  .cf-card .et-teaser{font-size:1em;line-height:1.6}
+  .cf-card .cf-cta{align-self:center;margin-top:1.4em;flex-shrink:0;font-size:inherit}
+  .cf-card .cf-cta .et-cta-text{font-family:'Cormorant Garamond',serif;font-style:italic;text-transform:none;letter-spacing:0;font-size:1em}
+  .cf-card.cf-open .cf-cta .et-cta-circle svg{transform:rotate(180deg)}
+  @media(prefers-reduced-motion:reduce){.cf-card{transition:none}}
+  @media(max-width:32em){
+    .cf-viewport{height:20em;perspective:1000px}
+    .cf-card{width:16em;padding:1.5em 1.4em}
   }
 
   /* Link list for Out There */
@@ -954,49 +941,86 @@
   <p class="masthead-intro">Most of what I build starts with a problem right in front of me, something I can test with real people in a real context. Some problems I can solve with a tool or a pipeline. Others need a fine-tuned model. I tend to find out which one the hard way.</p>
 </section>
 
-<!-- EDITORIAL THEATRE -->
-<div class="et-wrapper" id="editorial-theatre">
-  <!-- Previous arrow -->
-  <button class="et-arrow-btn disabled" id="et-prev" aria-label="previous project">
-    <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-      <g transform="scale(-1, 1)" transform-origin="8.5 8.5">
-        <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
-        <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
-        <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
-      </g>
-    </svg>
-  </button>
+<!-- EDITORIAL THEATRE — 3D coverflow -->
+<div id="editorial-theatre">
+  <div class="et-wrapper">
+    <!-- Previous arrow -->
+    <button class="et-arrow-btn" id="et-prev" aria-label="previous project">
+      <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g transform="scale(-1, 1)" transform-origin="8.5 8.5">
+          <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
+        </g>
+      </svg>
+    </button>
 
-  <!-- Card -->
-  <div class="et-card">
-    <!-- Tab navigation -->
-    <nav class="et-tabs" role="tablist" aria-label="Projects">
-      <button class="et-tab active" role="tab" data-project="0" id="et-tab-0" aria-selected="true" aria-controls="et-panel">GemmPen</button>
-      <button class="et-tab" role="tab" data-project="1" id="et-tab-1" aria-selected="false" aria-controls="et-panel">Compass</button>
-      <button class="et-tab" role="tab" data-project="2" id="et-tab-2" aria-selected="false" aria-controls="et-panel">Dojo</button>
-      <button class="et-tab" role="tab" data-project="3" id="et-tab-3" aria-selected="false" aria-controls="et-panel">UTE</button>
-      <button class="et-tab" role="tab" data-project="4" id="et-tab-4" aria-selected="false" aria-controls="et-panel">Claudia</button>
-    </nav>
+    <!-- 3D coverflow viewport -->
+    <div class="cf-viewport" id="cf-viewport" tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
+      <div class="cf-track" id="cf-track">
 
-    <!-- Hero content area -->
-    <div class="et-hero visible" id="et-panel" role="tabpanel">
-      <div class="et-ornament">&#x2500;&#x2500; &#x2726; &#x2500;&#x2500;</div>
-      <div class="et-counter" id="et-counter">01 / 05</div>
-      <div class="et-tag" id="et-tag"></div>
-      <h2 class="et-title" id="et-title"></h2>
-      <div class="et-teaser-wrap">
-        <p class="et-teaser" id="et-teaser"></p>
+        <article class="cf-card" data-project="0">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">01 / 05</div>
+          <div class="et-tag">on-device model</div>
+          <h3 class="et-title">GemmPen</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Traditional grading points at mistakes and scores them. I never believed in this to really help people to grow. I wanted feedback that puts the student at the centre and shows them exactly how to improve. This is why I built GemmPen.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
+        <article class="cf-card" data-project="1">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">02 / 05</div>
+          <div class="et-tag">fine-tuned tutor</div>
+          <h3 class="et-title">Compass</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Seeing how people use AI worries me when it comes to learning. Too often, a perfect output gives them the illusion of understanding when really the AI did the thinking, not them. I built a tool that teaches my students how to write an argument without handing them the answer, but helps them find their own. This is why I built Compass.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
+        <article class="cf-card" data-project="2">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">03 / 05</div>
+          <div class="et-tag">fine-tuned sensei</div>
+          <h3 class="et-title">Debate Dojo</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">With Compass I had to cage the AI to stop it from handing students their arguments. It worked, but every learning step had to be hardcoded. For Debate Dojo I tried a different approach: I fine-tuned a sensei that doesn&rsquo;t need caging because it was trained to match its help to the effort a student puts in. This is why I built Debate Dojo.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
+        <article class="cf-card" data-project="3">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">04 / 05</div>
+          <div class="et-tag">voice-first POS</div>
+          <h3 class="et-title">UTE</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">The register always gets in the way of a good conversation at the counter. I built an AI that listens along and handles the technical side, so the person behind the counter can focus on what matters: the customer. This is why I built UTE.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
+        <article class="cf-card" data-project="4">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">05 / 05</div>
+          <div class="et-tag">multi-agent infra</div>
+          <h3 class="et-title">Claudia</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Ever since watching Eureka when I was younger I wanted a home I can talk to. Now AI is actually capable enough, so I built one. Claudia runs on a Mac Mini in my flat, managing everything from voice control and multi-agent pipelines to automations. Minus the part where she goes rogue. This is why I built Claudia.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
       </div>
-      <button class="et-cta" id="et-cta" aria-expanded="false" aria-controls="et-expand">
-        <span class="et-cta-text">read the full story</span>
-        <span class="et-cta-circle">
-          <svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg>
-        </span>
-      </button>
     </div>
 
-    <!-- Expand zone -->
-    <div class="et-expand" id="et-expand">
+    <!-- Next arrow -->
+    <button class="et-arrow-btn" id="et-next" aria-label="next project">
+      <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g>
+          <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
+        </g>
+      </svg>
+    </button>
+  </div><!-- /et-wrapper -->
+
+  <!-- Expand zone (shared, opens beneath the centred card) -->
+  <div class="et-expand" id="et-expand">
 
       <!-- GemmPen expand -->
       <div class="et-expand-inner" data-expand="0" style="display:none">
@@ -1113,31 +1137,7 @@
       </div>
 
     </div><!-- /et-expand -->
-  </div><!-- /et-card -->
-
-  <!-- Next arrow -->
-  <button class="et-arrow-btn" id="et-next" aria-label="next project">
-    <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-      <g>
-        <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
-        <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
-        <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
-      </g>
-    </svg>
-  </button>
-</div><!-- /et-wrapper -->
-
-<!-- THE OTHER PARTS -->
-<div class="section-title reveal">The Other Parts</div>
-
-<section class="other-parts reveal">
-  <p>I studied economics, linguistics, and literature and culture studies. After that I worked as a researcher and lecturer at a university chair for vocational education, where I started a PhD. During my studies I taught people in correctional education to earn their school diploma, a context where nothing about learning can be taken for granted. Later I became the EU coordinator at my school, got it certified as a Europaschule, and ran international education projects across Europe. The bank was a side job along the way, but eleven years of thinking in risk and compliance turned out to be surprisingly useful the moment I started building anything that touches student data.</p>
-  <h4 class="aside-title">The Cake Problem</h4>
-  <p>My English classes have one rule. English only. Whoever slips into German owes the class something and can pick: a hundred push-ups, an essay on why we speak English in this course, or cake for everyone. My students pick cake. Almost always. They've turned the whole thing into something of a competition, and that gave us a very real logistics problem: on some days there was far too much cake, and on others we went completely cakeless. So I built them a little booking calendar where everyone reserves their day. Two cakes per lesson, no exceptions. Of all the problems I've ever solved with software, this one is my favourite, mostly because it's entirely self-inflicted.</p>
-  <p class="hobbies">
-    First violin in the Ford Symphony Orchestra here in Cologne.<span class="dot">&middot;</span>PADI Divemaster.<span class="dot">&middot;</span>SKS sailing licence.<span class="dot">&middot;</span>I love adventures and getting to know new cultures.
-  </p>
-</section>
+</div><!-- /editorial-theatre -->
 
 </div><!-- /section-build -->
 
@@ -1309,148 +1309,150 @@
     tab.addEventListener('click', function(){ activateTab(tab.dataset.section); });
   });
 
-  /* ── Editorial Theatre ── */
-  var PROJECTS = [
-    {key:'gemmpen', tag:'on-device model', title:'GemmPen',
-     teaser:'Traditional grading points at mistakes and scores them. I never believed in this to really help people to grow. I wanted feedback that puts the student at the centre and shows them exactly how to improve. This is why I built GemmPen.'},
-    {key:'compass', tag:'fine-tuned tutor', title:'Compass',
-     teaser:'Seeing how people use AI worries me when it comes to learning. Too often, a perfect output gives them the illusion of understanding when really the AI did the thinking, not them. I built a tool that teaches my students how to write an argument without handing them the answer, but helps them find their own. This is why I built Compass.'},
-    {key:'dojo', tag:'fine-tuned sensei', title:'Debate Dojo',
-     teaser:'With Compass I had to cage the AI to stop it from handing students their arguments. It worked, but every learning step had to be hardcoded. For Debate Dojo I tried a different approach: I fine-tuned a sensei that doesn’t need caging because it was trained to match its help to the effort a student puts in. This is why I built Debate Dojo.'},
-    {key:'ute', tag:'voice-first POS', title:'UTE',
-     teaser:'The register always gets in the way of a good conversation at the counter. I built an AI that listens along and handles the technical side, so the person behind the counter can focus on what matters: the customer. This is why I built UTE.'},
-    {key:'claudia', tag:'multi-agent infra', title:'Claudia',
-     teaser:'Ever since watching Eureka when I was younger I wanted a home I can talk to. Now AI is actually capable enough, so I built one. Claudia runs on a Mac Mini in my flat, managing everything from voice control and multi-agent pipelines to automations. Minus the part where she goes rogue. This is why I built Claudia.'}
-  ];
-
+  /* ── Editorial Theatre — 3D coverflow ── */
   var currentProject = 0;
-  var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var etTabs = document.querySelectorAll('.et-tab');
-  var etHero = document.getElementById('et-panel');
-  var etTag = document.getElementById('et-tag');
-  var etTitle = document.getElementById('et-title');
-  var etTeaser = document.getElementById('et-teaser');
-  var etCounter = document.getElementById('et-counter');
-  var etCta = document.getElementById('et-cta');
   var etExpand = document.getElementById('et-expand');
   var etPrev = document.getElementById('et-prev');
   var etNext = document.getElementById('et-next');
   var expandInners = document.querySelectorAll('.et-expand-inner');
 
-  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  // ── Coverflow carousel state ──
+  var cfViewport = document.getElementById('cf-viewport');
+  var cfCards = Array.prototype.slice.call(document.querySelectorAll('.cf-card'));
+  var projectKeys = ['gemmpen','compass','dojo','ute','claudia'];
+  var prevOffset = [];
 
-  function collapseExpand(){
-    etExpand.classList.remove('open');
-    etExpand.style.maxHeight = '0';
-    etCta.setAttribute('aria-expanded','false');
-    etCta.querySelector('.et-cta-text').textContent = 'read the full story';
+  // The full story is one global mode: open once → stays open while you browse the cards
+  var storyOpen = false;
+  function applyStoryState(){
+    if(storyOpen){
+      var inner = document.querySelector('.et-expand-inner[data-expand="' + currentProject + '"]');
+      if(inner){
+        inner.style.display = '';
+        etExpand.style.maxHeight = inner.scrollHeight + 'px';
+        etExpand.classList.add('open');
+      }
+    } else {
+      etExpand.classList.remove('open');
+      etExpand.style.maxHeight = '0';
+    }
+    cfCards.forEach(function(c){
+      c.classList.toggle('cf-open', storyOpen);
+      var cta = c.querySelector('.cf-cta');
+      if(cta){
+        cta.setAttribute('aria-expanded', storyOpen ? 'true' : 'false');
+        cta.querySelector('.et-cta-text').textContent = storyOpen ? 'collapse' : 'read the full story';
+      }
+    });
   }
+  function toggleStory(){ storyOpen = !storyOpen; applyStoryState(); }
 
   function selectProject(idx, updateHash){
-    if(idx < 0 || idx >= PROJECTS.length) return;
-    var wasExpanded = etExpand.classList.contains('open');
-
-    // Collapse if open
-    if(wasExpanded) collapseExpand();
-
+    var n = cfCards.length;
+    idx = ((idx % n) + n) % n;            // wrap around — infinite loop
     currentProject = idx;
-    var p = PROJECTS[idx];
 
-    // Update tabs
-    etTabs.forEach(function(t){
-      var active = parseInt(t.dataset.project, 10) === idx;
-      t.classList.toggle('active', active);
-      t.setAttribute('aria-selected', active ? 'true' : 'false');
-    });
-
-    // Update hero content
-    etTag.textContent = p.tag;
-    etTitle.textContent = p.title;
-    etTeaser.textContent = p.teaser;
-    etCounter.textContent = pad(idx + 1) + ' / ' + pad(PROJECTS.length);
-
-    // Show/hide expand inners
+    // Mount only the centred project's full story
     expandInners.forEach(function(inner){
       inner.style.display = parseInt(inner.dataset.expand, 10) === idx ? '' : 'none';
     });
-
-    // Stagger animation
-    if(!prefersReduced){
-      etHero.classList.remove('visible');
-      void etHero.offsetHeight;
-      etHero.classList.add('visible');
-    }
-
-    // Update arrows
-    etPrev.classList.toggle('disabled', idx === 0);
-    etNext.classList.toggle('disabled', idx === PROJECTS.length - 1);
-
-    // Stagger expand inner paragraphs
     var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
     if(activeInner){
-      var children = activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .project-example');
-      children.forEach(function(child, i){
-        child.style.transitionDelay = (i * 80) + 'ms';
-      });
+      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .project-example')
+        .forEach(function(child, i){ child.style.transitionDelay = (i * 80) + 'ms'; });
     }
 
-    if(updateHash !== false) history.replaceState(null, '', '#' + p.key);
+    layoutCarousel();
+    applyStoryState();   // keep the global open/closed state across cards
+    if(updateHash !== false) history.replaceState(null, '', '#' + projectKeys[idx]);
   }
 
-  // Tab clicks
-  etTabs.forEach(function(tab){
-    tab.addEventListener('click', function(){
-      selectProject(parseInt(tab.dataset.project, 10));
+  // Shortest circular distance from the centred card (so ends wrap seamlessly)
+  function circOffset(i){
+    var n = cfCards.length, half = Math.floor(n / 2), o = i - currentProject;
+    if(o >  half) o -= n;
+    if(o < -half) o += n;
+    return o;
+  }
+
+  // Place every card in 3D space based on its offset from the centre
+  function layoutCarousel(){
+    var cw = cfCards[0].offsetWidth || 300;
+    cfCards.forEach(function(c, i){
+      var o = circOffset(i), a = Math.abs(o), s = o < 0 ? -1 : 1, t, op, z;
+      if(a === 0){
+        t = 'translate(-50%,-50%) translateZ(0) scale(1)'; op = 1; z = 50;
+      } else {
+        t = 'translate(-50%,-50%) translateX(' + (s * (cw * 0.40 + (a - 1) * cw * 0.18)) + 'px) translateZ(' + (-a * cw * 0.60) + 'px) rotateY(' + (-s * 40) + 'deg) scale(' + (1 - a * 0.14) + ')';
+        op = a === 1 ? 0.60 : 0.24; z = 50 - a;
+      }
+      // A card crossing the seam jumps instantly (it lives in the faded far slot, so it's invisible)
+      var prev = prevOffset[i];
+      var teleport = prev !== undefined && Math.abs(o - prev) > 2;
+      if(teleport) c.style.transition = 'none';
+      c.style.transform = t;
+      c.style.opacity = op;
+      c.style.zIndex = z;
+      if(teleport){ void c.offsetWidth; c.style.transition = ''; }
+      c.classList.toggle('cf-active', a === 0);
+      c.setAttribute('aria-current', a === 0 ? 'true' : 'false');
+      prevOffset[i] = o;
+    });
+  }
+
+  // Side card → centre it; the centred card's CTA → open/close its story
+  cfCards.forEach(function(card, i){
+    card.addEventListener('click', function(){ if(i !== currentProject) selectProject(i); });
+    var cta = card.querySelector('.cf-cta');
+    if(cta) cta.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(i === currentProject) toggleStory(); else selectProject(i);
     });
   });
 
-  // Arrow clicks
+  // Arrows loop around
   etPrev.addEventListener('click', function(){ selectProject(currentProject - 1); });
   etNext.addEventListener('click', function(){ selectProject(currentProject + 1); });
 
-  // CTA expand/collapse
-  etCta.addEventListener('click', function(){
-    var isOpen = etExpand.classList.contains('open');
-    if(isOpen){
-      collapseExpand();
-    } else {
-      // Measure the active inner's scrollHeight
-      var activeInner = document.querySelector('.et-expand-inner[data-expand="' + currentProject + '"]');
-      if(!activeInner) return;
-      // Ensure the inner is visible for measurement
-      activeInner.style.display = '';
-      var h = activeInner.scrollHeight;
-      etExpand.style.maxHeight = h + 'px';
-      etExpand.classList.add('open');
-      etCta.setAttribute('aria-expanded','true');
-      etCta.querySelector('.et-cta-text').textContent = 'collapse';
-    }
+  // Re-place cards on resize (offsets are derived from the live card width)
+  var resizeT;
+  window.addEventListener('resize', function(){ clearTimeout(resizeT); resizeT = setTimeout(function(){ equalizeCards(); layoutCarousel(); }, 120); });
+
+  // Drag / swipe
+  var dragX = 0, dragging = false;
+  cfViewport.addEventListener('pointerdown', function(e){ dragX = e.clientX; dragging = true; });
+  cfViewport.addEventListener('pointerup', function(e){
+    if(!dragging) return; dragging = false;
+    var dx = e.clientX - dragX;
+    if(dx < -45) selectProject(currentProject + 1);
+    else if(dx > 45) selectProject(currentProject - 1);
   });
 
-  // Keyboard navigation for tabs
-  var tabNav = document.querySelector('.et-tabs');
-  if(tabNav){
-    tabNav.addEventListener('keydown', function(e){
-      if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-        e.preventDefault();
-        var dir = e.key === 'ArrowRight' ? 1 : -1;
-        var next = currentProject + dir;
-        if(next >= 0 && next < PROJECTS.length){
-          selectProject(next);
-          var nextTab = document.querySelector('.et-tab[data-project="' + next + '"]');
-          if(nextTab) nextTab.focus();
-        }
-      }
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        etCta.click();
-      }
+  // Keyboard navigation on the carousel viewport
+  if(cfViewport){
+    cfViewport.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight'){ e.preventDefault(); selectProject(currentProject + 1); }
+      else if(e.key === 'ArrowLeft'){ e.preventDefault(); selectProject(currentProject - 1); }
+      else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleStory(); }
     });
   }
 
-  // Initialize first project
+  // Make every card the height of the tallest, so the full text always fits
+  function equalizeCards(){
+    var max = 0;
+    cfCards.forEach(function(c){ c.style.height = 'auto'; });
+    cfCards.forEach(function(c){ if(c.offsetHeight > max) max = c.offsetHeight; });
+    cfCards.forEach(function(c){ c.style.height = max + 'px'; });
+    cfViewport.style.height = (max + 12) + 'px';
+  }
+
+  // Initialize
+  equalizeCards();
   selectProject(0, false);
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ equalizeCards(); layoutCarousel(); });
+  }
 
   /* ── Hash routing ── */
   var hashToProject = {gemmpen:0, compass:1, dojo:2, ute:3, claudia:4};
