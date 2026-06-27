@@ -410,6 +410,14 @@
   .ute-demo .dm-text .kw{
     color:var(--rust);font-style:normal;font-weight:600;
     border-bottom:1.5px solid rgba(159,58,31,0.3);
+    animation:kw-light .55s ease forwards;
+  }
+  @keyframes kw-light{
+    from{color:var(--ink);border-bottom-color:transparent}
+    to{color:var(--rust);border-bottom-color:rgba(159,58,31,0.3)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .ute-demo .dm-text .kw{animation:none}
   }
   .ute-demo .dm-note{
     font-family:'JetBrains Mono',monospace;font-size:0.62em;

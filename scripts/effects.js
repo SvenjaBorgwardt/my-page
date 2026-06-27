@@ -364,6 +364,7 @@
     // The assistant repeats everything — that's the confirmation.
     var SCENES = [
       {
+        explainFirst: true,   // first scene leads in: explain, then show
         dialog: [
           {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt']},
         ],
@@ -434,7 +435,8 @@
       var d = document.createElement('div');
       d.className = 'dm';
       var rendered = text;
-      if (keywords) {
+      var hasKw = keywords && keywords.length;
+      if (hasKw) {
         for (var k = 0; k < keywords.length; k++) {
           rendered = rendered.replace(keywords[k], '<span class="kw">' + keywords[k] + '</span>');
         }
@@ -452,8 +454,17 @@
       return new Promise(function(resolve) {
         function tick() {
           if (i >= plain.length) {
-            textEl.innerHTML = fullHTML;
-            resolve();
+            // Sentence finished — show it plain first (no colour yet).
+            textEl.textContent = plain;
+            if (hasKw) {
+              // After a beat, the keyword lights up red (animates ink → rust).
+              setTimeout(function() {
+                textEl.innerHTML = fullHTML;
+                setTimeout(resolve, 600); // let the red register before the explanation
+              }, 400);
+            } else {
+              resolve();
+            }
             return;
           }
           i++;
@@ -634,24 +645,25 @@
       var scene = SCENES[idx];
       var hasDialog  = scene.dialog && scene.dialog.length > 0;
       var hasActions = scene.actions && scene.actions.length > 0;
+      var notes = scene.notes || (scene.note ? [scene.note] : []);
 
-      // 1. Focus chat side, blur POS — reader watches the dialog
-      if (hasDialog) {
+      // Phase: dialog — focus chat, blur POS, reader watches the conversation
+      async function playDialog() {
+        if (!hasDialog) return;
         focusChat();
         await sleep(450); // let the blur transition settle
-
         for (var d = 0; d < scene.dialog.length; d++) {
           var line = scene.dialog[d];
           await addMsg(line.who, line.text, line.kw);
-          await sleep(Math.max(1900, line.text.length * 26));
+          await sleep(Math.max(1500, line.text.length * 26));
         }
       }
 
-      // 2. Switch focus to POS side, blur chat — reader watches the register
-      if (hasActions) {
+      // Phase: actions — focus POS, blur chat, reader watches the register
+      async function playActions() {
+        if (!hasActions) return;
         focusPos();
         await sleep(600); // let the blur transition settle
-
         for (var a = 0; a < scene.actions.length; a++) {
           var act = scene.actions[a];
           await sleep(550);
@@ -666,9 +678,9 @@
         }
       }
 
-      // 3. Annotation — briefly show both sides so reader sees connection
-      var notes = scene.notes || (scene.note ? [scene.note] : []);
-      if (notes.length) {
+      // Phase: notes — both sides sharp, the plain-words explanation
+      async function playNotes() {
+        if (!notes.length) return;
         focusBoth();
         await sleep(450);
         for (var ni = 0; ni < notes.length; ni++) {
@@ -677,12 +689,23 @@
         }
       }
 
-      // 4. Let reader absorb the POS state
+      await playDialog();
+      // First scene leads the reader in: explain BEFORE the register reacts.
+      // Later scenes show first, then explain (the pattern is established).
+      if (scene.explainFirst) {
+        await playNotes();
+        await playActions();
+      } else {
+        await playActions();
+        await playNotes();
+      }
+
+      // Let reader absorb the final state with both sides visible
+      focusBoth();
       await sleep(2600);
 
-      // 5. Fade out messages (except last scene)
+      // Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
-        focusBoth();
         await sleep(300);
         fadeAllMessages();
         await sleep(700);
