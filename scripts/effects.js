@@ -460,8 +460,8 @@
               // After a beat, the keyword lights up red (animates ink → rust).
               setTimeout(function() {
                 textEl.innerHTML = fullHTML;
-                setTimeout(resolve, 600); // let the red register before the explanation
-              }, 400);
+                setTimeout(resolve, 500); // let the red register before the explanation
+              }, 300);
             } else {
               resolve();
             }
@@ -635,10 +635,11 @@
       return new Promise(function(resolve) { setTimeout(resolve, ms); });
     }
 
-    // Reading time scaled to text length — long explanations linger.
+    // Reading time scaled to text length, at a natural reading pace
+    // (~52 ms per character ≈ 230 wpm, with a small base for the eye to land).
     function readMs(text) {
       var len = (text || '').length;
-      return Math.max(3600, Math.min(len * 70 + 1800, 10000));
+      return Math.max(2600, Math.min(len * 52 + 700, 6800));
     }
 
     async function runScene(idx) {
@@ -702,7 +703,7 @@
 
       // Let reader absorb the final state with both sides visible
       focusBoth();
-      await sleep(2600);
+      await sleep(1600);
 
       // Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
