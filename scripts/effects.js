@@ -365,40 +365,43 @@
     var SCENES = [
       {
         dialog: [
-          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?'},
+          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt']},
         ],
         actions: [
           {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
           {type:'filter', rule:'sesame'},
         ],
-        note: 'Assistant says the name — UTE matches it against the customer database',
+        notes: [
+          'Regular customer recognised by name — her profile loads, with allergies and intolerances on file.',
+          'Sesame allergy on file → UTE greys out every item with sesame, automatically.',
+        ],
       },
       {
         dialog: [
           {who:'mrs. schmidt', text:'Morning! Very well, thank you. The usual, please.'},
-          {who:'assistant', text:'Two rye breads and a sourdough, right?'},
+          {who:'assistant', text:'Two rye breads and a sourdough, right?', kw:['Two rye breads','sourdough']},
         ],
         actions: [
           {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
           {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
         ],
-        note: 'Assistant repeats the order back — UTE transcribes that as confirmation',
+        notes: ['“The usual” — the assistant repeats it as items, and UTE rings up what it hears: 2× rye bread, 1× sourdough.'],
       },
       {
         dialog: [
           {who:'mrs. schmidt', text:'Exactly! And my sister is visiting — she\'d love something vegan.'},
-          {who:'assistant', text:'Of course! Let me show you the vegan options.'},
+          {who:'assistant', text:'Of course! Let me show you the vegan options.', kw:['vegan']},
         ],
         actions: [
           {type:'badge', text:'Vegan', cls:'vegan'},
           {type:'filter', rule:'vegan'},
         ],
-        note: 'Keyword "vegan" in the assistant\'s speech — catalogue filters live',
+        notes: ['The assistant says “vegan” → the catalogue narrows to vegan items only. No menu, no searching.'],
       },
       {
         dialog: [
           {who:'mrs. schmidt', text:'The apple turnover looks wonderful.'},
-          {who:'assistant', text:'One apple turnover — lovely choice.'},
+          {who:'assistant', text:'One apple turnover — lovely choice.', kw:['apple turnover']},
         ],
         actions: [
           {type:'select',    name:'Apple turnover'},
@@ -406,19 +409,20 @@
           {type:'crosssell', product:'Vegan quiche — €3.90', reason:'Pairs well \xB7 vegan-friendly \xB7 popular combo'},
           {type:'highlight', name:'Vegan quiche'},
         ],
-        note: 'UTE surfaces cross-sell — assistant picks it up naturally',
+        notes: ['UTE surfaces a pairing the assistant can offer naturally — vegan quiche, matching her sister’s vegan choice.'],
       },
       {
         dialog: [
           {who:'assistant', text:'Something savory too? The vegan quiche pairs nicely.'},
           {who:'mrs. schmidt', text:'Oh, good idea — yes please!'},
-          {who:'assistant', text:'One vegan quiche as well. That\'s everything — have a wonderful day!'},
+          {who:'assistant', text:'One vegan quiche as well. That\'s everything — have a wonderful day!', kw:['vegan quiche']},
         ],
         actions: [
           {type:'select', name:'Vegan quiche'},
           {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
         ],
+        notes: ['Order closed and paid — the total settles automatically. Ready for the next customer.'],
       }
     ];
 
@@ -452,7 +456,7 @@
           }
           i++;
           textEl.textContent = plain.substring(0, i);
-          setTimeout(tick, 28);
+          setTimeout(tick, 38);
         }
         tick();
       });
@@ -604,9 +608,11 @@
     function showComplete() {
       var footer = cartWrap.querySelector('.pos-footer');
       if (!footer) return;
+      var total = footer.querySelector('.pos-total');
+      if (total) { total.classList.add('paid'); flashGlow(total); }
       var d = document.createElement('div');
       d.className = 'pos-complete';
-      d.textContent = 'Complete order';
+      d.innerHTML = '<span class="pos-check" aria-hidden="true">✓</span> Paid';
       footer.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
@@ -624,23 +630,23 @@
       // 1. Focus chat side, blur POS — reader watches the dialog
       if (hasDialog) {
         focusChat();
-        await sleep(350); // let the blur transition settle
+        await sleep(450); // let the blur transition settle
 
         for (var d = 0; d < scene.dialog.length; d++) {
           var line = scene.dialog[d];
           await addMsg(line.who, line.text, line.kw);
-          await sleep(600);
+          await sleep(850);
         }
       }
 
       // 2. Switch focus to POS side, blur chat — reader watches the register
       if (hasActions) {
         focusPos();
-        await sleep(400); // let the blur transition settle
+        await sleep(600); // let the blur transition settle
 
         for (var a = 0; a < scene.actions.length; a++) {
           var act = scene.actions[a];
-          await sleep(400);
+          await sleep(550);
           if (act.type === 'customer')        setCustomer(act.name, act.badge);
           else if (act.type === 'badge')     addBadge(act.text, act.cls);
           else if (act.type === 'filter')    filterBy(act.rule);
@@ -653,22 +659,25 @@
       }
 
       // 3. Annotation — briefly show both sides so reader sees connection
-      if (scene.note) {
+      var notes = scene.notes || (scene.note ? [scene.note] : []);
+      if (notes.length) {
         focusBoth();
-        await sleep(300);
-        addNote(scene.note);
-        await sleep(1500);
+        await sleep(450);
+        for (var ni = 0; ni < notes.length; ni++) {
+          addNote(notes[ni]);
+          await sleep(2400);
+        }
       }
 
       // 4. Let reader absorb the POS state
-      await sleep(2000);
+      await sleep(2200);
 
       // 5. Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
         focusBoth();
-        await sleep(200);
+        await sleep(300);
         fadeAllMessages();
-        await sleep(600);
+        await sleep(700);
       }
     }
 
@@ -699,6 +708,8 @@
       cartEl.innerHTML = '';
       runningTotal = 0;
       totalVal.textContent = '€0.00';
+      var paidTotal = cartWrap.querySelector('.pos-total');
+      if (paidTotal) paidTotal.classList.remove('paid');
       for (var j = 0; j < tileEls.length; j++) {
         tileEls[j].classList.remove('disabled','selected','suggest');
       }
@@ -737,7 +748,7 @@
       }
 
       // hold final state, then reset
-      await sleep(4000);
+      await sleep(4500);
       resetToIdle();
       running = false;
     }
