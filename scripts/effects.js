@@ -415,7 +415,9 @@
         dialog: [
           {who:'assistant', text:'Something savory too? The vegan quiche pairs nicely.'},
           {who:'mrs. schmidt', text:'Oh, good idea — yes please!'},
-          {who:'assistant', text:'One vegan quiche as well. That\'s everything — have a wonderful day!', kw:['vegan quiche']},
+          {who:'assistant', text:'One vegan quiche, then.', kw:['vegan quiche']},
+          {who:'mrs. schmidt', text:'That\'s everything, thank you!'},
+          {who:'assistant', text:'Perfect — that comes to €16.60. I wish you a wonderful day, Mrs. Schmidt!'},
         ],
         actions: [
           {type:'select', name:'Vegan quiche'},
@@ -622,6 +624,12 @@
       return new Promise(function(resolve) { setTimeout(resolve, ms); });
     }
 
+    // Reading time scaled to text length — long explanations linger.
+    function readMs(text) {
+      var len = (text || '').length;
+      return Math.max(3600, Math.min(len * 70 + 1800, 10000));
+    }
+
     async function runScene(idx) {
       var scene = SCENES[idx];
       var hasDialog  = scene.dialog && scene.dialog.length > 0;
@@ -635,7 +643,7 @@
         for (var d = 0; d < scene.dialog.length; d++) {
           var line = scene.dialog[d];
           await addMsg(line.who, line.text, line.kw);
-          await sleep(850);
+          await sleep(Math.max(1900, line.text.length * 26));
         }
       }
 
@@ -665,12 +673,12 @@
         await sleep(450);
         for (var ni = 0; ni < notes.length; ni++) {
           addNote(notes[ni]);
-          await sleep(2400);
+          await sleep(readMs(notes[ni]));
         }
       }
 
       // 4. Let reader absorb the POS state
-      await sleep(2200);
+      await sleep(2600);
 
       // 5. Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
