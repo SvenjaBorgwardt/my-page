@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Svenja Borgwardt</title>
+<title>Svenja Borgwardt · AI for Learning</title>
+<meta name="description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. GemmPen, Compass, UTE, Claudia.">
+<meta property="og:title" content="Svenja Borgwardt">
+<meta property="og:description" content="AI systems for learning: fine-tuned models that help without doing the thinking for you.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
@@ -40,7 +45,7 @@
   /* ========== MASTHEAD: name left, photo right ========== */
   .masthead{
     display:grid;grid-template-columns:1fr auto;gap:2.4em;align-items:center;
-    margin-bottom:3.2em;padding-bottom:2em;border-bottom:1px solid var(--rule);
+    margin-bottom:1.6em;padding-bottom:1.4em;border-bottom:1px solid var(--rule);
   }
   .masthead h1{
     font-family:'Cormorant Garamond',serif;font-weight:300;
@@ -75,7 +80,7 @@
     font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
     margin-bottom:0.3em;
   }
-  .masthead-intro:first-of-type{margin-top:2.4em}
+  .masthead-intro:first-of-type{margin-top:1.6em}
 
   .photo-frame{
     width:7.8em;height:10.4em;position:relative;flex-shrink:0;
@@ -110,7 +115,7 @@
   .thesis strong{font-weight:400}
 
   .hr-soft{
-    display:block;margin:3.6em auto;width:6em;height:0.05em;background:var(--rule);border:0;
+    display:block;margin:2.4em auto;width:6em;height:0.05em;background:var(--rule);border:0;
     position:relative;
   }
   .hr-soft::before{
@@ -126,7 +131,7 @@
 
   /* ========== SECTION HEADERS ========== */
   .section-title{
-    text-align:center;margin:5em 0 2.8em;
+    text-align:center;margin:3em 0 1.8em;
     font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.3em;text-transform:uppercase;
     color:var(--ink-dim);
   }
@@ -135,14 +140,14 @@
   }
 
   /* ========== CHAPTERS ========== */
-  .chapter{margin-bottom:4em;scroll-margin-top:3em}
-  .chapter-head{text-align:center;margin-bottom:2.2em}
+  .chapter{margin-bottom:3em;scroll-margin-top:3em}
+  .chapter-head{text-align:center;margin-bottom:1.6em}
   .chapter-num{
     font-style:italic;font-weight:300;
-    font-size:1.3em;color:var(--rust);display:block;margin-bottom:0.4em;letter-spacing:0.02em;
+    font-size:1em;color:var(--rust);display:block;margin-bottom:0.2em;letter-spacing:0.02em;
   }
   .chapter-title{
-    font-weight:400;font-size:clamp(38px,4.5vw,52px);line-height:1.05;letter-spacing:0;
+    font-weight:400;font-size:clamp(28px,3.5vw,40px);line-height:1.1;letter-spacing:0;
   }
   .chapter-title em{font-style:italic;font-weight:400}
 
@@ -175,6 +180,8 @@
     text-transform:uppercase;color:var(--ink-dim);line-height:1.9;
   }
   .stack .k{color:var(--rust);margin-right:0.4em}
+  .stack a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rust);transition:color .2s}
+  .stack a:hover{color:var(--rust)}
 
   /* ========== PROJECT EXAMPLES (SVG MOCKUPS) ========== */
   .project-example{margin:2.4em 0 0.4em;position:relative}
@@ -231,7 +238,7 @@
     max-height:380px;overflow:hidden;
     box-shadow:0 2px 16px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);
   }
-  /* ── title bar (register style) ── */
+  /* -- title bar (register style) -- */
   .ute-demo .pos-head{
     font-family:'JetBrains Mono',monospace;
     padding:7px 10px;border-bottom:1px solid var(--rule);
@@ -275,7 +282,7 @@
   .ute-demo .pos-head-status.active::before{
     background:var(--rust);opacity:1;
   }
-  /* ── customer bar ── */
+  /* -- customer bar -- */
   .ute-demo .pos-customer{
     font-family:'Cormorant Garamond',serif;font-size:11px;
     color:var(--ink-dim);
@@ -298,12 +305,12 @@
   }
   .ute-demo .pos-customer .cust-badge.badge-enter{opacity:0}
   .ute-demo .pos-customer .cust-badge.badge-show{opacity:1}
-  /* ── body: grid + sidebar ── */
+  /* -- body: grid + sidebar -- */
   .ute-demo .pos-body{
     display:grid;grid-template-columns:1fr 120px;
     flex:1 1 0;min-height:0;overflow:hidden;
   }
-  /* ── product grid ── */
+  /* -- product grid -- */
   .ute-demo .pos-grid{
     display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
     gap:0;
@@ -343,7 +350,7 @@
   .ute-demo .pos-tile.suggest{background:var(--paper-deep);border-left:2px solid var(--ink-dim);animation:suggest-pulse 1.5s ease-in-out infinite}
   .ute-demo .pos-tile.suggest .tile-name{color:var(--ink)}
   @keyframes suggest-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
-  /* ── sidebar / order panel ── */
+  /* -- sidebar / order panel -- */
   .ute-demo .pos-sidebar{
     display:flex;flex-direction:column;
     background:var(--paper);
@@ -379,7 +386,7 @@
     margin:2px 8px;line-height:1.4;
   }
   .ute-demo .pos-alert.show{opacity:1;transition:opacity .3s ease}
-  /* ── cross-sell suggestion card ── */
+  /* -- cross-sell suggestion card -- */
   .ute-demo .pos-crosssell{
     flex:0 0 auto;margin:4px 8px;padding:6px 8px;
     background:rgba(159,58,31,0.06);border:1px solid rgba(159,58,31,0.2);
@@ -411,9 +418,9 @@
     opacity:0;transform:translateY(2px);
   }
   .ute-demo .dm-note.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
-  .ute-demo .dm-note::before{content:'→ '}
+  .ute-demo .dm-note::before{content:'\2192 '}
   .ute-demo .dm.fade-out .dm-note{opacity:0}
-  /* ── footer: total + complete ── */
+  /* -- footer: total + complete -- */
   .ute-demo .pos-footer{
     flex:0 0 auto;padding:0 8px 6px;margin-top:auto;
   }
@@ -431,7 +438,7 @@
     border:none;
   }
   .ute-demo .pos-complete.show{opacity:1;transition:opacity .35s ease}
-  /* ── record bar ── */
+  /* -- record bar -- */
   .ute-demo .pos-rec{
     flex:0 0 auto;
     display:flex;align-items:center;justify-content:center;gap:6px;
@@ -470,9 +477,9 @@
     animation:rec-pulse 1.8s ease-in-out infinite;
   }
   @keyframes rec-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
-  /* ── sesame allergy highlight in status ── */
+  /* -- sesame allergy highlight in status -- */
   .ute-demo .pos-head-status .status-warn{color:var(--rust);font-weight:600}
-  /* ── action highlight: brief glow when something changes ── */
+  /* -- action highlight: brief glow when something changes -- */
   @keyframes action-glow{
     0%{box-shadow:0 0 0 0 rgba(159,58,31,0.5)}
     40%{box-shadow:0 0 8px 3px rgba(159,58,31,0.35)}
@@ -482,7 +489,7 @@
   @media(prefers-reduced-motion:reduce){
     .ute-demo .glow{animation:none}
   }
-  /* ── eye-guidance: blur + dim the inactive side ── */
+  /* -- eye-guidance: blur + dim the inactive side -- */
   .ute-demo-chat,
   .ute-demo-pos{
     transition:filter .5s ease,opacity .5s ease;
@@ -515,7 +522,7 @@
   }
   .topnav .nav-left{display:flex;gap:1.1em;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase}
   .topnav .nav-left a{color:var(--ink);text-decoration:none;position:relative;padding-left:0.7em;transition:color .3s}
-  .topnav .nav-left a::before{content:"►";position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--rust);font-size:0.4em;opacity:0;transition:opacity .3s}
+  .topnav .nav-left a::before{content:"\25B6";position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--rust);font-size:0.4em;opacity:0;transition:opacity .3s}
   .topnav .nav-left a:hover{color:var(--rust)}
   .topnav .nav-left a:hover::before{opacity:1}
   .topnav .nav-center{display:flex;gap:0.5em}
@@ -564,6 +571,10 @@
     font-style:italic;font-size:1.05em;line-height:1.75;color:var(--ink-soft);max-width:64ch;
   }
   .other-parts .hobbies .dot{color:var(--rust);margin:0 0.5em}
+  .other-parts .aside-title{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:1.15em;color:var(--rust);margin:1.6em 0 0.5em;letter-spacing:0.01em;
+  }
 
   /* ========== FOOTER ========== */
   footer{
@@ -619,7 +630,7 @@
     transition:color .2s;
   }
   .compass-opt::before{
-    content:"►";margin-right:0.5em;font-size:0.7em;color:var(--rust);
+    content:"\25B6";margin-right:0.5em;font-size:0.7em;color:var(--rust);
     opacity:0;transition:opacity .2s;
   }
   .compass-opt:hover{color:var(--ink)}
@@ -637,6 +648,217 @@
     .compass-response{transition:none}
   }
 
+  /* ========== CHAPTER TABS ========== */
+  .chapter-tabs{
+    display:grid;grid-template-columns:1fr 1fr 1fr;
+    margin:0;border-bottom:1px solid var(--rule);
+  }
+  .tab{
+    background:none;border:none;
+    padding:0.8em 0.5em;cursor:pointer;text-align:center;
+    color:var(--ink-dim);transition:color 0.3s;
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+    font-family:inherit;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .tab.active{color:var(--ink);border-bottom-color:var(--rust)}
+  .tab-num{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+    font-size:0.85em;color:var(--rust);display:block;margin-bottom:0.2em;letter-spacing:0.02em;
+  }
+  .tab-name{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:1.15em;letter-spacing:0.02em;
+  }
+  .tab-content{display:none;padding-top:1.2em}
+  .tab-content.active{display:block;animation:tabFadeIn .35s ease}
+  @keyframes tabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){.tab-content.active{animation:none}}
+
+  /* ========== EDITORIAL THEATRE ========== */
+  .et-wrapper{
+    display:flex;align-items:center;gap:1.2em;
+    margin:1.6em 0 0;
+  }
+  /* Arrow buttons */
+  .et-arrow-btn{
+    background:none;border:none;padding:0.5em;cursor:pointer;
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    transition:opacity 0.3s;
+  }
+  .et-arrow-btn:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .et-arrow-btn.disabled{opacity:0.12;pointer-events:none}
+  .et-arrow-btn svg{overflow:visible;display:block}
+  .et-arrow-btn g{fill:var(--ink);transition:fill 0.5s cubic-bezier(.2,1,.3,1)}
+  .et-arrow-btn:hover g{fill:var(--rust);transition:fill 1s cubic-bezier(.2,1,.3,1)}
+  .et-arrow{transition:all 0.5s cubic-bezier(.2,1,.3,1)}
+  .et-arrow-fixed{transition:all 0.5s cubic-bezier(.2,1,.3,1)}
+  .et-arrow-btn:hover .et-arrow{animation:et-arrow-anim 2.5s cubic-bezier(.2,1,.3,1) infinite}
+  .et-arrow-btn:hover .et-arrow-fixed{animation:et-arrow-fixed-anim 2.5s cubic-bezier(.2,1,.3,1) infinite}
+  @keyframes et-arrow-anim{0%{opacity:1;transform:translateX(0)}5%{transform:translateX(-0.1rem)}100%{transform:translateX(1rem);opacity:0}}
+  @keyframes et-arrow-fixed-anim{5%{opacity:0}20%{opacity:0.4}100%{opacity:1}}
+
+  /* (Tab/card chrome removed — replaced by the coverflow carousel below) */
+
+  .et-ornament{
+    color:var(--rule);font-size:0.85em;letter-spacing:0.3em;
+    margin-bottom:0.6em;
+  }
+  .et-counter{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    color:var(--rule);letter-spacing:0.12em;margin-bottom:1.2em;
+  }
+  .et-tag{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);
+    margin-bottom:0.3em;
+  }
+  .et-title{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:1.6em;line-height:1.15;color:var(--ink);letter-spacing:0;
+    margin-bottom:0.6em;
+  }
+  .et-teaser-wrap{
+    max-width:44ch;margin:0 auto;position:relative;
+    text-align:left;padding-left:2em;
+  }
+  .et-teaser-wrap::before{
+    content:'\201C';position:absolute;left:0;top:-0.2em;
+    font-family:'Cormorant Garamond',serif;font-size:2.4em;
+    color:var(--paper-warm);font-weight:300;line-height:1;
+  }
+  .et-teaser{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:0.75em;line-height:1.6;color:var(--ink-soft);
+  }
+
+  /* (Stagger removed — coverflow cards carry their own static content) */
+
+  /* CTA button */
+  .et-cta{
+    display:inline-flex;align-items:center;gap:0.6em;
+    margin-top:1.4em;background:none;border:none;cursor:pointer;padding:0;
+  }
+  .et-cta:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .et-cta-text{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);
+    transition:color 0.3s;
+  }
+  .et-cta-circle{
+    width:28px;height:28px;border-radius:50%;
+    border:1px solid var(--rule);
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color 0.3s,transform 0.3s;
+  }
+  .et-cta-circle svg{
+    width:12px;height:12px;stroke:var(--rust);fill:none;stroke-width:2;
+    transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .et-cta:hover .et-cta-circle{border-color:var(--rust);transform:translateY(2px)}
+  .et-cta[aria-expanded="true"] .et-cta-circle svg{transform:rotate(180deg)}
+
+  /* Expand zone */
+  .et-expand{
+    max-height:0;overflow:hidden;
+    transition:max-height 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .et-expand-inner{
+    padding:1.8em 2em 2em;
+    border-top:1px solid var(--rule);
+    position:relative;
+  }
+  /* (top fade overlay removed — the full story starts cleanly below the card) */
+  .et-expand-inner p,
+  .et-expand-inner blockquote,
+  .et-expand-inner .stack,
+  .et-expand-inner .compass-demo,
+  .et-expand-inner .ute-demo,
+  .et-expand-inner .project-example{
+    opacity:0;transform:translateY(8px);
+    transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1),transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .et-expand.open .et-expand-inner p,
+  .et-expand.open .et-expand-inner blockquote,
+  .et-expand.open .et-expand-inner .stack,
+  .et-expand.open .et-expand-inner .compass-demo,
+  .et-expand.open .et-expand-inner .ute-demo,
+  .et-expand.open .et-expand-inner .project-example{
+    opacity:1;transform:translateY(0);
+  }
+
+  /* Reduced motion */
+  @media(prefers-reduced-motion:reduce){
+    .et-arrow,.et-arrow-fixed{transition:none}
+    .et-arrow-btn:hover .et-arrow,
+    .et-arrow-btn:hover .et-arrow-fixed{animation:none}
+    .et-card{transition:none}
+    .et-tab::after{transition:none}
+    .et-tag,.et-title,.et-teaser-wrap{transition:none;opacity:1;transform:none}
+    .et-cta-circle,.et-cta-circle svg{transition:none}
+    .et-expand{transition:none}
+    .et-expand-inner p,
+    .et-expand-inner blockquote,
+    .et-expand-inner .stack,
+    .et-expand-inner .compass-demo,
+    .et-expand-inner .ute-demo,
+    .et-expand-inner .project-example{transition:none;opacity:1;transform:none}
+  }
+
+  /* Mobile */
+  @media(max-width:32em){
+    .et-wrapper{gap:0.5em}
+    .et-arrow-btn svg{width:20px;height:18px}
+    .et-hero{padding:1.4em 1.2em 1.2em}
+    .et-title{font-size:clamp(24px,6vw,32px)}
+    .et-expand-inner{padding:1.4em 1.2em 1.4em}
+    .et-tabs{padding:0 1em}
+    .et-tab{padding:0.8em 0.8em}
+  }
+
+  /* ========== COVERFLOW CAROUSEL ========== */
+  #editorial-theatre{position:relative;overflow:hidden}
+  .cf-viewport{
+    flex:1;min-width:0;position:relative;
+    perspective:1700px;height:22em;outline:none;
+  }
+  .cf-viewport:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:12px}
+  .cf-track{position:absolute;inset:0;transform-style:preserve-3d}
+  .cf-card{
+    position:absolute;top:50%;left:50%;width:20em;
+    background:var(--paper);border:0.5px solid var(--rule);border-radius:12px;
+    box-shadow:0 6px 26px rgba(20,16,24,0.07);
+    padding:1.9em 2em 1.6em;text-align:center;cursor:pointer;
+    display:flex;flex-direction:column;backface-visibility:hidden;
+    transform:translate(-50%,-50%);
+    transition:transform 0.72s cubic-bezier(.16,1,.3,1),opacity 0.72s cubic-bezier(.16,1,.3,1),box-shadow 0.4s cubic-bezier(.2,1,.3,1);
+  }
+  .cf-card.cf-active{cursor:default}
+  .cf-card .et-ornament{align-self:center;width:4.5em;height:1px;margin:0.2em 0 1.1em;background:var(--rule)}
+  .cf-card .et-counter{margin-bottom:1em}
+  .cf-card .et-teaser-wrap{flex:1;min-height:0;margin-top:0.7em;padding-left:0}
+  .cf-card .et-teaser-wrap::before{content:none}
+  .cf-card .et-teaser{font-size:1em;line-height:1.6}
+  .cf-card .cf-cta{align-self:center;margin-top:1.4em;flex-shrink:0;font-size:inherit}
+  .cf-card .cf-cta .et-cta-text{font-family:'Cormorant Garamond',serif;font-style:italic;text-transform:none;letter-spacing:0;font-size:1em}
+  .cf-card.cf-open .cf-cta .et-cta-circle svg{transform:rotate(180deg)}
+  @media(prefers-reduced-motion:reduce){.cf-card{transition:none}}
+  @media(max-width:32em){
+    .cf-viewport{height:20em;perspective:1000px}
+    .cf-card{width:16em;padding:1.5em 1.4em}
+  }
+
+  /* Link list for Out There */
+  .link-list{list-style:none;padding:0;max-width:64ch}
+  .link-list li{padding:1.2em 0;border-bottom:1px solid var(--rule)}
+  .link-list a{text-decoration:none;color:var(--ink);transition:color .3s;font-size:1.1em}
+  .link-list a:hover{color:var(--rust)}
+  .link-list .link-label{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.3em;
+  }
+
   @media (max-width:32em){
     main{padding:2em 1em 4em}
     .masthead{grid-template-columns:1fr;gap:1.2em;padding-bottom:1.4em;margin-bottom:2.8em}
@@ -648,6 +870,7 @@
     .example{padding:0.9em 1em}
     .example .row{grid-template-columns:1fr;gap:0.2em}
     .example .who{margin-top:0.3em}
+    .tab-name{font-size:0.95em}
   }
 </style>
 </head>
@@ -656,9 +879,7 @@
 <!-- STICKY TOP NAV -->
 <header class="topnav">
   <nav class="nav-left">
-    <a href="#about">About</a>
-    <a href="#compass">Work</a>
-    <a href="#contact">Contact</a>
+    <a href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
   </nav>
   <div class="nav-center">
     <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -666,7 +887,7 @@
         <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0z"/>
       </svg>
     </a>
-    <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub">
+    <a href="https://github.com/SvenjaBorgwardt" target="_blank" rel="noopener" aria-label="GitHub">
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.17c-3.34.72-4.04-1.42-4.04-1.42-.55-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.17 0 0 1.01-.32 3.3 1.23.96-.27 1.99-.4 3.01-.41 1.02.01 2.05.14 3.01.41 2.29-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.11 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
       </svg>
@@ -684,12 +905,11 @@
   <div class="name-block">
     <h1>Svenja <em>Borgwardt</em></h1>
     <button class="pronounce" aria-label="Listen to pronunciation: SVEN-yah BORK-vart">
-      <span class="pronounce-ipa">[ˈsfɛnja ˈbɔʁkvaʁt]</span>
+      <span class="pronounce-ipa">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
       <span class="pronounce-approx">SVEN-yah BORK-vart</span>
     </button>
-    <!-- HERO: INTRO — directly under the name -->
-    <p class="masthead-intro reveal">Currently based in Cologne, Germany.</p>
-    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. All of them ask the same question: how do we make AI that finds what's strong in people and makes room for them to grow?</p>
+    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little.</p>
+    <p class="masthead-intro reveal">I studied economics, linguistics, and literature and cultural studies. I've done education research, taught in several different institutions and countries, run and organized EU projects across Europe, and spent my early years thinking in risk and compliance at a bank. Currently based in Cologne, Germany.</p>
   </div>
   <figure class="photo-block">
     <div class="photo-frame">
@@ -698,288 +918,366 @@
   </figure>
 </header>
 
-<!-- FEATURED WORK -->
-<div class="section-title reveal">Featured Work</div>
+<!-- CHAPTER TABS -->
+<nav class="chapter-tabs" role="tablist" aria-label="Site sections">
+  <button class="tab active" data-section="build" role="tab" id="tab-build" aria-selected="true" aria-controls="section-build">
+    <span class="tab-name">What I Build</span>
+  </button>
+  <button class="tab" data-section="think" role="tab" id="tab-think" aria-selected="false" aria-controls="section-think">
+    <span class="tab-name">What I Think</span>
+  </button>
+  <button class="tab" data-section="out" role="tab" id="tab-out" aria-selected="false" aria-controls="section-out">
+    <span class="tab-name">Out There</span>
+  </button>
+</nav>
 
-<!-- COMPASS -->
-<section class="chapter" id="compass">
-  <header class="chapter-head reveal">
-    <span class="chapter-num">I.</span>
-    <h2 class="chapter-title"><em>Compass</em></h2>
-  </header>
+<!-- ============================================================ -->
+<!-- TAB: WHAT I BUILD                                            -->
+<!-- ============================================================ -->
+<div class="tab-content active" id="section-build" role="tabpanel" aria-labelledby="tab-build">
 
-  <p>Watching how people use AI, I keep noticing one thing: people tend to take the path of least resistance. In learning contexts, that worries me. AI creates a specific failure of self-assessment: the student produces a good output and reads the quality of the output as evidence of their own learning. Cognitive science calls this <em>the illusion of fluency</em>, the gap between how something feels to process and whether any of it has actually stuck. For something to be learned, it has to be slightly harder than easy. This is the idea behind Robert Bjork's <em>desirable difficulties</em>. What I see in the classroom is the opposite: students handing in well-written AI work they didn't understand themselves.</p>
-
-  <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
-
-  <div class="compass-demo" id="compass-demo">
-    <span class="compass-label">Student</span>
-    <p class="compass-question" aria-live="polite"></p>
-    <div class="compass-options" aria-label="Choose a response approach">
-      <button class="compass-opt" data-key="standard">Standard AI</button>
-      <button class="compass-opt" data-key="socratic">Socratic</button>
-      <button class="compass-opt" data-key="vision">My Vision</button>
-    </div>
-    <p class="compass-response" aria-live="polite"></p>
-  </div>
-
-  <p>So I asked myself: how can we make AI usable for learning without letting it take over the thinking of the most vulnerable group? I started building a tool that removes the AI's ability to give the answer directly, because the interaction layer never sees the whole task. Basically, I tried to handcuff the model into being helpful. But the better the models got, the harder it became to keep them from understanding the overall task. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level of that step. That made the whole thing hard to transfer to other topics and not particularly time-saving.</p>
-
-  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them. That's Compass — not a product, more of a direction. Everything I build for learning follows from this idea.</p>
-
-  <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
-
+<section class="build-intro reveal">
+  <p class="masthead-intro">I also happen to build things. All of them ask the same question: how do we shape AI to find what's strong in people and make room for them to grow?</p>
+  <p class="masthead-intro">Most of what I build starts with a problem right in front of me, something I can test with real people in a real context. Some problems I can solve with a tool or a pipeline. Others need a fine-tuned model. I tend to find out which one the hard way.</p>
 </section>
 
-<hr class="hr-soft">
+<!-- EDITORIAL THEATRE — 3D coverflow -->
+<div id="editorial-theatre">
+  <div class="et-wrapper">
+    <!-- Previous arrow -->
+    <button class="et-arrow-btn" id="et-prev" aria-label="previous project">
+      <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g transform="scale(-1, 1)" transform-origin="8.5 8.5">
+          <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
+        </g>
+      </svg>
+    </button>
 
-<!-- UTE -->
-<section class="chapter" id="ute">
-  <header class="chapter-head reveal">
-    <span class="chapter-num">II.</span>
-    <h2 class="chapter-title"><em>UTE</em></h2>
-  </header>
+    <!-- 3D coverflow viewport -->
+    <div class="cf-viewport" id="cf-viewport" tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
+      <div class="cf-track" id="cf-track">
 
-  <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
+        <article class="cf-card" data-project="0">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">01 / 05</div>
+          <div class="et-tag">on-device model</div>
+          <h3 class="et-title">GemmPen</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Traditional grading points at mistakes and scores them. I never believed in this to really help people to grow. I wanted feedback that puts the student at the centre and shows them exactly how to improve. This is why I built GemmPen.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
 
-  <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+        <article class="cf-card" data-project="1">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">02 / 05</div>
+          <div class="et-tag">fine-tuned tutor</div>
+          <h3 class="et-title">Compass</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Seeing how people use AI worries me when it comes to learning. Too often, a perfect output gives them the illusion of understanding when really the AI did the thinking, not them. I built a tool that teaches my students how to write an argument without handing them the answer, but helps them find their own. This is why I built Compass.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
 
-  <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
+        <article class="cf-card" data-project="2">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">03 / 05</div>
+          <div class="et-tag">fine-tuned sensei</div>
+          <h3 class="et-title">Debate Dojo</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">With Compass I had to cage the AI to stop it from handing students their arguments. It worked, but every learning step had to be hardcoded. For Debate Dojo I tried a different approach: I fine-tuned a sensei that doesn&rsquo;t need caging because it was trained to match its help to the effort a student puts in. This is why I built Debate Dojo.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
 
-  <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+        <article class="cf-card" data-project="3">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">04 / 05</div>
+          <div class="et-tag">voice-first POS</div>
+          <h3 class="et-title">UTE</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">The register always gets in the way of a good conversation at the counter. I built an AI that listens along and handles the technical side, so the person behind the counter can focus on what matters: the customer. This is why I built UTE.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
 
-  <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
+        <article class="cf-card" data-project="4">
+          <div class="et-ornament" aria-hidden="true"></div>
+          <div class="et-counter">05 / 05</div>
+          <div class="et-tag">multi-agent infra</div>
+          <h3 class="et-title">Claudia</h3>
+          <div class="et-teaser-wrap"><p class="et-teaser">Ever since watching Eureka when I was younger I wanted a home I can talk to. Now AI is actually capable enough, so I built one. Claudia runs on a Mac Mini in my flat, managing everything from voice control and multi-agent pipelines to automations. Minus the part where she goes rogue. This is why I built Claudia.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
 
-  <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
-
-  <div class="ute-demo reveal" id="ute-demo">
-    <div class="ute-demo-chat" id="ute-chat"></div>
-    <div class="ute-demo-pos">
-      <div class="pos-head">
-        <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span><span class="pos-divider">│</span><span class="pos-head-terminal">Register 01</span></span>
-        <span class="pos-head-status" id="ute-status">ready</span>
       </div>
-      <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
-      <div class="pos-body">
-        <div class="pos-grid" id="ute-grid"></div>
-        <div class="pos-sidebar" id="ute-cart-wrap">
-          <div class="pos-cart-head"><svg class="pos-cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l1.5 9h8L14 3.5H4"/><circle cx="5.5" cy="13" r="1"/><circle cx="11.5" cy="13" r="1"/></svg> Order</div>
-          <div class="pos-cart-items" id="ute-cart"></div>
-          <div class="pos-footer">
-            <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
+    </div>
+
+    <!-- Next arrow -->
+    <button class="et-arrow-btn" id="et-next" aria-label="next project">
+      <svg width="30" height="28" viewBox="-1 0 18 17" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g>
+          <polygon class="et-arrow" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <polygon class="et-arrow-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"/>
+          <path d="M0,0.56157424 L0,16.1929159 L9.708,8.33860465 L0,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 Z"/>
+        </g>
+      </svg>
+    </button>
+  </div><!-- /et-wrapper -->
+
+  <!-- Expand zone (shared, opens beneath the centred card) -->
+  <div class="et-expand" id="et-expand">
+
+      <!-- GemmPen expand -->
+      <div class="et-expand-inner" data-expand="0" style="display:none">
+        <p>I teach 240 students. Every exam round, I spend 20 to 30 minutes per paper, and while I'm grading I can see exactly what each student needs. One keeps dropping the third-person -s. Another writes beautiful arguments but forgets to connect them. I see all of it. But at the end, all they get is a number.</p>
+
+        <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
+
+        <p>I'd built a version of this before: Kaleido, a multi-agent pipeline that analysed each exam across separate steps and wrote individual feedback. It worked, but every round cost real money, and student data still had to leave the room, even with EU-based providers. A local model changes both: no cost pressure, and no data goes anywhere.</p>
+
+        <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
+
+        <p>When I review the feedback and disagree, that correction becomes training data. After about 30 corrections, one button retrains the model. Takes about 90 minutes on a free GPU, no ML knowledge needed. Over time, the model starts sounding more like me, because it learned from watching me correct it.</p>
+
+        <p>It runs on-device. With German school data, it has to be. But it also does something else. Running locally removes the trade-off between knowing a student well and keeping their data safe. A centralised system that tracks how each student writes, where they improve, where they stall? That's a privacy problem before it's a useful tool. A model on the teacher's machine that never sends anything anywhere can track all of it. The more it knows, the better it gets, and nobody has to make a policy decision about whether that's acceptable.</p>
+
+        <p>Right now GemmPen grades exams. That bothers me, because exams are part of an old system that I think we need to move past. We only have them because I can't sit down with 240 people individually. That's a workaround. It was never the point.</p>
+
+        <p>Exams are an artifact from an old system. Decontextualized knowledge checks that exist because we had no better way to find out whether someone learned something. What do you remember, in this room, right now, under time pressure? In a world with AI, that question matters less every year. What matters more: Can a student apply what they know somewhere else? Can they adjust when the situation changes? Do they notice when their own reasoning stops working? You never see that on an exam. You see it in how someone actually works.</p>
+
+        <p>I think we can do better. I want to work toward a version of education where we stop testing knowledge in isolation and start seeing it in what students actually do with it. Where a teacher doesn't need an exam to know what a student understands, because the learning itself makes that visible. We're not there yet. But I think we can get there, and that's the question I want to spend my time on.</p>
+
+        <div class="stack">
+          <span class="k">Stack</span>Gemma 4 + LoRA &middot; runs on-device &middot; retrains from teacher corrections<br>
+          <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a>
+        </div>
+      </div>
+
+      <!-- Compass expand -->
+      <div class="et-expand-inner" data-expand="1" style="display:none">
+        <p>Compass came from a different worry. Watching how my students use AI, I keep seeing the same thing: they produce good work and move on, reading the quality of the output as evidence of their own learning. That worries me. Cognitive science has a name for it: the illusion of fluency. The gap between how easy something feels and whether any of it has actually stuck. For something to be learned, it has to be slightly harder than easy. That's the idea behind Robert Bjork's <em>desirable difficulties</em>. What I see in my classroom is the opposite: AI making everything feel effortless, and students mistaking that feeling for understanding.</p>
+
+        <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
+
+        <div class="compass-demo" id="compass-demo">
+          <span class="compass-label">Student</span>
+          <p class="compass-question" aria-live="polite"></p>
+          <div class="compass-options" aria-label="Choose a response approach">
+            <button class="compass-opt" data-key="standard">Standard AI</button>
+            <button class="compass-opt" data-key="socratic">Socratic</button>
+            <button class="compass-opt" data-key="vision">My Vision</button>
+          </div>
+          <p class="compass-response" aria-live="polite"></p>
+        </div>
+
+        <p>So I started building something different. I wanted a tool where I upload a topic and the AI creates interactive learning material around it. Students work through it at their own pace, write directly inside the tool, and get individual feedback on what they produce. What I learned very quickly is that the AI is too helpful. It gives too much, explains too much, moves too fast. The whole point of learning is that it requires effort, and a model optimised for helpfulness removes exactly that.</p>
+
+        <p>I built Compass for argumentative writing in English, and basically tried to handcuff the model into being helpful without being too helpful. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level. Enough to push a student forward, not enough to do the thinking for them. The result works. Students like it, they engage with their own writing in a way I rarely see otherwise, and I can track where each of them struggles. But I had to hardcode every learning step to get there. Changing the topic means rebuilding most of it.</p>
+
+        <p>Making AI less helpful is harder than making it more helpful, and I don't think prompting will ever fully solve it. The model needs to learn what good teaching actually looks like: creating the conditions for someone to find the answer themselves. That's a fine-tuning problem.</p>
+
+        <p>I called it Compass because it's meant to give direction, not a destination. A compass points the way. It doesn't hand you the map.</p>
+
+        <div class="stack">
+          <span class="k">Links</span><a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">Try it live</a> &middot; <a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Debate Dojo</a>, the same thinking applied to debating
+        </div>
+      </div>
+
+      <!-- Dojo expand -->
+      <div class="et-expand-inner" data-expand="2" style="display:none">
+        <p>Debate Dojo applies the same thinking as Compass to debating. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
+        <div class="stack">
+          <span class="k">Links</span><a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Try it live</a>
+        </div>
+      </div>
+
+      <!-- UTE expand -->
+      <div class="et-expand-inner" data-expand="3" style="display:none">
+        <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the B&#xC4;KO Hackathon with three other women, and we won first place.</p>
+
+        <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+
+        <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
+
+        <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+
+        <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
+
+        <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
+
+        <div class="ute-demo reveal" id="ute-demo">
+          <div class="ute-demo-chat" id="ute-chat"></div>
+          <div class="ute-demo-pos">
+            <div class="pos-head">
+              <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span><span class="pos-divider">&#x2502;</span><span class="pos-head-terminal">Register 01</span></span>
+              <span class="pos-head-status" id="ute-status">ready</span>
+            </div>
+            <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
+            <div class="pos-body">
+              <div class="pos-grid" id="ute-grid"></div>
+              <div class="pos-sidebar" id="ute-cart-wrap">
+                <div class="pos-cart-head"><svg class="pos-cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l1.5 9h8L14 3.5H4"/><circle cx="5.5" cy="13" r="1"/><circle cx="11.5" cy="13" r="1"/></svg> Order</div>
+                <div class="pos-cart-items" id="ute-cart"></div>
+                <div class="pos-footer">
+                  <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="pos-rec idle" id="ute-rec">
+              <svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              <span class="pos-rec-label">Record</span>
+              <span class="pos-rec-dot"></span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="pos-rec idle" id="ute-rec">
-        <svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-        <span class="pos-rec-label">Record</span>
-        <span class="pos-rec-dot"></span>
+
+      <!-- Claudia expand -->
+      <div class="et-expand-inner" data-expand="4" style="display:none">
+        <p>Claudia is my multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat, managing everything from voice control and multi-agent pipelines to automations. I named her Claudia because "the multi-agent framework on the Mac Mini" stopped being charming around the tenth mention.</p>
+
+        <p>Most of what I know about agent design I learned by building her and then watching her break. Agents in a pipeline don't just fail. They fail in ways that are hard to find. One agent misreads something, the next one builds on it, and by the time you see the output, the original mistake is buried three layers deep. I learned to build checkpoints between agents, places where the system pauses and verifies before moving on. I learned that memory is the hardest part: what the system remembers, for how long, and what happens when an old memory stops being true. And I learned that not everything needs an agent. Sometimes a function that does one thing reliably is worth more than an agent that does it creatively. Knowing when to use which is a skill that only comes from getting it wrong a few times.</p>
+
+        <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-<hr class="hr-soft">
+    </div><!-- /et-expand -->
+</div><!-- /editorial-theatre -->
 
-<!-- KALEIDO -->
-<section class="chapter" id="kaleido">
-  <header class="chapter-head reveal">
-    <span class="chapter-num">III.</span>
-    <h2 class="chapter-title"><em>Kaleido</em></h2>
-  </header>
+</div><!-- /section-build -->
 
-  <p>Kaleido is a tool for giving individual feedback on student writing. It came out of a frustration I had no answer for: with 240 students a week, proper individual feedback on written work was simply not possible. I started vibe coding in early 2025, and this was my first big project. It began as a simple pipeline and grew. I added plagiarism detection, student progress analytics, all the things that seemed useful in theory, before subtracting most of it again. What's left is a GDPR and EU AI Act compliant pipeline that gives individual feedback to my students and generates targeted exercises for the specific mistakes they make, so they can actually improve.</p>
+<!-- ============================================================ -->
+<!-- TAB: WHAT I THINK                                            -->
+<!-- ============================================================ -->
+<div class="tab-content" id="section-think" role="tabpanel" aria-labelledby="tab-think">
 
-  <p>Here's how it works. A student hands in their paper. Their name is stripped out locally and replaced with a code. An anonymisation agent removes every remaining personal detail from the text. A set of agents then analyses the work along separate dimensions: structure, evidence, language, coherence, grammar, content. A final agent writes the feedback, <em>addressed to the student rather than about them</em>. The output is an HTML page they can read on their phone, with a progress view that shows how their writing has developed over the year.</p>
+  <section class="chapter">
+    <header class="chapter-head">
+      <h2 class="chapter-title">AI in Education: <em>The Wrong Bet</em></h2>
+    </header>
 
-  <p>The first time I handed back Kaleido feedback instead of the usual red-penned pages, something happened I hadn't seen before. Students came to me afterwards with questions about their own essays. Not about the mark. About the essay itself. They'd read the feedback because it was addressed to them, in language that treated them as the authors of something real, and they wanted to know more. They finally knew what to change to improve, instead of just seeing where they'd gone wrong.</p>
+    <p>I spend most of my time on a problem that might sound simple but isn't: Large language models are trained to be helpful, and in the context of learning, this is not always what is best for the person. That's why I started fine-tuning models to realign what helpful means when someone is trying to learn.</p>
 
-  <p>Kaleido works well for English and Economics because I trained the agents on my specific types of tasks. Publishing a version that fits other subjects is on my list.</p>
+    <p>When I first started using AI, it changed how I work, how I think, how I solve problems. I taught myself to code and within months I had built working software for things I'd been stuck on for years. But not everyone uses AI this way. Especially among younger adults, I keep seeing the same pattern: good output, no understanding. The AI gives a perfect answer and the person moves on, mistaking the quality of the result for their own learning.</p>
 
-  <blockquote>I called it Kaleido because a kaleidoscope turns the same fragments into a different pattern every time you look. That's what I want feedback to do.</blockquote>
+    <p>Most of what's called AI in education right now is automation of the existing system. Faster grading. Chatbots that answer student questions. Lesson plan generators. All of it takes the current structure as given and just tries to run it more efficiently.</p>
 
-  <figure class="project-example reveal">
-    <div class="frame">
-      <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
-        <rect width="720" height="400" fill="#FCFBF7"/>
-        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">KALEIDO · FEEDBACK</text>
-        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">W24 · REV. 01</text>
-        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
+    <p>I think that's the wrong bet. The system we have was designed for scale, not for individuals. Thirty students, one teacher, standardised assessments, a grade at the end. That was never the goal. It was a constraint. The goal was always for each student to be understood individually: what they know, what they struggle with, what they need next. We just never had the tools for it.</p>
 
-        <text x="32" y="84" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#8A8493">Addressed to you,</text>
-        <text x="32" y="104" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#8A8493">about this week's essay on social bonds.</text>
+    <p>It was also built to transfer knowledge and test whether it stuck. In a world where AI handles information retrieval, synthesis, and even reasoning better than most humans, that model stops making sense. What matters in that world is everything a machine can't replace: judgment, original thinking, the ability to ask a question no one has thought to ask. If we want to prepare students for that, we have to stop optimising for the skills that are about to become cheap and start building the ones that won't be.</p>
 
-        <text font-family="Cormorant Garamond" font-size="16" fill="#141018">
-          <tspan x="32" y="146">Your thesis is clear: technology has reshaped how communities form. Where the</tspan>
-          <tspan x="32" y="168">essay loses ground is in the examples — the first two build the argument, but</tspan>
-          <tspan x="32" y="190">the third (your "online dating" section) contradicts the claim about durable</tspan>
-          <tspan x="32" y="212">bonds. Consider either tightening the thesis, or finding a third example that</tspan>
-          <tspan x="32" y="234">reinforces rather than undermines it.</tspan>
-        </text>
+    <p>Now we might have the tools for both: a model that runs on a student's device, adapts to how they learn, tracks their progress over time, and does all of this without their data leaving the room. Some of my work still lives inside the old system, because that's the reality I teach in. But the technology underneath points somewhere else.</p>
+  </section>
 
-        <text font-family="Cormorant Garamond" font-size="16" fill="#141018">
-          <tspan x="32" y="268">The evidence in paragraph 4 is strong. Worth rereading paragraph 6 and</tspan>
-          <tspan x="32" y="290">asking whether those sentences say what you want them to.</tspan>
-        </text>
+</div>
 
-        <line x1="32" y1="324" x2="688" y2="324" stroke="#D4C9AF" stroke-width="1"/>
+<!-- ============================================================ -->
+<!-- TAB: OUT THERE                                               -->
+<!-- ============================================================ -->
+<div class="tab-content" id="section-out" role="tabpanel" aria-labelledby="tab-out">
 
-        <g font-family="JetBrains Mono" font-size="9" letter-spacing="2">
-          <text x="32" y="350" fill="#9F3A1F">STRUCTURE ↑</text>
-          <text x="146" y="350" fill="#9F3A1F">EVIDENCE ↑</text>
-          <text x="250" y="350" fill="#8A8493">LANGUAGE ·</text>
-          <text x="354" y="350" fill="#9F3A1F">COHERENCE ↑</text>
-          <text x="482" y="350" fill="#8A8493">GRAMMAR ·</text>
-          <text x="576" y="350" fill="#8A8493">CONTENT ·</text>
-        </g>
-        <text x="32" y="376" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">PROGRESS ↗ +12% this term</text>
-        <text x="688" y="376" text-anchor="end" font-family="JetBrains Mono" font-size="8" letter-spacing="2" fill="#8A8493">ANON · KL-4F2A9B</text>
-      </svg>
-    </div>
-    <figcaption>A Kaleido feedback card — <strong>addressed to the writer</strong>, with a six-dimension read-out and a term-level progress note.</figcaption>
-  </figure>
+  <div class="section-title">Talks</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://debate-dojo.vercel.app/dojo-landing.html?demo" target="_blank" rel="noopener">
+        <span class="link-label">Mistral Meetup Cologne · June 2026</span>
+        Debate Dojo: teaching a small open model to hold back when a student pushes for a shortcut, and to help once they have genuinely tried.
+      </a>
+    </li>
+    <li>
+      <a href="https://pirateskills.com/events/vibe-coding-cologne/2026-03-04" target="_blank" rel="noopener">
+        <span class="link-label">Vibe Coding Cologne · March 2026</span>
+        Vibe Coding Meets the Classroom
+      </a>
+    </li>
+    <li>
+      <span class="link-label">Podcast · with Josua Waghubinger</span>
+      What happens when you build learning tools on top of models optimised to give answers as fast as possible, and why fine-tuning is where this actually gets solved.
+    </li>
+  </ul>
 
-  <div class="stack">
-    <span class="k">Stack</span>Python · regex-based anonymisation · Mistral as the model provider · HTML output<br>
-    <span class="k">Note</span>EU jurisdiction matters when you're handling German school data
-  </div>
-</section>
+  <div class="section-title">Hackathons</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
+        <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind</span>
+        GemmPen: handwritten exams into personalised feedback, fully on-device
+      </a>
+    </li>
+    <li>
+      <span class="link-label">B&Auml;KO Hackathon · 1st Place</span>
+      UTE: voice-first ordering for bakery counters, built with a team of four women
+    </li>
+  </ul>
 
-<hr class="hr-soft">
+  <div class="section-title">Live Demos</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">
+        <span class="link-label">GemmPen</span>
+        gemmpen.vercel.app
+      </a>
+    </li>
+    <li>
+      <a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">
+        <span class="link-label">Compass · Comment Writing</span>
+        comment-writing-tool.vercel.app
+      </a>
+    </li>
+    <li>
+      <a href="https://debate-dojo.vercel.app/dojo-landing.html?demo" target="_blank" rel="noopener">
+        <span class="link-label">Debate Dojo</span>
+        debate-dojo.vercel.app
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/SvenjaBorgwardt/MATE-DEMO" target="_blank" rel="noopener">
+        <span class="link-label">MATE · Feedback Examples</span>
+        Student feedback, progress dashboard, personalized worksheets
+      </a>
+    </li>
+    <li>
+      <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">
+        <span class="link-label">GemmPen · Video Walkthrough</span>
+        youtu.be/IeDM1mJ3J2M
+      </a>
+    </li>
+  </ul>
 
-<!-- ALSO BUILT -->
-<div class="section-title reveal">Also Built</div>
+  <div class="section-title">Code & Models</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://github.com/SvenjaBorgwardt/GemmPen" target="_blank" rel="noopener">
+        <span class="link-label">GemmPen · Source</span>
+        github.com/SvenjaBorgwardt/GemmPen
+      </a>
+    </li>
+    <li>
+      <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">
+        <span class="link-label">GemmPen · LoRA Model</span>
+        huggingface.co/SveBorg/gemmpen-lora
+      </a>
+    </li>
+    <li>
+      <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
+        <span class="link-label">GemmPen · Kaggle Writeup</span>
+        Gemma 4 Good Hackathon
+      </a>
+    </li>
+  </ul>
 
-<section class="small-project reveal" id="claudia">
-  <span class="number">IV.</span>
-  <h4><em>Claudia</em></h4>
-  <p>Claudia is my multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat. During the day she orchestrates the agents behind Kaleido. The rest of the time she runs my home automation. Same framework, different endpoints. I named her Claudia because "the multi-agent framework on the Mac Mini" stopped being charming around the tenth mention. Most of what I know about agent design, memory, and orchestration I learned by building her and then watching her break in interesting ways.</p>
-  <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
+  <div class="section-title">Profiles</div>
+  <ul class="link-list">
+    <li>
+      <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener">
+        <span class="link-label">LinkedIn</span>
+        linkedin.com/in/svenja-borgwardt
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/SvenjaBorgwardt" target="_blank" rel="noopener">
+        <span class="link-label">GitHub</span>
+        github.com/SvenjaBorgwardt
+      </a>
+    </li>
+  </ul>
 
-  <figure class="project-example reveal">
-    <div class="frame">
-      <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
-        <rect width="720" height="360" fill="#FCFBF7"/>
-        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">CLAUDIA · MULTI-AGENT INFRASTRUCTURE</text>
-        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">MAC MINI · ALWAYS ON</text>
-        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
-
-        <!-- Center node -->
-        <rect x="296" y="148" width="128" height="80" fill="#EFE6D1" stroke="#141018" stroke-width="1.4"/>
-        <text x="360" y="180" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="22" fill="#141018">Claudia</text>
-        <text x="360" y="204" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">Mac Mini · local · always on</text>
-
-        <!-- Top-left -->
-        <line x1="296" y1="162" x2="208" y2="112" stroke="#9F3A1F" stroke-width="1.2"/>
-        <rect x="64" y="88" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
-        <text x="160" y="112" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Anonymisation</text>
-        <text x="160" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">regex + agent</text>
-
-        <!-- Top-right -->
-        <line x1="424" y1="162" x2="512" y2="112" stroke="#9F3A1F" stroke-width="1.2"/>
-        <rect x="464" y="88" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
-        <text x="560" y="112" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Feedback agents</text>
-        <text x="560" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">Kaleido · Mistral</text>
-
-        <!-- Bottom-left -->
-        <line x1="296" y1="214" x2="208" y2="264" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
-        <rect x="64" y="244" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
-        <text x="160" y="268" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Home automation</text>
-        <text x="160" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">lights · locks · climate</text>
-
-        <!-- Bottom-right -->
-        <line x1="424" y1="214" x2="512" y2="264" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
-        <rect x="464" y="244" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
-        <text x="560" y="268" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-style="italic" fill="#141018">Sarah</text>
-        <text x="560" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">smart-home · voice</text>
-
-        <!-- Legend -->
-        <line x1="32" y1="332" x2="64" y2="332" stroke="#9F3A1F" stroke-width="1.2"/>
-        <text x="72" y="336" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">BY DAY</text>
-        <line x1="168" y1="332" x2="200" y2="332" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="208" y="336" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">THE REST OF THE TIME</text>
-      </svg>
-    </div>
-    <figcaption>Claudia — one framework, four endpoints. <strong>By day</strong> the agents behind Kaleido; <strong>the rest of the time</strong>, the flat.</figcaption>
-  </figure>
-</section>
-
-<section class="small-project reveal" id="investor-game">
-  <span class="number">V.</span>
-  <h4><em>Investor Game</em></h4>
-  <p>A platform where participants develop product ideas, pitch them to a group, and invest play money into each other's pitches. Scoring is part quality-of-pitch, part performance-of-portfolio. You're rewarded both for being a good founder and for being a good judge of other founders. I wrote it because nothing off the shelf handled that combination, peer feedback and play-money investment in the same place. Deployed in a market economics class, where I've never seen the topic taken more seriously.</p>
-
-  <figure class="project-example reveal">
-    <div class="frame">
-      <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg">
-        <rect width="720" height="420" fill="#FCFBF7"/>
-        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">INVESTOR GAME · ROUND 3</text>
-        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">DAY 2 OF 5</text>
-        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
-
-        <!-- LEFT: PITCH CARD -->
-        <rect x="32" y="72" width="360" height="260" fill="#EFE6D1" stroke="#141018" stroke-width="1"/>
-        <text x="52" y="100" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#9F3A1F">PITCH N° 07</text>
-        <text x="52" y="132" font-family="Cormorant Garamond" font-size="28" fill="#141018">"Regrow"</text>
-        <text x="52" y="154" font-family="Cormorant Garamond" font-style="italic" font-size="14" fill="#8A8493">— a reforestation savings account —</text>
-
-        <text font-family="Cormorant Garamond" font-size="15" fill="#141018">
-          <tspan x="52" y="192">A monthly payment plan where each euro</tspan>
-          <tspan x="52" y="214">goes partly to reforestation, partly to</tspan>
-          <tspan x="52" y="236">interest. The user sees both grow.</tspan>
-        </text>
-
-        <line x1="52" y1="260" x2="372" y2="260" stroke="#D4C9AF" stroke-width="1" stroke-dasharray="2 2"/>
-        <text x="52" y="284" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">FOUNDERS</text>
-        <text x="52" y="306" font-family="Cormorant Garamond" font-size="15" fill="#141018">Team 04 · M. &amp; J.</text>
-
-        <!-- RIGHT: INVESTMENT + PORTFOLIO -->
-        <text x="432" y="94" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">YOUR INVESTMENT</text>
-        <rect x="432" y="108" width="256" height="48" fill="#FCFBF7" stroke="#141018"/>
-        <text x="560" y="142" text-anchor="middle" font-family="Cormorant Garamond" font-size="26" fill="#141018">300 M</text>
-        <text x="432" y="172" font-family="JetBrains Mono" font-size="8" letter-spacing="1" fill="#8A8493">OF 2,000 M AVAILABLE THIS ROUND</text>
-
-        <text x="432" y="204" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">CONFIDENCE</text>
-        <g>
-          <rect x="432" y="216" width="38" height="8" fill="#9F3A1F"/>
-          <rect x="476" y="216" width="38" height="8" fill="#9F3A1F"/>
-          <rect x="520" y="216" width="38" height="8" fill="#9F3A1F"/>
-          <rect x="564" y="216" width="38" height="8" fill="#D4C9AF"/>
-          <rect x="608" y="216" width="38" height="8" fill="#D4C9AF"/>
-        </g>
-
-        <text x="432" y="256" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">PORTFOLIO · ROUND 3</text>
-        <line x1="432" y1="266" x2="688" y2="266" stroke="#141018" stroke-width="1"/>
-
-        <g font-family="Cormorant Garamond" font-size="14" fill="#141018">
-          <text x="432" y="288">Pitch 02 · "Mica"</text>
-          <text x="688" y="288" text-anchor="end" fill="#9F3A1F">+42%</text>
-          <text x="432" y="310">Pitch 05 · "Carta"</text>
-          <text x="688" y="310" text-anchor="end" fill="#9F3A1F">+18%</text>
-          <text x="432" y="332">Pitch 07 · "Regrow"</text>
-          <text x="688" y="332" text-anchor="end" fill="#8A8493" font-style="italic">pending</text>
-        </g>
-
-        <line x1="432" y1="356" x2="688" y2="356" stroke="#141018" stroke-width="1"/>
-        <text x="432" y="380" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#141018">TOTAL VALUE</text>
-        <text x="688" y="380" text-anchor="end" font-family="Cormorant Garamond" font-size="20" fill="#9F3A1F">2,430 M</text>
-      </svg>
-    </div>
-    <figcaption>One round of the Investor Game: a pitch on the left, <strong>your own investment and portfolio</strong> on the right. Score is part pitch quality, part portfolio return.</figcaption>
-  </figure>
-</section>
-
-
-<!-- OTHER PARTS -->
-<div class="section-title reveal">The Other Parts</div>
-
-<section class="other-parts reveal">
-  <p>Eleven years at a German savings bank before this work. It wasn't always what I wanted, but it taught me to think in terms of risk, compliance, and long feedback loops. That turns out to be surprisingly useful the moment you start building anything that touches student data.</p>
-  <p class="hobbies">
-    First violin in the Ford Symphony Orchestra here in Cologne.<span class="dot">·</span>PADI Divemaster.<span class="dot">·</span>SKS sailing licence.<span class="dot">·</span>I love adventures and getting to know new cultures.
-  </p>
-</section>
-
+</div>
 
 <!-- FOOTER -->
 <footer class="reveal">
@@ -988,6 +1286,190 @@
 
 </main>
 
+<!-- Tab switching + editorial theatre + hash routing -->
+<script>
+(function(){
+  /* ── Main tab switching (Build / Think / Out) ── */
+  var tabs = document.querySelectorAll('.tab');
+  var sections = document.querySelectorAll('.tab-content');
+
+  function activateTab(name, updateHash){
+    var tab = document.querySelector('.tab[data-section="' + name + '"]');
+    var section = document.getElementById('section-' + name);
+    if(!tab || !section) return;
+    tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    sections.forEach(function(s){ s.classList.remove('active'); });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected','true');
+    section.classList.add('active');
+    if(updateHash !== false) history.replaceState(null, '', '#' + name);
+  }
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){ activateTab(tab.dataset.section); });
+  });
+
+  /* ── Editorial Theatre — 3D coverflow ── */
+  var currentProject = 0;
+
+  var etExpand = document.getElementById('et-expand');
+  var etPrev = document.getElementById('et-prev');
+  var etNext = document.getElementById('et-next');
+  var expandInners = document.querySelectorAll('.et-expand-inner');
+
+  // ── Coverflow carousel state ──
+  var cfViewport = document.getElementById('cf-viewport');
+  var cfCards = Array.prototype.slice.call(document.querySelectorAll('.cf-card'));
+  var projectKeys = ['gemmpen','compass','dojo','ute','claudia'];
+  var prevOffset = [];
+
+  // The full story is one global mode: open once → stays open while you browse the cards
+  var storyOpen = false;
+  function applyStoryState(){
+    if(storyOpen){
+      var inner = document.querySelector('.et-expand-inner[data-expand="' + currentProject + '"]');
+      if(inner){
+        inner.style.display = '';
+        etExpand.style.maxHeight = inner.scrollHeight + 'px';
+        etExpand.classList.add('open');
+      }
+    } else {
+      etExpand.classList.remove('open');
+      etExpand.style.maxHeight = '0';
+    }
+    cfCards.forEach(function(c){
+      c.classList.toggle('cf-open', storyOpen);
+      var cta = c.querySelector('.cf-cta');
+      if(cta){
+        cta.setAttribute('aria-expanded', storyOpen ? 'true' : 'false');
+        cta.querySelector('.et-cta-text').textContent = storyOpen ? 'collapse' : 'read the full story';
+      }
+    });
+  }
+  function toggleStory(){ storyOpen = !storyOpen; applyStoryState(); }
+
+  function selectProject(idx, updateHash){
+    var n = cfCards.length;
+    idx = ((idx % n) + n) % n;            // wrap around — infinite loop
+    currentProject = idx;
+
+    // Mount only the centred project's full story
+    expandInners.forEach(function(inner){
+      inner.style.display = parseInt(inner.dataset.expand, 10) === idx ? '' : 'none';
+    });
+    var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
+    if(activeInner){
+      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .project-example')
+        .forEach(function(child, i){ child.style.transitionDelay = (i * 80) + 'ms'; });
+    }
+
+    layoutCarousel();
+    applyStoryState();   // keep the global open/closed state across cards
+    if(updateHash !== false) history.replaceState(null, '', '#' + projectKeys[idx]);
+  }
+
+  // Shortest circular distance from the centred card (so ends wrap seamlessly)
+  function circOffset(i){
+    var n = cfCards.length, half = Math.floor(n / 2), o = i - currentProject;
+    if(o >  half) o -= n;
+    if(o < -half) o += n;
+    return o;
+  }
+
+  // Place every card in 3D space based on its offset from the centre
+  function layoutCarousel(){
+    var cw = cfCards[0].offsetWidth || 300;
+    cfCards.forEach(function(c, i){
+      var o = circOffset(i), a = Math.abs(o), s = o < 0 ? -1 : 1, t, op, z;
+      if(a === 0){
+        t = 'translate(-50%,-50%) translateZ(0) scale(1)'; op = 1; z = 50;
+      } else {
+        t = 'translate(-50%,-50%) translateX(' + (s * (cw * 0.40 + (a - 1) * cw * 0.18)) + 'px) translateZ(' + (-a * cw * 0.60) + 'px) rotateY(' + (-s * 40) + 'deg) scale(' + (1 - a * 0.14) + ')';
+        op = a === 1 ? 0.60 : 0.24; z = 50 - a;
+      }
+      // A card crossing the seam jumps instantly (it lives in the faded far slot, so it's invisible)
+      var prev = prevOffset[i];
+      var teleport = prev !== undefined && Math.abs(o - prev) > 2;
+      if(teleport) c.style.transition = 'none';
+      c.style.transform = t;
+      c.style.opacity = op;
+      c.style.zIndex = z;
+      if(teleport){ void c.offsetWidth; c.style.transition = ''; }
+      c.classList.toggle('cf-active', a === 0);
+      c.setAttribute('aria-current', a === 0 ? 'true' : 'false');
+      prevOffset[i] = o;
+    });
+  }
+
+  // Side card → centre it; the centred card's CTA → open/close its story
+  cfCards.forEach(function(card, i){
+    card.addEventListener('click', function(){ if(i !== currentProject) selectProject(i); });
+    var cta = card.querySelector('.cf-cta');
+    if(cta) cta.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(i === currentProject) toggleStory(); else selectProject(i);
+    });
+  });
+
+  // Arrows loop around
+  etPrev.addEventListener('click', function(){ selectProject(currentProject - 1); });
+  etNext.addEventListener('click', function(){ selectProject(currentProject + 1); });
+
+  // Re-place cards on resize (offsets are derived from the live card width)
+  var resizeT;
+  window.addEventListener('resize', function(){ clearTimeout(resizeT); resizeT = setTimeout(function(){ equalizeCards(); layoutCarousel(); }, 120); });
+
+  // Drag / swipe
+  var dragX = 0, dragging = false;
+  cfViewport.addEventListener('pointerdown', function(e){ dragX = e.clientX; dragging = true; });
+  cfViewport.addEventListener('pointerup', function(e){
+    if(!dragging) return; dragging = false;
+    var dx = e.clientX - dragX;
+    if(dx < -45) selectProject(currentProject + 1);
+    else if(dx > 45) selectProject(currentProject - 1);
+  });
+
+  // Keyboard navigation on the carousel viewport
+  if(cfViewport){
+    cfViewport.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight'){ e.preventDefault(); selectProject(currentProject + 1); }
+      else if(e.key === 'ArrowLeft'){ e.preventDefault(); selectProject(currentProject - 1); }
+      else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleStory(); }
+    });
+  }
+
+  // Make every card the height of the tallest, so the full text always fits
+  function equalizeCards(){
+    var max = 0;
+    cfCards.forEach(function(c){ c.style.height = 'auto'; });
+    cfCards.forEach(function(c){ if(c.offsetHeight > max) max = c.offsetHeight; });
+    cfCards.forEach(function(c){ c.style.height = max + 'px'; });
+    cfViewport.style.height = (max + 12) + 'px';
+  }
+
+  // Initialize
+  equalizeCards();
+  selectProject(0, false);
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ equalizeCards(); layoutCarousel(); });
+  }
+
+  /* ── Hash routing ── */
+  var hashToProject = {gemmpen:0, compass:1, dojo:2, ute:3, claudia:4};
+
+  function applyHash(){
+    var h = (location.hash || '').replace('#','');
+    if(!h) return;
+    if(h === 'build' || h === 'think' || h === 'out'){ activateTab(h, false); return; }
+    if(h in hashToProject){
+      activateTab('build', false);
+      selectProject(hashToProject[h], false);
+    }
+  }
+  window.addEventListener('hashchange', applyHash);
+  applyHash();
+})();
+</script>
 <script defer src="scripts/effects.js?v=40"></script>
 </body>
 </html>

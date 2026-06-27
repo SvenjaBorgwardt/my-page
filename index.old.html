@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
+  :root{
+    --paper:#F6F1E6;
+    --paper-warm:#EFE6D1;
+    --paper-deep:#E4D8B8;
+    --ink:#141018;
+    --ink-soft:#3A3440;
+    --ink-dim:#8A8493;
+    --rule:#D4C9AF;
+    --rust:#9F3A1F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:20px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse at 20% 10%,rgba(240,220,170,0.22) 0%,transparent 45%),
+      radial-gradient(ellipse at 85% 90%,rgba(180,160,120,0.13) 0%,transparent 45%);
+  }
+
+  main{position:relative;z-index:2;max-width:41em;margin:0 auto;padding:2.8em 1.6em 7em}
+
+  .mono{font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim)}
+
+  /* ========== MASTHEAD: name left, photo right ========== */
+  .masthead{
+    display:grid;grid-template-columns:1fr auto;gap:2.4em;align-items:center;
+    margin-bottom:3.2em;padding-bottom:2em;border-bottom:1px solid var(--rule);
+  }
+  .masthead h1{
+    font-family:'Cormorant Garamond',serif;font-weight:300;
+    font-size:clamp(35.2px,5.2vw,60.8px);line-height:1;letter-spacing:0.005em;
+  }
+  .masthead h1 em{font-style:italic;font-weight:300}
+  /* Split-flap overlay — positioned over individual chars, transparent background */
+  .name-block{position:relative}
+  .flip-overlay{position:absolute;overflow:hidden;clip-path:inset(0);z-index:10;pointer-events:none;will-change:transform;isolation:isolate}
+  .flip-overlay>div{text-align:center;position:relative}
+
+  /* Pronunciation — clickable line below the name */
+  .pronounce{
+    display:inline-flex;gap:0.8em;align-items:baseline;
+    background:none;border:none;cursor:pointer;padding:0;margin-top:0.5em;
+    transition:color .2s;
+  }
+  .pronounce:hover{color:var(--rust)}
+  .pronounce:focus-visible{outline:2px solid var(--rust);outline-offset:0.2em;border-radius:2px}
+  .pronounce-ipa{
+    font-family:'JetBrains Mono',monospace;font-size:clamp(12px,0.6em,16px);letter-spacing:0.04em;
+    color:var(--rust);
+  }
+  .pronounce-approx{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,0.8em,20px);
+    color:var(--rust);
+  }
+  .pronounce:hover .pronounce-ipa,
+  .pronounce:hover .pronounce-approx{color:var(--rust)}
+
+  .masthead-intro{
+    font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
+    margin-bottom:0.3em;
+  }
+  .masthead-intro:first-of-type{margin-top:2.4em}
+
+  .photo-frame{
+    width:7.8em;height:10.4em;position:relative;flex-shrink:0;
+    border:1px solid var(--rule);
+    box-shadow:4px 4px 0 rgba(0,0,0,0.05);
+    background:var(--paper-warm);overflow:hidden;
+    transition:transform .22s ease-out;
+    will-change:transform;
+    transform-origin:center center;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .photo-frame{transition:none;transform:none!important}
+  }
+  .photo-frame svg{display:block;width:100%;height:100%}
+  .photo-caption{
+    margin-top:0.5em;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.65em;
+    color:var(--ink-dim);text-align:center;letter-spacing:0.02em;
+  }
+
+  /* ========== HERO ========== */
+  .intro{
+    font-style:italic;font-size:1.1em;line-height:1.5;
+    color:var(--ink-soft);margin-bottom:1.8em;letter-spacing:0.005em;
+  }
+
+  .thesis{
+    font-weight:300;font-size:1em;line-height:1.72;
+    margin-bottom:2em;max-width:64ch;
+  }
+  .thesis em{font-style:italic;color:var(--rust);font-weight:300}
+  /* no bold — all strong tags stay regular weight */
+  .thesis strong{font-weight:400}
+
+  .hr-soft{
+    display:block;margin:3.6em auto;width:6em;height:0.05em;background:var(--rule);border:0;
+    position:relative;
+  }
+  .hr-soft::before{
+    content:"·";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    background:var(--paper);padding:0 0.7em;color:var(--rust);font-size:1.1em;line-height:0;
+  }
+
+  .observation{
+    font-size:1.05em;line-height:1.65;color:var(--ink);margin-bottom:1.3em;max-width:64ch;font-weight:400;
+  }
+  .observation em{font-style:italic;color:var(--ink-soft)}
+  .observation strong{font-weight:400}
+
+  /* ========== SECTION HEADERS ========== */
+  .section-title{
+    text-align:center;margin:5em 0 2.8em;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.3em;text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+  .section-title::before,.section-title::after{
+    content:"";display:inline-block;width:3em;height:0.05em;background:var(--rule);vertical-align:middle;margin:0 0.9em;
+  }
+
+  /* ========== CHAPTERS ========== */
+  .chapter{margin-bottom:4em;scroll-margin-top:3em}
+  .chapter-head{text-align:center;margin-bottom:2.2em}
+  .chapter-num{
+    font-style:italic;font-weight:300;
+    font-size:1.3em;color:var(--rust);display:block;margin-bottom:0.4em;letter-spacing:0.02em;
+  }
+  .chapter-title{
+    font-weight:400;font-size:clamp(38px,4.5vw,52px);line-height:1.05;letter-spacing:0;
+  }
+  .chapter-title em{font-style:italic;font-weight:400}
+
+  /* Body prose — consistent size and font */
+  p{margin-bottom:1.1em;max-width:64ch;font-size:1em;line-height:1.72;font-weight:400}
+  p em{font-style:italic}
+  p strong{font-weight:400}  /* no bold anywhere */
+
+  blockquote{
+    font-style:italic;font-weight:300;font-size:1.3em;line-height:1.35;
+    margin:2em 0;padding-left:1.4em;border-left:2px solid var(--rust);color:var(--ink);max-width:60ch;
+  }
+
+  /* Coding-bug example — monospace for code legibility */
+  .example{
+    margin:1.8em 0;padding:1.2em 1.4em;background:var(--paper-warm);
+    font-family:'JetBrains Mono',monospace;font-size:0.65em;line-height:1.95;
+    max-width:31em;border-radius:2px;
+  }
+  .example .lbl{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.75em;color:var(--rust);
+    display:block;margin-bottom:0.6em;letter-spacing:0.02em;
+  }
+  .example .row{display:grid;grid-template-columns:6.5em 1fr;gap:0.7em;padding:0.1em 0}
+  .example .who{color:var(--ink-dim);letter-spacing:0.04em;font-size:0.6em;text-transform:uppercase}
+
+  .stack{
+    margin-top:1.4em;padding-top:0.7em;border-top:1px solid var(--rule);
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--ink-dim);line-height:1.9;
+  }
+  .stack .k{color:var(--rust);margin-right:0.4em}
+
+  /* ========== PROJECT EXAMPLES (SVG MOCKUPS) ========== */
+  .project-example{margin:2.4em 0 0.4em;position:relative}
+  .project-example .frame{
+    border:1px solid var(--rule);background:var(--paper-warm);
+    padding:1em;box-shadow:3px 3px 0 rgba(0,0,0,0.04);
+  }
+  .project-example svg{display:block;width:100%;height:auto}
+  .project-example figcaption{
+    margin-top:0.7em;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.75em;color:var(--ink-dim);text-align:center;line-height:1.5;letter-spacing:0.005em;
+  }
+  .project-example figcaption strong{color:var(--ink);font-weight:400;font-style:normal}
+
+  /* ========== UTE ANIMATED DEMO ========== */
+  .ute-demo{
+    display:grid;grid-template-columns:35% 65%;grid-template-rows:380px;
+    margin:2.4em 0 0.4em;overflow:hidden;
+  }
+  .ute-demo-chat{
+    padding:0 1.2em 0 0;display:flex;flex-direction:column;gap:0.5em;
+    grid-row:1;grid-column:1;overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .ute-demo-chat::-webkit-scrollbar{display:none}
+  .ute-demo .dm{opacity:0;transform:translateY(4px)}
+  .ute-demo .dm.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
+  .ute-demo .dm.fade-out{opacity:0;max-height:0;margin:0;padding:0;overflow:hidden;transition:opacity .4s ease,max-height .4s ease,margin .4s ease}
+  .ute-demo .chat-prompt{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;gap:0.4em;opacity:0;animation:prompt-fade-in .8s ease .3s forwards;
+  }
+  .ute-demo .chat-prompt-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.8em;color:var(--ink-dim);text-align:center;line-height:1.5;
+  }
+  .ute-demo .chat-prompt-arrow{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);
+    animation:prompt-bounce 2s ease-in-out infinite;
+  }
+  @keyframes prompt-fade-in{to{opacity:1}}
+  @keyframes prompt-bounce{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  .ute-demo .dm-label{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  .ute-demo .dm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85em;line-height:1.5;color:var(--ink)}
+  .ute-demo-pos{
+    background:var(--paper);
+    border:1px solid var(--rule);border-radius:4px;
+    grid-row:1;grid-column:2;
+    display:flex;flex-direction:column;
+    max-height:380px;overflow:hidden;
+    box-shadow:0 2px 16px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);
+  }
+  /* ── title bar (register style) ── */
+  .ute-demo .pos-head{
+    font-family:'JetBrains Mono',monospace;
+    padding:7px 10px;border-bottom:1px solid var(--rule);
+    background:var(--paper-warm);flex:0 0 auto;
+    border-radius:4px 4px 0 0;
+    display:flex;align-items:center;gap:8px;
+    position:relative;
+  }
+  .ute-demo .pos-head::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--rust);opacity:0.35;border-radius:4px 4px 0 0;
+  }
+  .ute-demo .pos-head-title{
+    font-size:9px;font-weight:700;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--ink);flex:1;
+    display:flex;align-items:baseline;gap:6px;
+  }
+  .ute-demo .pos-head-title .pos-subtitle{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:9px;font-weight:400;letter-spacing:0.02em;
+    color:var(--ink-dim);text-transform:none;
+  }
+  .ute-demo .pos-head-title .pos-divider{
+    color:var(--rule);font-size:10px;margin:0 2px;
+  }
+  .ute-demo .pos-head-terminal{
+    font-size:8px;letter-spacing:0.05em;
+    color:var(--ink-dim);text-transform:uppercase;
+  }
+  .ute-demo .pos-head-status{
+    font-family:'Cormorant Garamond',serif;
+    font-size:10px;letter-spacing:0.02em;
+    color:var(--ink-dim);
+    display:flex;align-items:center;gap:4px;
+  }
+  .ute-demo .pos-head-status::before{
+    content:'';width:5px;height:5px;border-radius:50%;
+    background:var(--ink-dim);opacity:0.4;
+    transition:background .4s ease,opacity .4s ease;
+  }
+  .ute-demo .pos-head-status.active::before{
+    background:var(--rust);opacity:1;
+  }
+  /* ── customer bar ── */
+  .ute-demo .pos-customer{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    color:var(--ink-dim);
+    padding:5px 10px;background:var(--paper);
+    border-bottom:1px solid var(--rule);
+    flex:0 0 auto;min-height:22px;
+    display:flex;align-items:center;gap:5px;
+  }
+  .ute-demo .pos-customer .cust-name{font-weight:500;color:var(--ink)}
+  .ute-demo .pos-customer .cust-badge{
+    font-family:'Cormorant Garamond',serif;font-size:10px;
+    padding:1px 6px;border-radius:3px;
+    background:rgba(159,58,31,0.1);color:var(--rust);
+    border:1px solid rgba(159,58,31,0.2);
+    transition:opacity .3s ease;
+  }
+  .ute-demo .pos-customer .cust-badge.vegan{
+    background:rgba(46,125,50,0.1);color:#2e7d32;
+    border-color:rgba(46,125,50,0.25);
+  }
+  .ute-demo .pos-customer .cust-badge.badge-enter{opacity:0}
+  .ute-demo .pos-customer .cust-badge.badge-show{opacity:1}
+  /* ── body: grid + sidebar ── */
+  .ute-demo .pos-body{
+    display:grid;grid-template-columns:1fr 120px;
+    flex:1 1 0;min-height:0;overflow:hidden;
+  }
+  /* ── product grid ── */
+  .ute-demo .pos-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
+    gap:0;
+    background:var(--paper);
+    min-height:0;
+  }
+  .ute-demo .pos-tile{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;font-size:0.55em;
+    text-align:center;line-height:1.2;
+    padding:0.15em;background:var(--paper);min-height:0;overflow:hidden;
+    transition:background .5s ease;
+    position:relative;
+  }
+  .ute-demo .pos-tile .tile-icon{
+    width:43px;height:43px;object-fit:contain;display:block;margin-bottom:0.1em;
+    transition:filter .5s ease,opacity .5s ease;
+  }
+  .ute-demo .pos-tile .tile-name{
+    display:block;color:var(--ink-soft);letter-spacing:0.01em;
+    font-size:1em;
+    transition:color .4s ease;
+  }
+  .ute-demo .pos-tile .tile-price{
+    display:block;color:var(--ink-dim);font-size:1.1em;
+    transition:color .4s ease;
+  }
+  /* disabled */
+  .ute-demo .pos-tile.disabled{background:var(--paper)}
+  .ute-demo .pos-tile.disabled .tile-icon{filter:grayscale(1) brightness(1.1) contrast(0.9);opacity:0.45}
+  .ute-demo .pos-tile.disabled .tile-name{color:var(--rule)}
+  .ute-demo .pos-tile.disabled .tile-price{color:var(--rule)}
+  /* selected */
+  .ute-demo .pos-tile.selected{background:var(--paper-deep);border-left:2px solid var(--rust)}
+  .ute-demo .pos-tile.selected .tile-name{color:var(--ink)}
+  /* suggest */
+  .ute-demo .pos-tile.suggest{background:var(--paper-deep);border-left:2px solid var(--ink-dim);animation:suggest-pulse 1.5s ease-in-out infinite}
+  .ute-demo .pos-tile.suggest .tile-name{color:var(--ink)}
+  @keyframes suggest-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+  /* ── sidebar / order panel ── */
+  .ute-demo .pos-sidebar{
+    display:flex;flex-direction:column;
+    background:var(--paper);
+    border-left:1px solid var(--rule);
+    overflow:hidden;min-height:0;
+  }
+  .ute-demo .pos-cart-head{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    font-style:italic;color:var(--ink-dim);
+    padding:6px 8px 5px;
+    border-bottom:1px dashed var(--rule);
+    flex:0 0 auto;
+    display:flex;align-items:center;gap:4px;
+  }
+  .ute-demo .pos-cart-icon{width:10px;height:10px;stroke:var(--ink-dim)}
+  .ute-demo .pos-cart-items{
+    flex:1 1 0;overflow:hidden;min-height:0;
+    padding:4px 8px;
+  }
+  .ute-demo .pos-cart-item{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    display:flex;justify-content:space-between;gap:4px;
+    padding:2px 0;opacity:0;flex:0 0 auto;
+    color:var(--ink);
+  }
+  .ute-demo .pos-cart-item.show{opacity:1;transition:opacity .3s ease}
+  .ute-demo .pos-cart-item .cart-price{color:var(--ink-soft);white-space:nowrap}
+  .ute-demo .pos-alert{
+    font-family:'Cormorant Garamond',serif;font-size:10px;
+    color:var(--rust);
+    padding:3px 8px;flex:0 0 auto;opacity:0;
+    border-left:2px solid var(--rust);
+    margin:2px 8px;line-height:1.4;
+  }
+  .ute-demo .pos-alert.show{opacity:1;transition:opacity .3s ease}
+  /* ── cross-sell suggestion card ── */
+  .ute-demo .pos-crosssell{
+    flex:0 0 auto;margin:4px 8px;padding:6px 8px;
+    background:rgba(159,58,31,0.06);border:1px solid rgba(159,58,31,0.2);
+    border-radius:3px;opacity:0;transform:translateY(4px);
+    transition:opacity .4s ease,transform .4s ease;
+  }
+  .ute-demo .pos-crosssell.show{opacity:1;transform:translateY(0)}
+  .ute-demo .pos-crosssell-label{
+    font-family:'JetBrains Mono',monospace;font-size:7px;
+    letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--rust);margin-bottom:2px;
+  }
+  .ute-demo .pos-crosssell-text{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    color:var(--ink);line-height:1.4;
+  }
+  .ute-demo .pos-crosssell-reason{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;
+    color:var(--ink-dim);line-height:1.3;margin-top:1px;
+  }
+  .ute-demo .dm-text .kw{
+    color:var(--rust);font-style:normal;font-weight:600;
+    border-bottom:1.5px solid rgba(159,58,31,0.3);
+  }
+  .ute-demo .dm-note{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.04em;color:var(--rust);
+    line-height:1.5;padding:0.3em 0 0;
+    opacity:0;transform:translateY(2px);
+  }
+  .ute-demo .dm-note.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
+  .ute-demo .dm-note::before{content:'→ '}
+  .ute-demo .dm.fade-out .dm-note{opacity:0}
+  /* ── footer: total + complete ── */
+  .ute-demo .pos-footer{
+    flex:0 0 auto;padding:0 8px 6px;margin-top:auto;
+  }
+  .ute-demo .pos-total{
+    display:flex;justify-content:space-between;
+    font-family:'Cormorant Garamond',serif;font-size:13px;
+    padding:6px 0 0;border-top:1.5px solid var(--ink);
+    color:var(--ink);font-weight:500;
+  }
+  .ute-demo .pos-complete{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    letter-spacing:0.02em;text-align:center;
+    padding:5px;margin-top:4px;border-radius:3px;
+    background:var(--ink);color:var(--paper);flex:0 0 auto;opacity:0;
+    border:none;
+  }
+  .ute-demo .pos-complete.show{opacity:1;transition:opacity .35s ease}
+  /* ── record bar ── */
+  .ute-demo .pos-rec{
+    flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:6px 10px;
+    border-top:1px solid var(--rule);
+    background:var(--paper);
+    border-radius:0 0 4px 4px;
+    cursor:default;
+  }
+  .ute-demo .pos-rec-icon{
+    width:13px;height:13px;color:var(--ink-dim);
+    transition:color .4s ease;
+  }
+  .ute-demo .pos-rec-label{
+    font-family:'Cormorant Garamond',serif;font-size:11px;
+    letter-spacing:0.02em;color:var(--ink-dim);
+    transition:color .4s ease;
+  }
+  .ute-demo .pos-rec-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--rule);
+    transition:background .4s ease;
+  }
+  /* idle: editorial record button */
+  .ute-demo .pos-rec.idle{
+    cursor:pointer;
+  }
+  .ute-demo .pos-rec.idle .pos-rec-icon{color:var(--rust)}
+  .ute-demo .pos-rec.idle .pos-rec-label{color:var(--rust);font-weight:600}
+  .ute-demo .pos-rec.idle .pos-rec-dot{background:var(--rust)}
+  /* on: listening state */
+  .ute-demo .pos-rec.on .pos-rec-icon{color:var(--rust)}
+  .ute-demo .pos-rec.on .pos-rec-label{color:var(--ink-soft)}
+  .ute-demo .pos-rec.on .pos-rec-dot{
+    background:var(--rust);
+    animation:rec-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes rec-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  /* ── sesame allergy highlight in status ── */
+  .ute-demo .pos-head-status .status-warn{color:var(--rust);font-weight:600}
+  /* ── action highlight: brief glow when something changes ── */
+  @keyframes action-glow{
+    0%{box-shadow:0 0 0 0 rgba(159,58,31,0.5)}
+    40%{box-shadow:0 0 8px 3px rgba(159,58,31,0.35)}
+    100%{box-shadow:0 0 0 0 rgba(159,58,31,0)}
+  }
+  .ute-demo .glow{animation:action-glow .8s ease-out}
+  @media(prefers-reduced-motion:reduce){
+    .ute-demo .glow{animation:none}
+  }
+  /* ── eye-guidance: blur + dim the inactive side ── */
+  .ute-demo-chat,
+  .ute-demo-pos{
+    transition:filter .5s ease,opacity .5s ease;
+  }
+  .ute-demo-chat.inactive{
+    filter:blur(3.5px);opacity:0.3;pointer-events:none;
+  }
+  .ute-demo-pos.inactive{
+    filter:blur(3.5px);opacity:0.3;pointer-events:none;
+  }
+  @media(prefers-reduced-motion:reduce){
+    .ute-demo-chat,
+    .ute-demo-pos{transition:opacity .3s ease;filter:none!important}
+    .ute-demo-chat.inactive,
+    .ute-demo-pos.inactive{filter:none!important;opacity:0.25}
+  }
+
+  @media(max-width:600px){
+    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto;max-height:30em}
+    .ute-demo-pos{border:1px solid var(--rule);grid-row:2;grid-column:1}
+  }
+
+  /* ========== STICKY TOP NAV ========== */
+  .topnav{
+    position:sticky;top:0;z-index:30;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule);
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.6em;
+    padding:0.7em 1.6em;
+  }
+  .topnav .nav-left{display:flex;gap:1.1em;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase}
+  .topnav .nav-left a{color:var(--ink);text-decoration:none;position:relative;padding-left:0.7em;transition:color .3s}
+  .topnav .nav-left a::before{content:"►";position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--rust);font-size:0.4em;opacity:0;transition:opacity .3s}
+  .topnav .nav-left a:hover{color:var(--rust)}
+  .topnav .nav-left a:hover::before{opacity:1}
+  .topnav .nav-center{display:flex;gap:0.5em}
+  .topnav .nav-center a{
+    display:flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:1px solid var(--rule);color:var(--ink);transition:border-color .3s,color .3s,background .3s;
+  }
+  .topnav .nav-center a:hover{border-color:var(--rust);color:var(--rust);background:rgba(159,58,31,0.04)}
+  .topnav .nav-center svg{width:0.75em;height:0.75em;display:block}
+  .topnav .nav-right{
+    text-align:right;font-family:'JetBrains Mono',monospace;
+    font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase;
+  }
+  .topnav .nav-right a{color:var(--ink);text-decoration:none;transition:color .3s}
+  .topnav .nav-right a:hover{color:var(--rust)}
+
+  /* .reveal classes kept on HTML elements as hooks for a future agent;
+     currently no-op so everything renders immediately. */
+  .reveal{opacity:1;transform:none}
+
+  @media (max-width:41em){
+    .topnav{grid-template-columns:1fr auto 1fr;gap:0.6em;padding:0.5em 0.9em}
+    .topnav .nav-left,.topnav .nav-right{font-size:0.475em;letter-spacing:0.14em}
+  }
+  @media (max-width:32em){
+    .topnav{grid-template-columns:1fr auto 1fr;gap:0.4em;padding:0.5em 0.7em}
+    .topnav .nav-left,.topnav .nav-right{font-size:0.4em;letter-spacing:0.1em}
+    .topnav .nav-center a{width:1.5em;height:1.5em}
+  }
+
+  /* ========== SMALLER PROJECTS ========== */
+  .small-project{margin-bottom:2.8em}
+  .small-project h4{
+    font-weight:400;font-size:1.5em;letter-spacing:0;margin-bottom:0.8em;
+  }
+  .small-project h4 em{font-style:italic}
+  .small-project .number{
+    font-style:italic;font-weight:300;
+    font-size:0.9em;color:var(--rust);margin-bottom:0.2em;display:block;letter-spacing:0.04em;
+  }
+
+  /* ========== OTHER PARTS ========== */
+  .other-parts p{font-size:1em;line-height:1.72}
+  .other-parts .hobbies{
+    margin-top:1.2em;padding-top:0.9em;border-top:1px solid var(--rule);
+    font-style:italic;font-size:1.05em;line-height:1.75;color:var(--ink-soft);max-width:64ch;
+  }
+  .other-parts .hobbies .dot{color:var(--rust);margin:0 0.5em}
+
+  /* ========== FOOTER ========== */
+  footer{
+    margin-top:6em;padding:2em 0;text-align:center;border-top:1px solid var(--rule);
+  }
+  footer .colophon{
+    font-style:italic;font-size:0.8em;color:var(--ink-dim);
+    max-width:56ch;margin:0 auto 1.2em;line-height:1.6;
+  }
+  footer .contact{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.65em;color:var(--ink);
+    letter-spacing:0.1em;text-decoration:none;border-bottom:2px solid var(--rust);padding-bottom:0.1em;
+  }
+  footer .contact:hover{color:var(--rust)}
+  footer .ts{
+    display:block;margin-top:1.2em;font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    color:var(--ink-dim);letter-spacing:0.2em;text-transform:uppercase;
+  }
+
+  /* ========== COMPASS DEMO ========== */
+  .compass-demo{margin:2.4em 0 1.6em}
+  .compass-label{
+    font-style:italic;font-weight:300;
+    font-size:0.9em;color:var(--rust);display:block;margin-bottom:0.5em;letter-spacing:0.02em;
+  }
+  .compass-question{
+    font-size:1em;line-height:1.72;font-weight:400;max-width:64ch;
+    min-height:1.5em;
+  }
+  .compass-question .cursor{
+    display:inline-block;width:1px;height:1.1em;background:var(--ink);
+    vertical-align:text-bottom;margin-left:1px;
+    animation:blink .7s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){
+    .compass-question .cursor{animation:none;opacity:0}
+  }
+  .compass-options{
+    display:flex;gap:1.8em;margin:1.8em 0 0;opacity:0;
+    justify-content:center;max-width:64ch;
+    transition:opacity .4s ease;
+  }
+  .compass-options.visible{opacity:1}
+  @media(prefers-reduced-motion:reduce){
+    .compass-options{transition:none}
+  }
+  .compass-opt{
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;
+    background:none;border:none;padding:0.4em 0;cursor:pointer;
+    color:var(--ink-dim);position:relative;
+    transition:color .2s;
+  }
+  .compass-opt::before{
+    content:"►";margin-right:0.5em;font-size:0.7em;color:var(--rust);
+    opacity:0;transition:opacity .2s;
+  }
+  .compass-opt:hover{color:var(--ink)}
+  .compass-opt:hover::before{opacity:1}
+  .compass-opt:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .compass-opt.active{color:var(--rust)}
+  .compass-opt.active::before{opacity:1}
+  .compass-response{
+    font-style:italic;font-size:1em;line-height:1.72;
+    color:var(--ink-soft);max-width:64ch;margin-top:1em;
+    min-height:0;opacity:0;transition:opacity .35s ease;
+  }
+  .compass-response.visible{opacity:1}
+  @media(prefers-reduced-motion:reduce){
+    .compass-response{transition:none}
+  }
+
+  @media (max-width:32em){
+    main{padding:2em 1em 4em}
+    .masthead{grid-template-columns:1fr;gap:1.2em;padding-bottom:1.4em;margin-bottom:2.8em}
+    .photo-frame{width:6.4em;height:8.5em;justify-self:start}
+    .hr-soft{margin:2.8em auto}
+    .section-title{margin:3.6em 0 2em}
+    .section-title::before,.section-title::after{width:1.5em;margin:0 0.5em}
+    .chapter{margin-bottom:3em}
+    .example{padding:0.9em 1em}
+    .example .row{grid-template-columns:1fr;gap:0.2em}
+    .example .who{margin-top:0.3em}
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY TOP NAV -->
+<header class="topnav">
+  <nav class="nav-left">
+    <a href="#about">About</a>
+    <a href="#compass">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="nav-center">
+    <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0z"/>
+      </svg>
+    </a>
+    <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.17c-3.34.72-4.04-1.42-4.04-1.42-.55-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.17 0 0 1.01-.32 3.3 1.23.96-.27 1.99-.4 3.01-.41 1.02.01 2.05.14 3.01.41 2.29-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.11 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+    </a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:svenja@borgwardt.me">Open for Collaboration</a>
+  </div>
+</header>
+
+<main>
+
+<!-- MASTHEAD: name left, photo right -->
+<header class="masthead">
+  <div class="name-block">
+    <h1>Svenja <em>Borgwardt</em></h1>
+    <button class="pronounce" aria-label="Listen to pronunciation: SVEN-yah BORK-vart">
+      <span class="pronounce-ipa">[ˈsfɛnja ˈbɔʁkvaʁt]</span>
+      <span class="pronounce-approx">SVEN-yah BORK-vart</span>
+    </button>
+    <!-- HERO: INTRO — directly under the name -->
+    <p class="masthead-intro reveal">Currently based in Cologne, Germany.</p>
+    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. All of them ask the same question: how do we make AI that finds what's strong in people and makes room for them to grow?</p>
+  </div>
+  <figure class="photo-block">
+    <div class="photo-frame">
+      <img src="svenja.jpg" alt="Svenja Borgwardt" style="width:100%;height:100%;object-fit:cover;display:block">
+    </div>
+  </figure>
+</header>
+
+<!-- FEATURED WORK -->
+<div class="section-title reveal">Featured Work</div>
+
+<!-- COMPASS -->
+<section class="chapter" id="compass">
+  <header class="chapter-head reveal">
+    <span class="chapter-num">I.</span>
+    <h2 class="chapter-title"><em>Compass</em></h2>
+  </header>
+
+  <p>Watching how people use AI, I keep noticing one thing: people tend to take the path of least resistance. In learning contexts, that worries me. AI creates a specific failure of self-assessment: the student produces a good output and reads the quality of the output as evidence of their own learning. Cognitive science calls this <em>the illusion of fluency</em>, the gap between how something feels to process and whether any of it has actually stuck. For something to be learned, it has to be slightly harder than easy. This is the idea behind Robert Bjork's <em>desirable difficulties</em>. What I see in the classroom is the opposite: students handing in well-written AI work they didn't understand themselves.</p>
+
+  <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
+
+  <div class="compass-demo" id="compass-demo">
+    <span class="compass-label">Student</span>
+    <p class="compass-question" aria-live="polite"></p>
+    <div class="compass-options" aria-label="Choose a response approach">
+      <button class="compass-opt" data-key="standard">Standard AI</button>
+      <button class="compass-opt" data-key="socratic">Socratic</button>
+      <button class="compass-opt" data-key="vision">My Vision</button>
+    </div>
+    <p class="compass-response" aria-live="polite"></p>
+  </div>
+
+  <p>So I asked myself: how can we make AI usable for learning without letting it take over the thinking of the most vulnerable group? I started building a tool that removes the AI's ability to give the answer directly, because the interaction layer never sees the whole task. Basically, I tried to handcuff the model into being helpful. But the better the models got, the harder it became to keep them from understanding the overall task. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level of that step. That made the whole thing hard to transfer to other topics and not particularly time-saving.</p>
+
+  <p>So I came to the conclusion that I had to fine-tune the model itself. I don't want it to give answers right away, and I don't want it to pester the student with endless questions either. What I want is a model that intervenes at exactly the right level: enough to unstick the learner, not so much that it does the thinking for them. That's Compass — not a product, more of a direction. Everything I build for learning follows from this idea.</p>
+
+  <p>The first concrete thing that came out of it is a chatbot for my Economics class. I fine-tuned an open-weight model on preference pairs from my own lessons — situations where I knew exactly what a student needed to hear and what would have just done the thinking for them. Honestly, I wasn't sure they'd bother with it. But they started arguing with it. Pushing back on its hints, trying different angles, coming back with better arguments. Which is, I think, the whole point.</p>
+
+</section>
+
+<hr class="hr-soft">
+
+<!-- UTE -->
+<section class="chapter" id="ute">
+  <header class="chapter-head reveal">
+    <span class="chapter-num">II.</span>
+    <h2 class="chapter-title"><em>UTE</em></h2>
+  </header>
+
+  <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
+
+  <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+
+  <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
+
+  <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+
+  <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
+
+  <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
+
+  <div class="ute-demo reveal" id="ute-demo">
+    <div class="ute-demo-chat" id="ute-chat"></div>
+    <div class="ute-demo-pos">
+      <div class="pos-head">
+        <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span><span class="pos-divider">│</span><span class="pos-head-terminal">Register 01</span></span>
+        <span class="pos-head-status" id="ute-status">ready</span>
+      </div>
+      <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
+      <div class="pos-body">
+        <div class="pos-grid" id="ute-grid"></div>
+        <div class="pos-sidebar" id="ute-cart-wrap">
+          <div class="pos-cart-head"><svg class="pos-cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l1.5 9h8L14 3.5H4"/><circle cx="5.5" cy="13" r="1"/><circle cx="11.5" cy="13" r="1"/></svg> Order</div>
+          <div class="pos-cart-items" id="ute-cart"></div>
+          <div class="pos-footer">
+            <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="pos-rec idle" id="ute-rec">
+        <svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        <span class="pos-rec-label">Record</span>
+        <span class="pos-rec-dot"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hr-soft">
+
+<!-- KALEIDO -->
+<section class="chapter" id="kaleido">
+  <header class="chapter-head reveal">
+    <span class="chapter-num">III.</span>
+    <h2 class="chapter-title"><em>Kaleido</em></h2>
+  </header>
+
+  <p>Kaleido is a tool for giving individual feedback on student writing. It came out of a frustration I had no answer for: with 240 students a week, proper individual feedback on written work was simply not possible. I started vibe coding in early 2025, and this was my first big project. It began as a simple pipeline and grew. I added plagiarism detection, student progress analytics, all the things that seemed useful in theory, before subtracting most of it again. What's left is a GDPR and EU AI Act compliant pipeline that gives individual feedback to my students and generates targeted exercises for the specific mistakes they make, so they can actually improve.</p>
+
+  <p>Here's how it works. A student hands in their paper. Their name is stripped out locally and replaced with a code. An anonymisation agent removes every remaining personal detail from the text. A set of agents then analyses the work along separate dimensions: structure, evidence, language, coherence, grammar, content. A final agent writes the feedback, <em>addressed to the student rather than about them</em>. The output is an HTML page they can read on their phone, with a progress view that shows how their writing has developed over the year.</p>
+
+  <p>The first time I handed back Kaleido feedback instead of the usual red-penned pages, something happened I hadn't seen before. Students came to me afterwards with questions about their own essays. Not about the mark. About the essay itself. They'd read the feedback because it was addressed to them, in language that treated them as the authors of something real, and they wanted to know more. They finally knew what to change to improve, instead of just seeing where they'd gone wrong.</p>
+
+  <p>Kaleido works well for English and Economics because I trained the agents on my specific types of tasks. Publishing a version that fits other subjects is on my list.</p>
+
+  <blockquote>I called it Kaleido because a kaleidoscope turns the same fragments into a different pattern every time you look. That's what I want feedback to do.</blockquote>
+
+  <figure class="project-example reveal">
+    <div class="frame">
+      <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
+        <rect width="720" height="400" fill="#FCFBF7"/>
+        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">KALEIDO · FEEDBACK</text>
+        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">W24 · REV. 01</text>
+        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
+
+        <text x="32" y="84" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#8A8493">Addressed to you,</text>
+        <text x="32" y="104" font-family="Cormorant Garamond" font-style="italic" font-size="17" fill="#8A8493">about this week's essay on social bonds.</text>
+
+        <text font-family="Cormorant Garamond" font-size="16" fill="#141018">
+          <tspan x="32" y="146">Your thesis is clear: technology has reshaped how communities form. Where the</tspan>
+          <tspan x="32" y="168">essay loses ground is in the examples — the first two build the argument, but</tspan>
+          <tspan x="32" y="190">the third (your "online dating" section) contradicts the claim about durable</tspan>
+          <tspan x="32" y="212">bonds. Consider either tightening the thesis, or finding a third example that</tspan>
+          <tspan x="32" y="234">reinforces rather than undermines it.</tspan>
+        </text>
+
+        <text font-family="Cormorant Garamond" font-size="16" fill="#141018">
+          <tspan x="32" y="268">The evidence in paragraph 4 is strong. Worth rereading paragraph 6 and</tspan>
+          <tspan x="32" y="290">asking whether those sentences say what you want them to.</tspan>
+        </text>
+
+        <line x1="32" y1="324" x2="688" y2="324" stroke="#D4C9AF" stroke-width="1"/>
+
+        <g font-family="JetBrains Mono" font-size="9" letter-spacing="2">
+          <text x="32" y="350" fill="#9F3A1F">STRUCTURE ↑</text>
+          <text x="146" y="350" fill="#9F3A1F">EVIDENCE ↑</text>
+          <text x="250" y="350" fill="#8A8493">LANGUAGE ·</text>
+          <text x="354" y="350" fill="#9F3A1F">COHERENCE ↑</text>
+          <text x="482" y="350" fill="#8A8493">GRAMMAR ·</text>
+          <text x="576" y="350" fill="#8A8493">CONTENT ·</text>
+        </g>
+        <text x="32" y="376" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">PROGRESS ↗ +12% this term</text>
+        <text x="688" y="376" text-anchor="end" font-family="JetBrains Mono" font-size="8" letter-spacing="2" fill="#8A8493">ANON · KL-4F2A9B</text>
+      </svg>
+    </div>
+    <figcaption>A Kaleido feedback card — <strong>addressed to the writer</strong>, with a six-dimension read-out and a term-level progress note.</figcaption>
+  </figure>
+
+  <div class="stack">
+    <span class="k">Stack</span>Python · regex-based anonymisation · Mistral as the model provider · HTML output<br>
+    <span class="k">Note</span>EU jurisdiction matters when you're handling German school data
+  </div>
+</section>
+
+<hr class="hr-soft">
+
+<!-- ALSO BUILT -->
+<div class="section-title reveal">Also Built</div>
+
+<section class="small-project reveal" id="claudia">
+  <span class="number">IV.</span>
+  <h4><em>Claudia</em></h4>
+  <p>Claudia is my multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat. During the day she orchestrates the agents behind Kaleido. The rest of the time she runs my home automation. Same framework, different endpoints. I named her Claudia because "the multi-agent framework on the Mac Mini" stopped being charming around the tenth mention. Most of what I know about agent design, memory, and orchestration I learned by building her and then watching her break in interesting ways.</p>
+  <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
+
+  <figure class="project-example reveal">
+    <div class="frame">
+      <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
+        <rect width="720" height="360" fill="#FCFBF7"/>
+        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">CLAUDIA · MULTI-AGENT INFRASTRUCTURE</text>
+        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">MAC MINI · ALWAYS ON</text>
+        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
+
+        <!-- Center node -->
+        <rect x="296" y="148" width="128" height="80" fill="#EFE6D1" stroke="#141018" stroke-width="1.4"/>
+        <text x="360" y="180" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="22" fill="#141018">Claudia</text>
+        <text x="360" y="204" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">Mac Mini · local · always on</text>
+
+        <!-- Top-left -->
+        <line x1="296" y1="162" x2="208" y2="112" stroke="#9F3A1F" stroke-width="1.2"/>
+        <rect x="64" y="88" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
+        <text x="160" y="112" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Anonymisation</text>
+        <text x="160" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">regex + agent</text>
+
+        <!-- Top-right -->
+        <line x1="424" y1="162" x2="512" y2="112" stroke="#9F3A1F" stroke-width="1.2"/>
+        <rect x="464" y="88" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
+        <text x="560" y="112" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Feedback agents</text>
+        <text x="560" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">Kaleido · Mistral</text>
+
+        <!-- Bottom-left -->
+        <line x1="296" y1="214" x2="208" y2="264" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
+        <rect x="64" y="244" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
+        <text x="160" y="268" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" fill="#141018">Home automation</text>
+        <text x="160" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">lights · locks · climate</text>
+
+        <!-- Bottom-right -->
+        <line x1="424" y1="214" x2="512" y2="264" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
+        <rect x="464" y="244" width="192" height="52" fill="#FCFBF7" stroke="#141018"/>
+        <text x="560" y="268" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-style="italic" fill="#141018">Sarah</text>
+        <text x="560" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">smart-home · voice</text>
+
+        <!-- Legend -->
+        <line x1="32" y1="332" x2="64" y2="332" stroke="#9F3A1F" stroke-width="1.2"/>
+        <text x="72" y="336" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">BY DAY</text>
+        <line x1="168" y1="332" x2="200" y2="332" stroke="#141018" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="208" y="336" font-family="JetBrains Mono" font-size="9" fill="#8A8493" letter-spacing="1">THE REST OF THE TIME</text>
+      </svg>
+    </div>
+    <figcaption>Claudia — one framework, four endpoints. <strong>By day</strong> the agents behind Kaleido; <strong>the rest of the time</strong>, the flat.</figcaption>
+  </figure>
+</section>
+
+<section class="small-project reveal" id="investor-game">
+  <span class="number">V.</span>
+  <h4><em>Investor Game</em></h4>
+  <p>A platform where participants develop product ideas, pitch them to a group, and invest play money into each other's pitches. Scoring is part quality-of-pitch, part performance-of-portfolio. You're rewarded both for being a good founder and for being a good judge of other founders. I wrote it because nothing off the shelf handled that combination, peer feedback and play-money investment in the same place. Deployed in a market economics class, where I've never seen the topic taken more seriously.</p>
+
+  <figure class="project-example reveal">
+    <div class="frame">
+      <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg">
+        <rect width="720" height="420" fill="#FCFBF7"/>
+        <text x="32" y="36" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#8A8493">INVESTOR GAME · ROUND 3</text>
+        <text x="688" y="36" text-anchor="end" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">DAY 2 OF 5</text>
+        <line x1="32" y1="50" x2="688" y2="50" stroke="#141018" stroke-width="1"/>
+
+        <!-- LEFT: PITCH CARD -->
+        <rect x="32" y="72" width="360" height="260" fill="#EFE6D1" stroke="#141018" stroke-width="1"/>
+        <text x="52" y="100" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#9F3A1F">PITCH N° 07</text>
+        <text x="52" y="132" font-family="Cormorant Garamond" font-size="28" fill="#141018">"Regrow"</text>
+        <text x="52" y="154" font-family="Cormorant Garamond" font-style="italic" font-size="14" fill="#8A8493">— a reforestation savings account —</text>
+
+        <text font-family="Cormorant Garamond" font-size="15" fill="#141018">
+          <tspan x="52" y="192">A monthly payment plan where each euro</tspan>
+          <tspan x="52" y="214">goes partly to reforestation, partly to</tspan>
+          <tspan x="52" y="236">interest. The user sees both grow.</tspan>
+        </text>
+
+        <line x1="52" y1="260" x2="372" y2="260" stroke="#D4C9AF" stroke-width="1" stroke-dasharray="2 2"/>
+        <text x="52" y="284" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">FOUNDERS</text>
+        <text x="52" y="306" font-family="Cormorant Garamond" font-size="15" fill="#141018">Team 04 · M. &amp; J.</text>
+
+        <!-- RIGHT: INVESTMENT + PORTFOLIO -->
+        <text x="432" y="94" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">YOUR INVESTMENT</text>
+        <rect x="432" y="108" width="256" height="48" fill="#FCFBF7" stroke="#141018"/>
+        <text x="560" y="142" text-anchor="middle" font-family="Cormorant Garamond" font-size="26" fill="#141018">300 M</text>
+        <text x="432" y="172" font-family="JetBrains Mono" font-size="8" letter-spacing="1" fill="#8A8493">OF 2,000 M AVAILABLE THIS ROUND</text>
+
+        <text x="432" y="204" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">CONFIDENCE</text>
+        <g>
+          <rect x="432" y="216" width="38" height="8" fill="#9F3A1F"/>
+          <rect x="476" y="216" width="38" height="8" fill="#9F3A1F"/>
+          <rect x="520" y="216" width="38" height="8" fill="#9F3A1F"/>
+          <rect x="564" y="216" width="38" height="8" fill="#D4C9AF"/>
+          <rect x="608" y="216" width="38" height="8" fill="#D4C9AF"/>
+        </g>
+
+        <text x="432" y="256" font-family="JetBrains Mono" font-size="9" letter-spacing="2" fill="#8A8493">PORTFOLIO · ROUND 3</text>
+        <line x1="432" y1="266" x2="688" y2="266" stroke="#141018" stroke-width="1"/>
+
+        <g font-family="Cormorant Garamond" font-size="14" fill="#141018">
+          <text x="432" y="288">Pitch 02 · "Mica"</text>
+          <text x="688" y="288" text-anchor="end" fill="#9F3A1F">+42%</text>
+          <text x="432" y="310">Pitch 05 · "Carta"</text>
+          <text x="688" y="310" text-anchor="end" fill="#9F3A1F">+18%</text>
+          <text x="432" y="332">Pitch 07 · "Regrow"</text>
+          <text x="688" y="332" text-anchor="end" fill="#8A8493" font-style="italic">pending</text>
+        </g>
+
+        <line x1="432" y1="356" x2="688" y2="356" stroke="#141018" stroke-width="1"/>
+        <text x="432" y="380" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#141018">TOTAL VALUE</text>
+        <text x="688" y="380" text-anchor="end" font-family="Cormorant Garamond" font-size="20" fill="#9F3A1F">2,430 M</text>
+      </svg>
+    </div>
+    <figcaption>One round of the Investor Game: a pitch on the left, <strong>your own investment and portfolio</strong> on the right. Score is part pitch quality, part portfolio return.</figcaption>
+  </figure>
+</section>
+
+
+<!-- OTHER PARTS -->
+<div class="section-title reveal">The Other Parts</div>
+
+<section class="other-parts reveal">
+  <p>Eleven years at a German savings bank before this work. It wasn't always what I wanted, but it taught me to think in terms of risk, compliance, and long feedback loops. That turns out to be surprisingly useful the moment you start building anything that touches student data.</p>
+  <p class="hobbies">
+    First violin in the Ford Symphony Orchestra here in Cologne.<span class="dot">·</span>PADI Divemaster.<span class="dot">·</span>SKS sailing licence.<span class="dot">·</span>I love adventures and getting to know new cultures.
+  </p>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="reveal">
+  <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
+</footer>
+
+</main>
+
+<script defer src="scripts/effects.js?v=40"></script>
+</body>
+</html>
