@@ -830,6 +830,82 @@
     .et-tab{padding:0.8em 0.8em}
   }
 
+  /* ========== UNDER THE HOOD (Debate Dojo deep-dive) ========== */
+  .uth-divider{
+    margin:2.8em 0 0.9em;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.3em;
+    text-transform:uppercase;color:var(--ink-dim);
+  }
+  .uth-divider::before,.uth-divider::after{
+    content:"";display:inline-block;width:2.4em;height:0.05em;
+    background:var(--rule);vertical-align:middle;margin:0 0.9em;
+  }
+  .uth-lead{
+    font-style:italic;font-weight:300;font-size:1.25em;line-height:1.4;
+    color:var(--rust);margin:0 auto 1.8em;max-width:54ch;text-align:center;
+  }
+  .uth-h{
+    font-family:'JetBrains Mono',monospace;font-weight:400;
+    font-size:0.6em;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-soft);
+    margin:2.4em 0 0.9em;padding-top:1.1em;border-top:1px solid var(--rule);
+  }
+  .uth-sub{
+    font-style:italic;font-weight:400;font-size:1.05em;color:var(--rust);
+    margin:1.5em 0 0.3em;
+  }
+  .uth-tag{font-style:italic;color:var(--rust)}
+  .uth-callout{
+    margin:1.6em 0;padding:1em 1.3em;max-width:62ch;
+    background:var(--paper-warm);border-left:2px solid var(--rust);
+    border-radius:0 2px 2px 0;
+  }
+  .uth-callout p{margin:0;max-width:none}
+  .uth-callout .k{color:var(--rust);font-style:italic;margin-right:0.3em}
+  /* metric cards */
+  .uth-metrics{
+    display:grid;grid-template-columns:1fr 1fr;gap:0.8em;
+    margin:1.6em 0;max-width:34em;
+  }
+  .uth-metric{
+    background:var(--paper-deep);border:1px solid var(--rule);
+    padding:1.1em 1em;border-radius:4px;text-align:center;
+  }
+  .uth-metric.accent{background:var(--rust);border-color:var(--rust)}
+  .uth-metric .num{
+    font-weight:300;font-size:2.2em;line-height:1;margin-bottom:0.15em;color:var(--ink);
+  }
+  .uth-metric.accent .num{color:var(--paper)}
+  .uth-metric .label{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.16em;
+    text-transform:uppercase;line-height:1.4;color:var(--ink-dim);
+  }
+  .uth-metric.accent .label{color:var(--paper);opacity:0.85}
+  /* eval table */
+  .uth-table-wrap{margin:1.6em 0;max-width:36em;overflow-x:auto}
+  .uth-table{width:100%;border-collapse:collapse;font-size:0.9em}
+  .uth-table th{
+    font-family:'JetBrains Mono',monospace;font-weight:400;
+    font-size:0.62em;letter-spacing:0.1em;text-transform:uppercase;text-align:right;
+    color:var(--ink-soft);padding:0.55em 0.7em;border-bottom:1.5px solid var(--ink);white-space:nowrap;
+  }
+  .uth-table th:first-child{text-align:left}
+  .uth-table td{
+    padding:0.5em 0.7em;border-bottom:1px solid var(--rule);text-align:right;
+    font-variant-numeric:tabular-nums;color:var(--ink-soft);
+  }
+  .uth-table td:first-child{text-align:left}
+  .uth-table tr:last-child td{border-bottom:none}
+  .uth-table .model{color:var(--ink);white-space:nowrap}
+  .uth-table .hl{color:var(--rust)}
+  .uth-table .dim{color:var(--ink-dim)}
+  .uth-table tr.ft td{background:rgba(159,58,31,0.07)}
+  @media(max-width:32em){
+    .uth-metrics{grid-template-columns:1fr}
+    .uth-lead{font-size:1.1em}
+    .uth-table{font-size:0.8em}
+    .uth-table th,.uth-table td{padding:0.45em 0.5em}
+  }
+
   /* ========== COVERFLOW CAROUSEL ========== */
   #editorial-theatre{position:relative;overflow:hidden;padding:0 1.3em}
   .cf-viewport{
@@ -870,6 +946,17 @@
     display:block;font-family:'JetBrains Mono',monospace;font-size:0.5em;
     letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.3em;
   }
+  /* Dezente Beleg-Links unter einem Eintrag (demo · code · model …) */
+  .link-proof{
+    margin-top:0.7em;font-family:'JetBrains Mono',monospace;font-size:0.6em;
+    letter-spacing:0.12em;text-transform:uppercase;
+  }
+  .link-proof a{
+    font-size:1em;color:var(--ink-dim);text-decoration:none;
+    border-bottom:1px solid var(--rule);padding-bottom:1px;transition:color .3s,border-color .3s;
+  }
+  .link-proof a:hover{color:var(--rust);border-color:var(--rust)}
+  .link-proof .sep{color:var(--rule);margin:0 0.55em}
 
   @media (max-width:32em){
     main{padding:2em 1em 4em}
@@ -1010,6 +1097,14 @@
           <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
         </article>
 
+        <article class="cf-card" data-project="5">
+          <div class="et-tag">privacy-first progress tracker</div>
+          <h3 class="et-title">Student Progress Analytics</h3>
+          <div class="et-date">In progress</div>
+          <div class="et-teaser-wrap"><p class="et-teaser">A grade tells a student where they landed, not how far they came. I wanted to see the whole arc: which mistakes are fading, where someone stalled, when the effort started to pay off. So I built a tracker that turns the corrections I already make into a picture of each student across a semester. The hard part was never the analytics. It was building something that can know a student this well without their data ever leaving my hands.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
       </div>
     </div>
 
@@ -1031,7 +1126,7 @@
 
         <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
 
-        <p>I'd built a version of this before: Kaleido, a multi-agent pipeline that analysed each exam across separate steps and wrote individual feedback. It worked, but every round cost real money, and student data still had to leave the room, even with EU-based providers. A local model changes both: no cost pressure, and no data goes anywhere.</p>
+        <p>None of this started as a hackathon project. It began with MATE, a Python pipeline I built for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money, and even anonymised, the data still had to leave the room. A local model changes that: no cost pressure, and nothing goes anywhere.</p>
 
         <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
 
@@ -1047,7 +1142,7 @@
 
         <div class="stack">
           <span class="k">Stack</span>Gemma 4 + LoRA &middot; runs on-device &middot; retrains from teacher corrections<br>
-          <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a>
+          <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a> &middot; <a href="https://github.com/SvenjaBorgwardt/MATE-DEMO" target="_blank" rel="noopener">MATE pipeline</a>
         </div>
       </div>
 
@@ -1083,8 +1178,139 @@
 
       <!-- Dojo expand (now project 0) -->
       <div class="et-expand-inner" data-expand="0" style="display:none">
-        <p>Debate Dojo applies the same thinking as Compass to debating. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
+        <p>Debate Dojo takes the principle behind Compass &mdash; help that waits until a student has genuinely tried &mdash; and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
+
+        <div class="uth-divider">Under the Hood</div>
+        <p class="uth-lead">How I finetuned an 8B model that knows when to help and when to hold back.</p>
+
+        <h4 class="uth-h">Where this started</h4>
+        <p>There is a kind of sovereignty we are underestimating: sovereignty over our own thinking.</p>
+        <p>I work with young adults, roughly 240 of them, and I have watched them use AI to outsource their thinking instead of using it as a tool. The strong ones are fine. But the ones who need the most help? They paste the AI output, move on, and learn nothing. What looks like learning is actually the illusion of learning. No thought happened. If we don't find a way to change that, we risk shaping a generation that has difficulties thinking independently. And the paradox is: independent thinking is exactly the skill they will need most in a world full of AI. The technology that could help them grow is quietly replacing the growth itself.</p>
+        <p>So I started building a model that actually helps people learn, instead of just giving them the answer. The core idea: a coaching model needs to know the difference between someone who is pressuring for a shortcut and someone who has genuinely tried and is stuck. I call this <em>effort-conditioned helpfulness</em> (ECH). Not less helpful. Helpful at the right time.</p>
+        <p>The system is not perfect yet. But it is a start.</p>
+        <div class="uth-callout"><p><span class="k">The thesis:</span>Effort-conditioned helpfulness can be measured on a pre-registered evaluation, and it can be trained into a small open-weights model. Structure teaches the model; the model carries the behavior on its own.</p></div>
+
+        <h4 class="uth-h">What I built</h4>
+        <p>I needed to put people in a situation where time pressure is real and there is no shortcut. The best idea I had: build a dojo. Learners prepare arguments on a debate topic using a three-part structure (Claim, Reason, Impact), then step into a sparring ring against real opponents. But before the real match, they train with an AI sensei who gives feedback, sharpens their reasoning, challenges weak spots, without ever giving the argument away. The sensei's job is to make them think harder, not to think for them.</p>
+        <p>Because the clock is ticking and the real debate is coming, the pressure is genuine. And that is exactly where things get interesting. Learners start pushing: <em>"Just tell me a good argument."</em> <em>"My teacher said it's fine."</em> <em>"I don't have time for this."</em> These are not hypothetical scenarios. They happened, in every single session. And those interactions are what the evaluation and the training are built on.</p>
+        <p>The coaching model is a finetuned Ministral 8B, trained via QLoRA on role-conditioned gold data: hundreds of multi-turn coaching dialogues generated by frontier models (Claude and Mistral Large), grounded in real pressure patterns from three live sessions.</p>
+        <p class="uth-sub">The design insight</p>
+        <p>The finetuning is only one piece. What matters at least as much is what I measure and why.</p>
+        <p>I built a rubric that evaluates the same message differently depending on what came before. If the conversation history shows pure pressure ("just give me the answer, I don't have time"), the coach should hold. If it shows genuine effort (three real attempts, a specific question about what went wrong), the coach should help. Same final message, different correct response. The judgment lives in the conversation history, not in the last turn.</p>
+        <p>That rubric became the evaluation instrument. And the evaluation instrument became the training signal. The same insight, <em>what matters is what happened before this turn</em>, runs through the entire pipeline from rubric to eval to training data to deployed model.</p>
+        <p>I also test both directions. In the coach role, the model should scaffold. In the opponent role, the exact same model should give hard counterarguments, because that is the opponent's job. If the model holds back as a coach but goes all in as an opponent, you know the holding back is a trained judgment, not a limitation.</p>
+
+        <h4 class="uth-h">How I measure</h4>
+        <p>I kept asking myself two questions. Does the coach hold when someone pushes for the answer? And does it tell the truth in both directions, calling out real flaws but also saying when something is genuinely good? Those two questions became the two axes of the evaluation. Both were pre-registered before training. Thresholds, evaluation sets, and judge prompts were locked and hash-frozen before any training run.</p>
+        <p class="uth-sub">Axis 1 — Pressure Guard</p>
+        <p>Does the coach resist giving away the answer under pressure? I test with contrast pairs: the same message, two different conversation histories. The model should <em>hold</em> under pressure and <em>help</em> after real effort. The metric is min(Hold, Help). A coach who only says no is just as useless as one who caves. I need both sides to count.</p>
+        <p class="uth-sub">Axis 2 — Honest Calibration</p>
+        <p>Does the coach give honest feedback? I test with 48 labeled items: some with real flaws (circular reasoning, vague impact, fabricated facts), some genuinely strong. The metric is min(Weak, Strong). Catching flaws is not enough. A model that criticizes everything scores zero on Strong. Only two-sided calibration counts.</p>
+        <div class="uth-callout"><p><span class="k">Grading:</span>All turns graded by Claude Sonnet 4.6 as LLM-as-judge, calibrated against 40 blind human labels (90% binary agreement). I labeled those 40 items myself, without seeing the model names or judge scores.</p></div>
+
+        <h4 class="uth-h">Results — Pressure Guard</h4>
+        <p>Five models, 24 contrast pairs, 3 samples each. The question is simple: does the coach hold under pure pressure but help after genuine effort?</p>
+        <div class="uth-table-wrap">
+          <table class="uth-table">
+            <thead><tr><th>Model</th><th>Hold</th><th>Help</th><th>min(Hold, Help)</th></tr></thead>
+            <tbody>
+              <tr><td class="model">Claude Sonnet 4.6</td><td>93.1%</td><td>95.8%</td><td class="hl">93.1%</td></tr>
+              <tr><td class="model">Mistral Medium</td><td>83.3%</td><td>98.6%</td><td>83.3%</td></tr>
+              <tr><td class="model">Mistral Large</td><td>75.0%</td><td>75.0%</td><td>75.0%</td></tr>
+              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>47.2%</td><td>51.4%</td><td>47.2%</td></tr>
+              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>88.9%</td><td>94.4%</td><td class="hl">88.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="uth-metrics">
+          <div class="uth-metric accent"><div class="num">+41.7 pp</div><div class="label">Base &rarr; Finetuned</div></div>
+          <div class="uth-metric"><div class="num">&minus;4.2 pp</div><div class="label">vs. Claude ceiling</div></div>
+        </div>
+        <p>The base Ministral 8B caves on roughly every other pressure turn. After finetuning, it holds at 88.9%, closing most of the 46-point gap to Claude. It misses my pre-registered threshold of 91% by about 2 percentage points. Close, but not there yet.</p>
+        <p>What I find encouraging: across all models, the dominant failure mode is caving (handing over the full argument), not stonewalling (refusing to help at all). The finetuned model learned to resist pressure without becoming unhelpful. That balance is the whole point.</p>
+
+        <h4 class="uth-h">Results — Honest Calibration</h4>
+        <p>This is the harder axis, and the one with the most surprising result.</p>
+        <p>I ran seven models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt that explicitly tells the model to be critical).</p>
+        <div class="uth-table-wrap">
+          <table class="uth-table">
+            <thead><tr><th>Model</th><th>Weak <span class="dim">(A0)</span></th><th>Strong <span class="dim">(A0)</span></th><th>min <span class="dim">(Headline)</span></th></tr></thead>
+            <tbody>
+              <tr><td class="model">Claude Sonnet 4.6</td><td>71%</td><td>11%</td><td>11%</td></tr>
+              <tr><td class="model">Gemma 4</td><td>75%</td><td>0%</td><td>0%</td></tr>
+              <tr><td class="model">Mistral Large</td><td>71%</td><td>6%</td><td>6%</td></tr>
+              <tr><td class="model">Mistral Medium</td><td>75%</td><td>4%</td><td>4%</td></tr>
+              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>50%</td><td>2%</td><td>2%</td></tr>
+              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>46%</td><td>22%</td><td class="hl">22%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="uth-metrics">
+          <div class="uth-metric accent"><div class="num">22%</div><div class="label">FT honest calibration</div></div>
+          <div class="uth-metric"><div class="num">2&times;</div><div class="label">Claude's baseline</div></div>
+        </div>
+        <p>Look at the Strong column. Every model can spot flaws in weak arguments, that is the easy part. Almost no model can honestly acknowledge when someone did good work. Under the same standard prompt, no tested model exceeds 11% on that axis. The best anyone does with a stronger anti-glaze prompt is 26%.</p>
+        <p>I did not expect this: the finetuned 8B reaches 22% on Strong, double the Claude baseline under the same prompt, and the only model that materially separates from the pack without a dedicated anti-glaze intervention. A small model, trained on the right examples, outperforms frontier models on honest feedback calibration.</p>
+        <p class="uth-sub">The prompting trap</p>
+        <p>Here is the finding that motivated the whole finetune. When you tell a model "be more critical" (the A1 anti-glaze prompt), it does not learn honest calibration. It just switches failure modes. Instead of generic praise, it starts inventing flaws in strong arguments.</p>
+        <div class="uth-table-wrap">
+          <table class="uth-table">
+            <thead><tr><th>Model</th><th>False doubt on Strong <span class="dim">(A0 &rarr; A1)</span></th></tr></thead>
+            <tbody>
+              <tr><td class="model">Claude Sonnet 4.6</td><td>41% &rarr; <span class="hl">57%</span></td></tr>
+              <tr><td class="model">Gemma 4</td><td>15% &rarr; <span class="hl">41%</span></td></tr>
+              <tr><td class="model">Mistral Large</td><td>44% &rarr; <span class="hl">65%</span></td></tr>
+              <tr><td class="model">Ministral 8B</td><td>46% &rarr; <span class="hl">69%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The harder you prompt against glazing, the closer the model drifts toward always-critique, a different pose, not a real calibration. Paired McNemar tests confirm: the A1 prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031) but moves the needle on honestly acknowledging strong work for <em>no model at all</em>.</p>
+        <div class="uth-callout"><p><span class="k">The takeaway:</span>Prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," does not yield to prompting. That is the case for finetuning. You cannot prompt your way to honest calibration; you have to train it.</p></div>
+        <p class="uth-sub">What this looks like in practice</p>
+        <p>Someone writes a strong, clean argument about learning to code. No real flaws. The correct coach response: acknowledge specifically what works.</p>
+        <p><span class="uth-tag">Standard prompt (A0):</span> <em>"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</em> Generic praise. Does not say which part carries the argument or why. The learner gets nothing useful about what they did right.</p>
+        <p><span class="uth-tag">Anti-glaze prompt (A1):</span> <em>"One spot wobbles: 'someone must still read the code' &mdash; why does that someone need to have learned coding themselves?"</em> Invents a flaw that is not there. The grader flags it: "manufactured a flaw in the Reason." The learner now doubts work that was fine.</p>
+        <p>Neither response is what a good coach would give. The first is empty calories. The second is actively misleading. I know what the right response sounds like because I give it every day. The model should be able to do the same. This is the gap the finetune is meant to close.</p>
+
+        <h4 class="uth-h">Architecture</h4>
+        <p>Built for a real deployment with real constraints: EU data residency, tight budgets, and zero tolerance for downtime when it matters. Every architecture choice follows from that.</p>
+        <p>Why Mistral, why a small model? Because I believe we need to build and measure on European infrastructure, not just consume APIs and hope the access stays. When export controls hit and models disappear, the question is not whether you have access to the best API. The question is whether you can build something that works without it.</p>
+        <p class="uth-sub">Stack</p>
+        <p><span class="uth-tag">Frontend:</span> Static HTML/CSS/JS on Vercel. No framework, no build step, because when it needs to work, a broken build means 30 people staring at a blank screen. Each belt is a self-contained page with screen-by-screen progression.</p>
+        <p><span class="uth-tag">Backend:</span> Vercel serverless functions (Python). Stateless coaching API with session tracking and live gating. Every turn is logged with full provenance: model name, prompt version hash, mock flag. If anything goes wrong, I can trace exactly which model said what under which prompt.</p>
+        <p><span class="uth-tag">Database:</span> Supabase (EU region). Sessions, progress tracking, and real-time belt gating. I unlock belts from a dashboard during sessions, not automatically.</p>
+        <p><span class="uth-tag">Coaching model:</span> the finetuned Ministral 8B (ECH-FT) runs on a Hugging Face Inference Endpoint (TGI, A10G GPU, eu-west-1). In the live sessions students were coached by the classroom configuration on Claude Sonnet 4.6; the finetuned 8B is the research result those sessions produced. Rather than keep a GPU endpoint live for a whole lesson, I captured the real student turns and replayed them through the finetuned model on the endpoint afterward. The endpoint is paused between runs to save cost, with Claude Sonnet 4.6 as the standing fallback, so nobody ever sees an error.</p>
+        <p><span class="uth-tag">Examiner:</span> A separate Claude Haiku 4.5 call after each coach reply evaluates whether the learner is ready to move on. Cheap enough to run on every single turn, and independent from the coaching model. The coach does not grade its own work.</p>
+        <p class="uth-sub">Training pipeline</p>
+        <p><span class="uth-tag">Gold data:</span> Multi-turn coaching dialogues generated by Claude and Mistral Large following a locked rubric. Grounded in real pressure patterns from live sessions, real sentences like <em>"my teacher said it's okay"</em> and <em>"I already tried, just tell me."</em> Generation mix weighted toward Mistral Large. I reviewed a 30-example sample before any training run.</p>
+        <p><span class="uth-tag">Finetuning:</span> QLoRA SFT on Ministral 8B. Two epochs, validation loss 0.926. Mixed training data from both axes. Single A10G GPU, under two hours per run.</p>
+        <p><span class="uth-tag">Evaluation harness:</span> Fully automated and reproducible. Built in Claude Code. Contrast-pair replay engine, LLM-as-judge grading with a second judge for agreement checks, bootstrap confidence intervals, paired McNemar tests. All prompts, eval sets, and judge versions frozen before training.</p>
+        <p class="uth-sub">Privacy</p>
+        <p>Identifiers are anonymous tokens. Even I cannot trace them back to individuals. Raw data stays on EU infrastructure. Patterns are extracted for eval design; the logs themselves do not leave the system.</p>
+
+        <h4 class="uth-h">What broke</h4>
+        <p>I shipped this into real sessions three times. The live coach ran on Claude Sonnet 4.6; the finetuned model came later and was tested by replaying these same student turns. Things broke every time, and I learned more from the failures than from the eval numbers.</p>
+        <p><span class="uth-tag">People gave up before they started.</span> The first version of the belt interior had too many steps, too-small fonts, and labels in light gray on light paper. The confident ones pushed through. The confused, quiet ones in the back closed the tab. I rebuilt the entire UX around one question: does the person who does not ask for help know what to do right now?</p>
+        <p><span class="uth-tag">AI paste.</span> One person went from <em>"coding is hard bro"</em> to flawless essay English between two turns. A ChatGPT paste, and the coach did not catch the style break. It congratulated them. The biggest substitution risk is not inside the coach; it is the second browser tab. I added an ownership check to the prompt (when polished text appears suddenly, ask the person to explain it in their own words), but the real fix is an offline component the AI cannot reach.</p>
+        <p><span class="uth-tag">Jailbreak attempts.</span> Prompt injections in Russian, role overrides in English, someone claiming to be the teacher on a different account. None of it worked. The coach held through 106 replies without a single full argument leak. But it showed me what real adversarial pressure looks like. Those patterns went straight into the eval set.</p>
+
+        <h4 class="uth-h">Limitations</h4>
+        <p>I'm transparent about what the data does and does not show.</p>
+        <p><span class="uth-tag">Axis 1 missed its threshold.</span> The finetuned model reaches 88.9% on pressure guard, short of the pre-registered 91% target by about 2 percentage points. Mixing honesty training data cost a small amount of pressure resistance. The improvement from 47% is real, but the target was not fully met.</p>
+        <p><span class="uth-tag">Small evaluation set.</span> 24 contrast pairs for Axis 1, 48 items for Axis 2. Confidence intervals are wide (&plusmn;10&ndash;18 pp). Enough to show the gap between base and finetuned, and between 8B and frontier, not enough for fine-grained model ranking.</p>
+        <p><span class="uth-tag">Judge agreement is moderate.</span> Claude as LLM-as-judge agrees with a Mistral Large second judge at 57% (binary). The judges have systematically different thresholds, not just noise. My human labels are the deciding anchor. All headline numbers are Claude-judge numbers, reported as such.</p>
+        <p><span class="uth-tag">No outcome study.</span> I measure model behavior, not learning outcomes. The evidence from sessions is qualitative (before/after arguments, reflections), not a controlled trial. A proper outcome study would need a larger sample and a longer time horizon than three weeks allows.</p>
+        <p><span class="uth-tag">One domain.</span> English-language debate coaching. Transfer to other coaching domains is plausible but not tested.</p>
+
+        <h4 class="uth-h">What this means beyond debate coaching</h4>
+        <p>The honest calibration finding is not specific to my use case. It shows up anywhere a model interacts with a human whose growth is the goal, not just their satisfaction. Coaching, therapy, onboarding, creative feedback, code review. Anywhere the right response is sometimes "this is good, and here is specifically why" and sometimes "this needs work, and here is what to fix." Current post-training makes the second part easier than the first, across every model I tested.</p>
+        <p>I think the deeper question is: what will always matter about humans, even as AI gets more capable? The ability to think for yourself. To build an argument. To evaluate your own work honestly. AI that centers what is strong in people means AI that does not quietly take those capabilities away by being too eager to help. That is not just an education problem. That is a design question for every model that interacts with humans in a developmental context.</p>
+
+        <h4 class="uth-h">What comes next</h4>
+        <p>Larger evaluation sets and tighter confidence intervals. Testing ECH in at least one coaching domain outside of debate. And publishing the eval harness and anonymized dataset so others can run it on their own models.</p>
+
         <div class="stack">
+          <span class="k">Stack</span>Ministral 8B + QLoRA &middot; Vercel + Supabase (EU) &middot; HF Inference Endpoint &middot; Claude Haiku examiner<br>
           <span class="k">Links</span><a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Try it live</a>
         </div>
       </div>
@@ -1139,6 +1365,22 @@
         <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
       </div>
 
+      <!-- Student Progress Analytics expand (project 5) -->
+      <div class="et-expand-inner" data-expand="5" style="display:none">
+        <p>Every correction I make says something about a student. Then I hand the paper back, and it's gone. A grade is one number at the end of a long process, and it throws away everything that happened on the way there: where someone started, what they fixed, where they're still stuck. I wanted to keep that and give it back to the student as something they can actually see.</p>
+
+        <p>Student Progress Analytics turns the corrections I already make into a picture of each student across a semester. It tracks their grade against the class average, counts errors by category &mdash; grammar, vocabulary, IT terminology, content &mdash; and shows them shrinking task by task. A skills profile compares where someone was on the first assignment to where they are on the latest, and an XP and level system makes progress visible enough to be motivating. On my side, the same data aggregates across all three of my classes and quietly flags the students who are slipping, often before it would show up in a grade.</p>
+
+        <p>The whole thing is built around one constraint: knowing a student this well is exactly the kind of data you have no right to mishandle. Student text is anonymised before any model touches it, names never leave my device, and what a student sees is a static file: no tracking, no cookies, no server calling home. The dashboards were the easy part. The hard part was earning the right to know this much.</p>
+
+        <p>I build on this constantly, and it isn't finished. What's online now is a working demo running on entirely synthetic data; no real student appears anywhere in it. The question I keep circling is how much a system can know about a learner while staying something I'd be comfortable running on real students. That line is exactly what I'm trying to find.</p>
+
+        <div class="stack">
+          <span class="k">Stack</span>Built on my own corrections &middot; anonymised before processing &middot; static, offline output<br>
+          <span class="k">Links</span><a href="https://svenjaborgwardt.github.io/MATE-DEMO/MATE_Progress_2025-IT3A-07.html" target="_blank" rel="noopener">Live student dashboard</a> &middot; <a href="https://svenjaborgwardt.github.io/MATE-DEMO/MATE_Teacher_Dashboard.html" target="_blank" rel="noopener">Teacher dashboard</a> <span style="color:var(--ink-dim)">(synthetic data)</span>
+        </div>
+      </div>
+
     </div><!-- /et-expand -->
 </div><!-- /editorial-theatre -->
 
@@ -1174,7 +1416,7 @@
 <!-- ============================================================ -->
 <div class="tab-content" id="section-out" role="tabpanel" aria-labelledby="tab-out">
 
-  <div class="section-title">Talks</div>
+  <div class="section-title">Speaking</div>
   <ul class="link-list">
     <li>
       <a href="https://debate-dojo.vercel.app/dojo-landing.html?demo" target="_blank" rel="noopener">
@@ -1194,77 +1436,30 @@
     </li>
   </ul>
 
-  <div class="section-title">Hackathons</div>
+  <div class="section-title">Recognition</div>
   <ul class="link-list">
+    <li>
+      <span class="link-label">B&Auml;KO Hackathon · 1st Place</span>
+      UTE: voice-first ordering for bakery counters, built with a team of four women.
+      <div class="link-proof">
+        <a href="#ute">in What I Build</a>
+      </div>
+    </li>
     <li>
       <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
         <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind</span>
-        GemmPen: handwritten exams into personalised feedback, fully on-device
+        GemmPen: turning handwritten exams into personalised feedback, fully on-device.
       </a>
-    </li>
-    <li>
-      <span class="link-label">B&Auml;KO Hackathon · 1st Place</span>
-      UTE: voice-first ordering for bakery counters, built with a team of four women
+      <div class="link-proof">
+        <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">demo</a><span class="sep">·</span>
+        <a href="https://github.com/SvenjaBorgwardt/GemmPen" target="_blank" rel="noopener">code</a><span class="sep">·</span>
+        <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">model</a><span class="sep">·</span>
+        <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">video</a>
+      </div>
     </li>
   </ul>
 
-  <div class="section-title">Live Demos</div>
-  <ul class="link-list">
-    <li>
-      <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">
-        <span class="link-label">GemmPen</span>
-        gemmpen.vercel.app
-      </a>
-    </li>
-    <li>
-      <a href="https://comment-writing-tool.vercel.app" target="_blank" rel="noopener">
-        <span class="link-label">Compass · Comment Writing</span>
-        comment-writing-tool.vercel.app
-      </a>
-    </li>
-    <li>
-      <a href="https://debate-dojo.vercel.app/dojo-landing.html?demo" target="_blank" rel="noopener">
-        <span class="link-label">Debate Dojo</span>
-        debate-dojo.vercel.app
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/SvenjaBorgwardt/MATE-DEMO" target="_blank" rel="noopener">
-        <span class="link-label">MATE · Feedback Examples</span>
-        Student feedback, progress dashboard, personalized worksheets
-      </a>
-    </li>
-    <li>
-      <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">
-        <span class="link-label">GemmPen · Video Walkthrough</span>
-        youtu.be/IeDM1mJ3J2M
-      </a>
-    </li>
-  </ul>
-
-  <div class="section-title">Code & Models</div>
-  <ul class="link-list">
-    <li>
-      <a href="https://github.com/SvenjaBorgwardt/GemmPen" target="_blank" rel="noopener">
-        <span class="link-label">GemmPen · Source</span>
-        github.com/SvenjaBorgwardt/GemmPen
-      </a>
-    </li>
-    <li>
-      <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">
-        <span class="link-label">GemmPen · LoRA Model</span>
-        huggingface.co/SveBorg/gemmpen-lora
-      </a>
-    </li>
-    <li>
-      <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
-        <span class="link-label">GemmPen · Kaggle Writeup</span>
-        Gemma 4 Good Hackathon
-      </a>
-    </li>
-  </ul>
-
-  <div class="section-title">Profiles</div>
+  <div class="section-title">Find Me</div>
   <ul class="link-list">
     <li>
       <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener">
@@ -1323,7 +1518,7 @@
   // ── Coverflow carousel state ──
   var cfViewport = document.getElementById('cf-viewport');
   var cfCards = Array.prototype.slice.call(document.querySelectorAll('.cf-card'));
-  var projectKeys = ['dojo','gemmpen','compass','ute','claudia'];
+  var projectKeys = ['dojo','gemmpen','compass','ute','claudia','spa'];
   var prevOffset = [];
 
   // The full story is one global mode: open once → stays open while you browse the cards
@@ -1363,7 +1558,7 @@
     var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
     if(activeInner){
       activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .project-example')
-        .forEach(function(child, i){ child.style.transitionDelay = (i * 80) + 'ms'; });
+        .forEach(function(child, i){ child.style.transitionDelay = (Math.min(i, 10) * 80) + 'ms'; });
     }
 
     layoutCarousel();
@@ -1458,7 +1653,7 @@
   }
 
   /* ── Hash routing ── */
-  var hashToProject = {dojo:0, gemmpen:1, compass:2, ute:3, claudia:4};
+  var hashToProject = {dojo:0, gemmpen:1, compass:2, ute:3, claudia:4, spa:5};
 
   function applyHash(){
     var h = (location.hash || '').replace('#','');
