@@ -1089,10 +1089,10 @@
 
 <div class="uth-keystrip" style="margin:1.6em auto 0.6em;max-width:38em">
   <div class="uth-keystrip-card accent"><div class="ks-num">+41.7<span style="font-size:0.55em">pp</span></div><div class="ks-label">Pressure Guard</div></div>
-  <div class="uth-keystrip-card"><div class="ks-num">2&times;</div><div class="ks-label">Claude on Honest Calibration</div></div>
+  <div class="uth-keystrip-card"><div class="ks-num">n=48</div><div class="ks-label">Honest Calibration Eval</div></div>
   <div class="uth-keystrip-card"><div class="ks-num">8B</div><div class="ks-label">Pre-registered Eval</div></div>
 </div>
-<p class="uth-keystrip-hook" style="text-align:center;margin:0 auto 2em">A finetuned 8B model that knows when to help and when to hold back. <a href="#dojo" id="hero-research-link" style="color:var(--rust);text-decoration:none;border-bottom:1px solid var(--rust);white-space:nowrap">Read the research &rarr;</a></p>
+<p class="uth-keystrip-hook" style="text-align:center;margin:0 auto 2em">Early results from a pre-registered eval on a finetuned 8B. <a href="#dojo" id="hero-research-link" style="color:var(--rust);text-decoration:none;border-bottom:1px solid var(--rust);white-space:nowrap">Read the research &rarr;</a></p>
 
 <!-- EDITORIAL THEATRE — 3D coverflow -->
 <div id="editorial-theatre">
@@ -1239,10 +1239,10 @@
 
         <div class="uth-keystrip">
           <div class="uth-keystrip-card accent"><div class="ks-num">+41.7<span style="font-size:0.55em">pp</span></div><div class="ks-label">Pressure Guard</div></div>
-          <div class="uth-keystrip-card"><div class="ks-num">2&times;</div><div class="ks-label">Claude's Honest Calibration</div></div>
+          <div class="uth-keystrip-card"><div class="ks-num">n=48</div><div class="ks-label">Honest Calibration Eval</div></div>
           <div class="uth-keystrip-card"><div class="ks-num">8B</div><div class="ks-label">Params &middot; QLoRA</div></div>
         </div>
-        <p class="uth-keystrip-hook">The expected result: the finetuned model holds under pressure. The surprise: it also outperforms every frontier model on honestly telling a student when their work is good.</p>
+        <p class="uth-keystrip-hook">The expected result: the finetuned model holds under pressure. The surprise: no frontier model I tested could honestly tell a student when their work is good. The finetuned 8B could.</p>
 
         <h4 class="uth-h">Where this started</h4>
         <p>There is a kind of sovereignty we are underestimating: sovereignty over our own thinking.</p>
@@ -1308,10 +1308,10 @@
         </div>
         <div class="uth-metrics">
           <div class="uth-metric accent"><div class="num">22%</div><div class="label">FT honest calibration</div></div>
-          <div class="uth-metric"><div class="num">2&times;</div><div class="label">Claude's baseline</div></div>
+          <div class="uth-metric"><div class="num">11%</div><div class="label">Claude's baseline</div></div>
         </div>
-        <p>Look at the Strong column. Every model can spot flaws in weak arguments, that is the easy part. Almost no model can honestly acknowledge when someone did good work. Under the same standard prompt, no tested model exceeds 11% on that axis. The best anyone does with a stronger anti-glaze prompt is 26%.</p>
-        <p>I did not expect this: the finetuned 8B reaches 22% on Strong, double the Claude baseline under the same prompt, and the only model that materially separates from the pack without a dedicated anti-glaze intervention. A small model, trained on the right examples, outperforms frontier models on honest feedback calibration.</p>
+        <p>Look at the Strong column. Every model can spot flaws in weak arguments, that is the easy part. Almost no model can honestly acknowledge when someone did good work. Under the same standard prompt, no tested model exceeds 11% on that axis. The best anyone does with a stronger anti-sycophancy prompt is 26%.</p>
+        <p>I did not expect this: the finetuned 8B reaches 22% on Strong under the same prompt, the only model that materially separates from the pack without a dedicated anti-sycophancy intervention. The sample is small (48 items, confidence intervals &plusmn;10&ndash;18 pp), so the specific numbers should be read with caution. But the pattern is consistent: training on examples of calibrated feedback moved the needle where prompting could not.</p>
         <p class="uth-sub">The prompting trap</p>
         <p>Here is the finding that motivated the whole finetune. When you tell a model "be more critical" (the A1 anti-glaze prompt), it does not learn honest calibration. It just switches failure modes. Instead of generic praise, it starts inventing flaws in strong arguments.</p>
         <div class="uth-table-wrap">
@@ -1326,7 +1326,7 @@
           </table>
         </div>
         <p>The harder you prompt against glazing, the closer the model drifts toward always-critique, a different pose, not a real calibration. Paired McNemar tests confirm: the A1 prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031) but moves the needle on honestly acknowledging strong work for <em>no model at all</em>.</p>
-        <div class="uth-callout"><p><span class="k">The takeaway:</span>Prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," does not yield to prompting. That is the case for finetuning. You cannot prompt your way to honest calibration; you have to train it.</p></div>
+        <div class="uth-callout"><p><span class="k">The takeaway:</span>In my eval, prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," did not yield to prompting in any model I tested. That is what motivated the finetune: if you cannot prompt your way to honest calibration, you have to train it.</p></div>
         <p class="uth-sub">What this looks like in practice</p>
         <p>Someone writes a strong, clean argument about learning to code. No real flaws. The correct coach response: acknowledge specifically what works.</p>
         <p><span class="uth-tag">Standard prompt (A0):</span> <em>"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</em> Generic praise. Does not say which part carries the argument or why. The learner gets nothing useful about what they did right.</p>
@@ -1364,7 +1364,7 @@
         <p><span class="uth-tag">One domain.</span> English-language debate coaching. Transfer to other coaching domains is plausible but not tested.</p>
 
         <h4 class="uth-h">What this means beyond debate coaching</h4>
-        <p>The honest calibration finding is not specific to my use case. It shows up anywhere a model interacts with a human whose growth is the goal, not just their satisfaction. Coaching, therapy, onboarding, creative feedback, code review. Anywhere the right response is sometimes "this is good, and here is specifically why" and sometimes "this needs work, and here is what to fix." Current post-training makes the second part easier than the first, across every model I tested.</p>
+        <p>If the pattern holds at larger scale, it is not specific to my use case. It would show up anywhere a model interacts with a human whose growth is the goal, not just their satisfaction. Coaching, therapy, onboarding, creative feedback, code review. Anywhere the right response is sometimes "this is good, and here is specifically why" and sometimes "this needs work, and here is what to fix." In my eval, current post-training made the second part easier than the first, across every model I tested.</p>
         <p>I think the deeper question is: what will always matter about humans, even as AI gets more capable? The ability to think for yourself. To build an argument. To evaluate your own work honestly. AI that centers what is strong in people means AI that does not quietly take those capabilities away by being too eager to help. That is not just an education problem. That is a design question for every model that interacts with humans in a developmental context.</p>
 
         <h4 class="uth-h">What comes next</h4>
