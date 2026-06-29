@@ -861,6 +861,37 @@
   }
   .uth-callout p{margin:0;max-width:none}
   .uth-callout .k{color:var(--rust);font-style:italic;margin-right:0.3em}
+  /* key takeaway strip (executive summary) */
+  .uth-keystrip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0.7em;
+    margin:0 0 2em;max-width:38em;
+  }
+  .uth-keystrip-card{
+    text-align:center;padding:1.1em 0.6em;
+    border:1px solid var(--rule);border-radius:6px;
+    background:var(--paper);
+  }
+  .uth-keystrip-card.accent{
+    background:var(--rust);border-color:var(--rust);
+  }
+  .uth-keystrip-card .ks-num{
+    font-weight:300;font-size:2em;line-height:1;color:var(--ink);
+  }
+  .uth-keystrip-card.accent .ks-num{color:var(--paper)}
+  .uth-keystrip-card .ks-label{
+    font-family:'JetBrains Mono',monospace;font-size:0.48em;
+    letter-spacing:0.14em;text-transform:uppercase;line-height:1.4;
+    color:var(--ink-dim);margin-top:0.4em;
+  }
+  .uth-keystrip-card.accent .ks-label{color:var(--paper);opacity:0.85}
+  .uth-keystrip-hook{
+    font-style:italic;font-weight:300;font-size:1.05em;line-height:1.5;
+    color:var(--ink-soft);margin:-0.6em 0 2.2em;max-width:54ch;
+  }
+  @media(max-width:32em){
+    .uth-keystrip{grid-template-columns:1fr;max-width:16em;margin:0 auto 1.6em}
+    .uth-keystrip-card .ks-num{font-size:1.7em}
+  }
   /* metric cards */
   .uth-metrics{
     display:grid;grid-template-columns:1fr 1fr;gap:0.8em;
@@ -1009,7 +1040,7 @@
     </a>
   </div>
   <div class="nav-right">
-    <a href="mailto:svenja@borgwardt.me">Open for Collaboration</a>
+    <a href="mailto:svenja@borgwardt.me">Get in touch</a>
   </div>
 </header>
 
@@ -1023,8 +1054,9 @@
       <span class="pronounce-ipa">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
       <span class="pronounce-approx">SVEN-yah BORK-vart</span>
     </button>
-    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little.</p>
+    <p class="masthead-intro reveal">I build AI that makes room for the human in the room. Everything I build asks the same question: how do we shape AI to find what's strong in people and make room for them to grow?</p>
     <p class="masthead-intro reveal">I studied economics, linguistics, and literature and cultural studies. I've done education research, taught in several different institutions and countries, run and organized EU projects across Europe, and spent my early years thinking in risk and compliance at a bank. Currently based in Cologne, Germany.</p>
+    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little.</p>
   </div>
   <figure class="photo-block">
     <div class="photo-frame">
@@ -1052,7 +1084,6 @@
 <div class="tab-content active" id="section-build" role="tabpanel" aria-labelledby="tab-build">
 
 <section class="build-intro reveal">
-  <p class="masthead-intro">I also happen to build things. All of them ask the same question: how do we shape AI to find what's strong in people and make room for them to grow?</p>
   <p class="masthead-intro">Most of what I build starts with a problem right in front of me, something I can test with real people in a real context. Some problems I can solve with a tool or a pipeline. Others need a fine-tuned model. I tend to find out which one the hard way.</p>
 </section>
 
@@ -1199,6 +1230,13 @@
         <div class="uth-divider">Under the Hood</div>
         <p class="uth-lead">How I finetuned an 8B model that knows when to help and when to hold back.</p>
 
+        <div class="uth-keystrip">
+          <div class="uth-keystrip-card accent"><div class="ks-num">+41.7<span style="font-size:0.55em">pp</span></div><div class="ks-label">Pressure Guard</div></div>
+          <div class="uth-keystrip-card"><div class="ks-num">2&times;</div><div class="ks-label">Claude's Honest Calibration</div></div>
+          <div class="uth-keystrip-card"><div class="ks-num">8B</div><div class="ks-label">Params &middot; QLoRA</div></div>
+        </div>
+        <p class="uth-keystrip-hook">The expected result: the finetuned model holds under pressure. The surprise: it also outperforms every frontier model on honestly telling a student when their work is good.</p>
+
         <h4 class="uth-h">Where this started</h4>
         <p>There is a kind of sovereignty we are underestimating: sovereignty over our own thinking.</p>
         <p>I work with young adults, roughly 240 of them, and I have watched them use AI to outsource their thinking instead of using it as a tool. The strong ones are fine. But the ones who need the most help? They paste the AI output, move on, and learn nothing. What looks like learning is actually the illusion of learning. No thought happened. If we don't find a way to change that, we risk shaping a generation that has difficulties thinking independently. And the paradox is: independent thinking is exactly the skill they will need most in a world full of AI. The technology that could help them grow is quietly replacing the growth itself.</p>
@@ -1247,7 +1285,7 @@
 
         <h4 class="uth-h">Results: Honest Calibration</h4>
         <p>This is the harder axis, and the one with the most surprising result.</p>
-        <p>I ran seven models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt that explicitly tells the model to be critical).</p>
+        <p>I ran seven models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt &mdash; targeting what the field calls <em>sycophancy</em> &mdash; that explicitly tells the model to be critical).</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
             <thead><tr><th>Model</th><th>Weak <span class="dim">(A0)</span></th><th>Strong <span class="dim">(A0)</span></th><th>min <span class="dim">(Headline)</span></th></tr></thead>
@@ -1290,7 +1328,7 @@
 
         <h4 class="uth-h">Architecture</h4>
         <p>Built for a real deployment with real constraints: EU data residency, tight budgets, and zero tolerance for downtime when it matters. Every architecture choice follows from that.</p>
-        <p>Why Mistral, why a small model? Because I believe we need to build and measure on European infrastructure, not just consume APIs and hope the access stays. When export controls hit and models disappear, the question is not whether you have access to the best API. The question is whether you can build something that works without it.</p>
+        <p>Why Mistral, why a small model? The constraints were real: EU data residency, a tight budget, a classroom that can't go down. But beyond the constraints, I believe we need to build on infrastructure we actually control, not just consume APIs and hope the access stays. When export controls shift and models disappear, the question is whether you can build something that works without them.</p>
         <p class="uth-sub">Stack</p>
         <p><span class="uth-tag">Frontend:</span> Static HTML/CSS/JS on Vercel. No framework, no build step, because when it needs to work, a broken build means 30 people staring at a blank screen. Each belt is a self-contained page with screen-by-screen progression.</p>
         <p><span class="uth-tag">Backend:</span> Vercel serverless functions (Python). Stateless coaching API with session tracking and live gating. Every turn is logged with full provenance: model name, prompt version hash, mock flag. If anything goes wrong, I can trace exactly which model said what under which prompt.</p>
@@ -1378,7 +1416,7 @@
 
         <p>Most of what I know about agent design I learned by building her and then watching her break. Agents in a pipeline don't just fail. They fail in ways that are hard to find. One agent misreads something, the next one builds on it, and by the time you see the output, the original mistake is buried three layers deep. I learned to build checkpoints between agents, places where the system pauses and verifies before moving on. I learned that memory is the hardest part: what the system remembers, for how long, and what happens when an old memory stops being true. And I learned that not everything needs an agent. Sometimes a function that does one thing reliably is worth more than an agent that does it creatively. Knowing when to use which is a skill that only comes from getting it wrong a few times.</p>
 
-        <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
+        <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where she turns on me.</p>
       </div>
 
       <!-- Student Progress Analytics expand (project 5) -->
@@ -1521,6 +1559,7 @@
 
 <!-- FOOTER -->
 <footer class="reveal">
+  <p class="colophon">I'm interested in how models behave with the people who use them &mdash; evals, model behaviour, AI that's actually good for learning. If that's your problem too, write me.</p>
   <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
 </footer>
 
