@@ -906,6 +906,21 @@
     .uth-table th,.uth-table td{padding:0.45em 0.5em}
   }
 
+  /* ========== SENSEI SCROLL ========== */
+  .sensei-scroll{padding:2em 0 0;margin:0 auto;width:min(340px,55vw)}
+  .sensei-scroll__scene{position:relative;aspect-ratio:2222/1888;width:100%}
+  .sensei-scroll__bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .sensei-scroll__figure{position:absolute;left:24.5%;bottom:8%;width:45%}
+  .sensei-scroll__shadow{
+    position:absolute;left:50%;bottom:-1.5%;transform:translateX(-50%);
+    width:56%;height:6%;
+    background:radial-gradient(50% 50% at 50% 50%,rgba(20,16,24,.34),rgba(20,16,24,0) 70%);
+    filter:blur(4px);pointer-events:none;
+  }
+  .sensei-scroll__canvas{width:100%;height:auto;display:block;position:relative}
+  /* Kill main bottom padding when sensei is visible, so nothing scrolls below */
+  .sensei-active{padding-bottom:0!important}
+
   /* ========== COVERFLOW CAROUSEL ========== */
   #editorial-theatre{position:relative;overflow:hidden;padding:0 1.3em}
   .cf-viewport{
@@ -1178,7 +1193,7 @@
 
       <!-- Dojo expand (now project 0) -->
       <div class="et-expand-inner" data-expand="0" style="display:none">
-        <p>Debate Dojo takes the principle behind Compass &mdash; help that waits until a student has genuinely tried &mdash; and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
+        <p>Debate Dojo takes the principle behind Compass (help that waits until a student has genuinely tried) and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
 
         <div class="uth-divider">Under the Hood</div>
         <p class="uth-lead">How I finetuned an 8B model that knows when to help and when to hold back.</p>
@@ -1202,13 +1217,13 @@
 
         <h4 class="uth-h">How I measure</h4>
         <p>I kept asking myself two questions. Does the coach hold when someone pushes for the answer? And does it tell the truth in both directions, calling out real flaws but also saying when something is genuinely good? Those two questions became the two axes of the evaluation. Both were pre-registered before training. Thresholds, evaluation sets, and judge prompts were locked and hash-frozen before any training run.</p>
-        <p class="uth-sub">Axis 1 — Pressure Guard</p>
+        <p class="uth-sub">Axis 1: Pressure Guard</p>
         <p>Does the coach resist giving away the answer under pressure? I test with contrast pairs: the same message, two different conversation histories. The model should <em>hold</em> under pressure and <em>help</em> after real effort. The metric is min(Hold, Help). A coach who only says no is just as useless as one who caves. I need both sides to count.</p>
-        <p class="uth-sub">Axis 2 — Honest Calibration</p>
+        <p class="uth-sub">Axis 2: Honest Calibration</p>
         <p>Does the coach give honest feedback? I test with 48 labeled items: some with real flaws (circular reasoning, vague impact, fabricated facts), some genuinely strong. The metric is min(Weak, Strong). Catching flaws is not enough. A model that criticizes everything scores zero on Strong. Only two-sided calibration counts.</p>
         <div class="uth-callout"><p><span class="k">Grading:</span>All turns graded by Claude Sonnet 4.6 as LLM-as-judge, calibrated against 40 blind human labels (90% binary agreement). I labeled those 40 items myself, without seeing the model names or judge scores.</p></div>
 
-        <h4 class="uth-h">Results — Pressure Guard</h4>
+        <h4 class="uth-h">Results: Pressure Guard</h4>
         <p>Five models, 24 contrast pairs, 3 samples each. The question is simple: does the coach hold under pure pressure but help after genuine effort?</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
@@ -1229,7 +1244,7 @@
         <p>The base Ministral 8B caves on roughly every other pressure turn. After finetuning, it holds at 88.9%, closing most of the 46-point gap to Claude. It misses my pre-registered threshold of 91% by about 2 percentage points. Close, but not there yet.</p>
         <p>What I find encouraging: across all models, the dominant failure mode is caving (handing over the full argument), not stonewalling (refusing to help at all). The finetuned model learned to resist pressure without becoming unhelpful. That balance is the whole point.</p>
 
-        <h4 class="uth-h">Results — Honest Calibration</h4>
+        <h4 class="uth-h">Results: Honest Calibration</h4>
         <p>This is the harder axis, and the one with the most surprising result.</p>
         <p>I ran seven models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt that explicitly tells the model to be critical).</p>
         <div class="uth-table-wrap">
@@ -1269,7 +1284,7 @@
         <p class="uth-sub">What this looks like in practice</p>
         <p>Someone writes a strong, clean argument about learning to code. No real flaws. The correct coach response: acknowledge specifically what works.</p>
         <p><span class="uth-tag">Standard prompt (A0):</span> <em>"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</em> Generic praise. Does not say which part carries the argument or why. The learner gets nothing useful about what they did right.</p>
-        <p><span class="uth-tag">Anti-glaze prompt (A1):</span> <em>"One spot wobbles: 'someone must still read the code' &mdash; why does that someone need to have learned coding themselves?"</em> Invents a flaw that is not there. The grader flags it: "manufactured a flaw in the Reason." The learner now doubts work that was fine.</p>
+        <p><span class="uth-tag">Anti-glaze prompt (A1):</span> <em>"One spot wobbles: 'someone must still read the code' &ndash; why does that someone need to have learned coding themselves?"</em> Invents a flaw that is not there. The grader flags it: "manufactured a flaw in the Reason." The learner now doubts work that was fine.</p>
         <p>Neither response is what a good coach would give. The first is empty calories. The second is actively misleading. I know what the right response sounds like because I give it every day. The model should be able to do the same. This is the gap the finetune is meant to close.</p>
 
         <h4 class="uth-h">Architecture</h4>
@@ -1369,7 +1384,7 @@
       <div class="et-expand-inner" data-expand="5" style="display:none">
         <p>Every correction I make says something about a student. Then I hand the paper back, and it's gone. A grade is one number at the end of a long process, and it throws away everything that happened on the way there: where someone started, what they fixed, where they're still stuck. I wanted to keep that and give it back to the student as something they can actually see.</p>
 
-        <p>Student Progress Analytics turns the corrections I already make into a picture of each student across a semester. It tracks their grade against the class average, counts errors by category &mdash; grammar, vocabulary, IT terminology, content &mdash; and shows them shrinking task by task. A skills profile compares where someone was on the first assignment to where they are on the latest, and an XP and level system makes progress visible enough to be motivating. On my side, the same data aggregates across all three of my classes and quietly flags the students who are slipping, often before it would show up in a grade.</p>
+        <p>Student Progress Analytics turns the corrections I already make into a picture of each student across a semester. It tracks their grade against the class average, counts errors by category (grammar, vocabulary, IT terminology, content) and shows them shrinking task by task. A skills profile compares where someone was on the first assignment to where they are on the latest, and an XP and level system makes progress visible enough to be motivating. On my side, the same data aggregates across all three of my classes and quietly flags the students who are slipping, often before it would show up in a grade.</p>
 
         <p>The whole thing is built around one constraint: knowing a student this well is exactly the kind of data you have no right to mishandle. Student text is anonymised before any model touches it, names never leave my device, and what a student sees is a static file: no tracking, no cookies, no server calling home. The dashboards were the easy part. The hard part was earning the right to know this much.</p>
 
@@ -1383,6 +1398,16 @@
 
     </div><!-- /et-expand -->
 </div><!-- /editorial-theatre -->
+
+<div class="sensei-scroll" id="sensei-scroll" style="display:none">
+  <div class="sensei-scroll__scene">
+    <img class="sensei-scroll__bg" src="sensei-scroll/sensei_bg.png" alt="" loading="lazy">
+    <div class="sensei-scroll__figure">
+      <div class="sensei-scroll__shadow"></div>
+      <canvas class="sensei-scroll__canvas" id="senseiCanvas" width="514" height="680"></canvas>
+    </div>
+  </div>
+</div>
 
 </div><!-- /section-build -->
 
@@ -1421,40 +1446,44 @@
     <li>
       <a href="https://debate-dojo.vercel.app/dojo-landing.html?demo" target="_blank" rel="noopener">
         <span class="link-label">Mistral Meetup Cologne · June 2026</span>
-        Debate Dojo: teaching a small open model to hold back when a student pushes for a shortcut, and to help once they have genuinely tried.
+        Souver&auml;nit&auml;t im Kopf (Sovereignty in Your Head). How a finetuned Ministral 8B learns to dose help instead of handing out answers.
       </a>
     </li>
     <li>
       <a href="https://pirateskills.com/events/vibe-coding-cologne/2026-03-04" target="_blank" rel="noopener">
         <span class="link-label">Vibe Coding Cologne · March 2026</span>
-        Vibe Coding Meets the Classroom
+        Vibe Coding Meets the Classroom. How I built an AI feedback pipeline for 240 students, from anonymisation to EU AI Act compliance, and open-sourced the infrastructure so other teachers can do the same.
       </a>
     </li>
     <li>
-      <span class="link-label">Podcast · with Josua Waghubinger</span>
-      What happens when you build learning tools on top of models optimised to give answers as fast as possible, and why fine-tuning is where this actually gets solved.
+      <a href="https://www.youtube.com/watch?v=2aQ8f9lni6s" target="_blank" rel="noopener">
+        <span class="link-label">KI Garage Podcast · with Josua Waghubinger</span>
+        Building AI tools that solve real problems, from classroom feedback pipelines to voice-first bakery counters, and why the biggest risk is letting AI replace thinking instead of supporting it.
+      </a>
     </li>
   </ul>
 
   <div class="section-title">Recognition</div>
   <ul class="link-list">
     <li>
-      <span class="link-label">B&Auml;KO Hackathon · 1st Place</span>
-      UTE: voice-first ordering for bakery counters, built with a team of four women.
-      <div class="link-proof">
-        <a href="#ute">in What I Build</a>
-      </div>
-    </li>
-    <li>
       <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
-        <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind</span>
-        GemmPen: turning handwritten exams into personalised feedback, fully on-device.
+        <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind · June 2026</span>
+        GemmPen: a LoRA-finetuned Gemma 4 trained on 883 pairs from real handwritten exams. Reads student handwriting via built-in vision, scores against the teacher's rubric, and generates individual feedback with exercises built around each student's actual mistakes. Fully on-device.
       </a>
       <div class="link-proof">
         <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">demo</a><span class="sep">·</span>
         <a href="https://github.com/SvenjaBorgwardt/GemmPen" target="_blank" rel="noopener">code</a><span class="sep">·</span>
         <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">model</a><span class="sep">·</span>
         <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">video</a>
+      </div>
+    </li>
+    <li>
+      <a href="http://www.baeko-hackathon.de/#ergebnisse" target="_blank" rel="noopener">
+        <span class="link-label">B&Auml;KO Hackathon · 1st Place + Audience Award · March 2026</span>
+        UTE: a Mistral-based speech recognition pipeline that listens to the conversation at the bakery counter and matches orders against the product database in real time. Built with a team of four women. Live demo on stage.
+      </a>
+      <div class="link-proof">
+        <a href="#ute">in What I Build</a>
       </div>
     </li>
   </ul>
@@ -1471,6 +1500,18 @@
       <a href="https://github.com/SvenjaBorgwardt" target="_blank" rel="noopener">
         <span class="link-label">GitHub</span>
         github.com/SvenjaBorgwardt
+      </a>
+    </li>
+    <li>
+      <a href="https://huggingface.co/SveBorg" target="_blank" rel="noopener">
+        <span class="link-label">Hugging Face</span>
+        huggingface.co/SveBorg
+      </a>
+    </li>
+    <li>
+      <a href="https://www.kaggle.com/svenjaborgwardt" target="_blank" rel="noopener">
+        <span class="link-label">Kaggle</span>
+        kaggle.com/svenjaborgwardt
       </a>
     </li>
   </ul>
@@ -1543,6 +1584,13 @@
         cta.querySelector('.et-cta-text').textContent = storyOpen ? 'collapse' : 'read the full story';
       }
     });
+    /* Show sensei only for the Dojo story */
+    var senseiEl = document.getElementById('sensei-scroll');
+    var mainEl   = document.querySelector('main');
+    var showSensei = storyOpen && currentProject === 0;
+    if(senseiEl) senseiEl.style.display = showSensei ? '' : 'none';
+    if(mainEl)   mainEl.classList.toggle('sensei-active', showSensei);
+    if(window._senseiReset && !showSensei) window._senseiReset();
   }
   function toggleStory(){ storyOpen = !storyOpen; applyStoryState(); }
 
@@ -1666,6 +1714,146 @@
   }
   window.addEventListener('hashchange', applyHash);
   applyHash();
+
+  /* ========== SENSEI SCROLL ANIMATION ========== */
+  /* Wheel-capture approach: when the sensei scene is in view, scroll input
+     drives the bow animation frame-by-frame instead of scrolling the page.
+     Releases at boundaries so normal scrolling works above/below. */
+  (function(){
+    var FC   = 38;                                // frames in the down-bow
+    var PATH = 'sensei-scroll/sensei_frames/sensei_';
+    var EXT  = '.png';
+    var SW = 514, SH = 680;
+    var TOTAL_DELTA = 2400;                       // px of cumulative wheel delta for full cycle
+
+    var canvas = document.getElementById('senseiCanvas');
+    if(!canvas) return;
+    var ctx  = canvas.getContext('2d');
+    var wrap = document.getElementById('sensei-scroll');
+    var dpr  = Math.max(1, window.devicePixelRatio || 1);
+
+    var frames = [], loaded = 0, drawn = -1, framesReady = false;
+    var progress = 0;                             // 0 → 1 = full bow-and-return cycle
+    var target = 0, current = 0, rafId = 0;
+
+    function pad(n){ return ('00' + n).slice(-3); }
+
+    function sizeCanvas(){
+      var w = canvas.clientWidth || 200;
+      var h = Math.round(w * SH / SW);
+      canvas.style.height = h + 'px';
+      canvas.width  = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      drawn = -1; paint(Math.round(current));
+    }
+
+    function paint(idx){
+      idx = Math.max(0, Math.min(FC - 1, idx));
+      if(idx === drawn) return;
+      drawn = idx;
+      var img = frames[idx];
+      if(!img || !img.complete) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    }
+
+    function ease(){
+      var d = target - current;
+      if(Math.abs(d) < 0.4){ current = target; paint(Math.round(current)); rafId = 0; return; }
+      current += d * 0.18;
+      paint(Math.round(current));
+      rafId = requestAnimationFrame(ease);
+    }
+
+    /* Triangle: progress 0→0.5 = bow down (frame 0→37), 0.5→1 = bow up (37→0) */
+    function progressToFrame(p){
+      var tri = p < 0.5 ? p * 2 : 2 - p * 2;
+      return Math.round(tri * (FC - 1));
+    }
+
+    /* ── Wheel capture ── */
+    function onWheel(e){
+      if(wrap.style.display === 'none') return;
+      var rect = wrap.getBoundingClientRect();
+      var vh   = window.innerHeight;
+      /* Scene must be mostly visible */
+      if(rect.bottom < vh * 0.3 || rect.top > vh * 0.7) return;
+      /* At boundaries, release so normal scrolling resumes */
+      if(progress <= 0 && e.deltaY < 0) return;         // top: scroll up passes through
+      if(progress >= 1 && e.deltaY > 0) return;         // done: scroll down passes through
+      e.preventDefault();
+      progress = Math.max(0, Math.min(1, progress + e.deltaY / TOTAL_DELTA));
+      target = progressToFrame(progress);
+      if(!rafId) rafId = requestAnimationFrame(ease);
+    }
+    document.addEventListener('wheel', onWheel, {passive: false});
+
+    /* ── Touch support ── */
+    var lastTouchY = null;
+    function onTouchStart(e){
+      if(wrap.style.display === 'none') return;
+      var rect = wrap.getBoundingClientRect();
+      var vh = window.innerHeight;
+      if(rect.bottom < vh * 0.3 || rect.top > vh * 0.7) return;
+      if(progress > 0 && progress < 1) lastTouchY = e.touches[0].clientY;
+    }
+    function onTouchMove(e){
+      if(lastTouchY === null) return;
+      var dy = lastTouchY - e.touches[0].clientY;
+      lastTouchY = e.touches[0].clientY;
+      if(progress <= 0 && dy < 0){ lastTouchY = null; return; }
+      if(progress >= 1 && dy > 0){ lastTouchY = null; return; }
+      e.preventDefault();
+      progress = Math.max(0, Math.min(1, progress + dy / (TOTAL_DELTA * 0.5)));
+      target = progressToFrame(progress);
+      if(!rafId) rafId = requestAnimationFrame(ease);
+    }
+    function onTouchEnd(){ lastTouchY = null; }
+    document.addEventListener('touchstart', onTouchStart, {passive: true});
+    document.addEventListener('touchmove', onTouchMove, {passive: false});
+    document.addEventListener('touchend', onTouchEnd);
+
+    /* ── Also start capturing when the scene first scrolls fully into view ── */
+    function onFirstScroll(){
+      if(wrap.style.display === 'none' || progress > 0) return;
+      var rect = wrap.getBoundingClientRect();
+      var vh = window.innerHeight;
+      /* Scene bottom is at or above viewport bottom → fully visible, start capture */
+      if(rect.bottom <= vh && rect.top >= 0 && progress === 0){
+        lastTouchY = null;   // arm touch capture for next touchstart
+      }
+    }
+    window.addEventListener('scroll', onFirstScroll, {passive: true});
+
+    /* ── Lazy-load frames ── */
+    function loadFrames(){
+      if(framesReady) return;
+      framesReady = true;
+      for(var i = 1; i <= FC; i++){
+        var img = new Image();
+        img.onload = function(){ loaded++; if(loaded === 1) sizeCanvas(); if(loaded === FC) paint(0); };
+        img.src = PATH + pad(i) + EXT;
+        frames.push(img);
+      }
+    }
+    if(window.IntersectionObserver){
+      new IntersectionObserver(function(entries, obs){
+        if(entries[0].isIntersecting){ loadFrames(); obs.disconnect(); }
+      }, {rootMargin: '400px'}).observe(wrap);
+    }
+
+    window.addEventListener('resize', function(){ if(framesReady) sizeCanvas(); });
+
+    /* Reset when the Dojo story closes (called from applyStoryState) */
+    window._senseiReset = function(){
+      progress = 0; target = 0; current = 0; drawn = -1;
+    };
+
+    /* Reduced motion: show standing pose, skip animation */
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      onWheel = function(){};
+    }
+  })();
 })();
 </script>
 <script defer src="scripts/effects.js?v=40"></script>
