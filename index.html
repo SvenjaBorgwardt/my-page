@@ -1087,6 +1087,13 @@
   <p class="masthead-intro">Most of what I build starts with a problem right in front of me, something I can test with real people in a real context. Some problems I can solve with a tool or a pipeline. Others need a fine-tuned model. I tend to find out which one the hard way.</p>
 </section>
 
+<div class="uth-keystrip" style="margin:1.6em auto 0.6em;max-width:38em">
+  <div class="uth-keystrip-card accent"><div class="ks-num">+41.7<span style="font-size:0.55em">pp</span></div><div class="ks-label">Pressure Guard</div></div>
+  <div class="uth-keystrip-card"><div class="ks-num">2&times;</div><div class="ks-label">Claude on Honest Calibration</div></div>
+  <div class="uth-keystrip-card"><div class="ks-num">8B</div><div class="ks-label">Pre-registered Eval</div></div>
+</div>
+<p class="uth-keystrip-hook" style="text-align:center;margin:0 auto 2em">A finetuned 8B model that knows when to help and when to hold back. <a href="#dojo" id="hero-research-link" style="color:var(--rust);text-decoration:none;border-bottom:1px solid var(--rust);white-space:nowrap">Read the research &rarr;</a></p>
+
 <!-- EDITORIAL THEATRE — 3D coverflow -->
 <div id="editorial-theatre">
   <div class="et-wrapper">
@@ -1754,6 +1761,20 @@
   }
   window.addEventListener('hashchange', applyHash);
   applyHash();
+
+  /* ── Hero research deep-link ── */
+  var heroLink = document.getElementById('hero-research-link');
+  if(heroLink){
+    heroLink.addEventListener('click', function(e){
+      e.preventDefault();
+      selectProject(0);
+      if(!storyOpen) toggleStory();
+      setTimeout(function(){
+        var divider = document.querySelector('.uth-divider');
+        if(divider) divider.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 700);
+    });
+  }
 
   /* ========== SENSEI SCROLL ANIMATION ========== */
   /* Wheel-capture approach: when the sensei scene is in view, scroll input
