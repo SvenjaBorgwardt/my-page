@@ -907,7 +907,7 @@
   }
 
   /* ========== SENSEI SCROLL ========== */
-  .sensei-scroll{padding:2em 0 0;margin:0 auto;width:min(340px,55vw)}
+  .sensei-scroll{padding:0.5em 0 0;margin:0 auto;width:min(340px,55vw)}
   .sensei-scroll__scene{position:relative;aspect-ratio:2222/1888;width:100%}
   .sensei-scroll__bg{position:absolute;inset:0;width:100%;height:100%;display:block}
   .sensei-scroll__figure{position:absolute;left:24.5%;bottom:8%;width:45%}
@@ -918,8 +918,9 @@
     filter:blur(4px);pointer-events:none;
   }
   .sensei-scroll__canvas{width:100%;height:auto;display:block;position:relative}
-  /* Kill main bottom padding when sensei is visible, so nothing scrolls below */
+  /* Kill spacing below sensei so the footer sits tight and nothing scrolls past */
   .sensei-active{padding-bottom:0!important}
+  .sensei-active footer{margin-top:0.5em}
 
   /* ========== COVERFLOW CAROUSEL ========== */
   #editorial-theatre{position:relative;overflow:hidden;padding:0 1.3em}
@@ -1772,15 +1773,18 @@
     }
 
     /* ── Wheel capture ── */
+    function atPageBottom(){
+      return (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 2);
+    }
     function onWheel(e){
       if(wrap.style.display === 'none') return;
-      var rect = wrap.getBoundingClientRect();
-      var vh   = window.innerHeight;
-      /* Scene must be mostly visible */
-      if(rect.bottom < vh * 0.3 || rect.top > vh * 0.7) return;
-      /* At boundaries, release so normal scrolling resumes */
-      if(progress <= 0 && e.deltaY < 0) return;         // top: scroll up passes through
-      if(progress >= 1 && e.deltaY > 0) return;         // done: scroll down passes through
+      /* Only start capturing once the user has scrolled to the very bottom
+         (footer with email visible). Mid-animation, keep capturing regardless. */
+      if(progress === 0 && e.deltaY > 0 && !atPageBottom()) return;
+      /* At top boundary, release upward so the user can scroll back to the text */
+      if(progress <= 0 && e.deltaY < 0) return;
+      /* At end: block further scrolling — the bow is the last thing on the page */
+      if(progress >= 1 && e.deltaY > 0){ e.preventDefault(); return; }
       e.preventDefault();
       progress = Math.max(0, Math.min(1, progress + e.deltaY / TOTAL_DELTA));
       target = progressToFrame(progress);
@@ -1792,17 +1796,15 @@
     var lastTouchY = null;
     function onTouchStart(e){
       if(wrap.style.display === 'none') return;
-      var rect = wrap.getBoundingClientRect();
-      var vh = window.innerHeight;
-      if(rect.bottom < vh * 0.3 || rect.top > vh * 0.7) return;
-      if(progress > 0 && progress < 1) lastTouchY = e.touches[0].clientY;
+      if(progress === 0 && !atPageBottom()) return;
+      if(progress > 0 || atPageBottom()) lastTouchY = e.touches[0].clientY;
     }
     function onTouchMove(e){
       if(lastTouchY === null) return;
       var dy = lastTouchY - e.touches[0].clientY;
       lastTouchY = e.touches[0].clientY;
       if(progress <= 0 && dy < 0){ lastTouchY = null; return; }
-      if(progress >= 1 && dy > 0){ lastTouchY = null; return; }
+      if(progress >= 1 && dy > 0){ e.preventDefault(); return; }
       e.preventDefault();
       progress = Math.max(0, Math.min(1, progress + dy / (TOTAL_DELTA * 0.5)));
       target = progressToFrame(progress);
