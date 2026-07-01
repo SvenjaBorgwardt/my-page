@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svenja Borgwardt — Preview v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F1E6;
+    --paper-warm:#EFE6D1;
+    --paper-deep:#E4D8B8;
+    --ink:#141018;
+    --ink-soft:#3A3440;
+    --ink-dim:#8A8493;
+    --rule:#D4C9AF;
+    --rust:#9F3A1F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:20px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse at 20% 10%,rgba(240,220,170,0.22) 0%,transparent 45%),
+      radial-gradient(ellipse at 85% 90%,rgba(180,160,120,0.13) 0%,transparent 45%);
+  }
+
+  main{position:relative;z-index:2;max-width:41em;margin:0 auto;padding:2.8em 1.6em 7em}
+
+  .mono{font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim)}
+
+  .masthead{
+    display:grid;grid-template-columns:1fr auto;gap:2.4em;align-items:center;
+    margin-bottom:3.2em;padding-bottom:2em;border-bottom:1px solid var(--rule);
+  }
+  .masthead h1{
+    font-family:'Cormorant Garamond',serif;font-weight:300;
+    font-size:clamp(35.2px,5.2vw,60.8px);line-height:1;letter-spacing:0.005em;
+  }
+  .masthead h1 em{font-style:italic;font-weight:300}
+  .masthead-intro{
+    font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
+    margin-bottom:0.3em;
+  }
+  .masthead-intro:first-of-type{margin-top:2.4em}
+
+  .photo-frame{
+    width:7.8em;height:10.4em;position:relative;flex-shrink:0;
+    border:1px solid var(--rule);
+    box-shadow:4px 4px 0 rgba(0,0,0,0.05);
+    background:var(--paper-warm);overflow:hidden;
+  }
+
+  .section-title{
+    text-align:center;margin:5em 0 2.8em;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.3em;text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+  .section-title::before,.section-title::after{
+    content:"";display:inline-block;width:3em;height:0.05em;background:var(--rule);vertical-align:middle;margin:0 0.9em;
+  }
+
+  .chapter{margin-bottom:4em;scroll-margin-top:3em}
+  .chapter-head{text-align:center;margin-bottom:2.2em}
+  .chapter-num{
+    font-style:italic;font-weight:300;
+    font-size:1.3em;color:var(--rust);display:block;margin-bottom:0.4em;letter-spacing:0.02em;
+  }
+  .chapter-title{
+    font-weight:400;font-size:clamp(38px,4.5vw,52px);line-height:1.05;letter-spacing:0;
+  }
+  .chapter-title em{font-style:italic;font-weight:400}
+
+  p{margin-bottom:1.1em;max-width:64ch;font-size:1em;line-height:1.72;font-weight:400}
+  p em{font-style:italic}
+  p strong{font-weight:400}
+
+  blockquote{
+    font-style:italic;font-weight:300;font-size:1.3em;line-height:1.35;
+    margin:2em 0;padding-left:1.4em;border-left:2px solid var(--rust);color:var(--ink);max-width:60ch;
+  }
+
+  .hr-soft{
+    display:block;margin:3.6em auto;width:6em;height:0.05em;background:var(--rule);border:0;
+    position:relative;
+  }
+  .hr-soft::before{
+    content:"·";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    background:var(--paper);padding:0 0.7em;color:var(--rust);font-size:1.1em;line-height:0;
+  }
+
+  .small-project{margin-bottom:2.8em}
+  .small-project h4{
+    font-weight:400;font-size:1.5em;letter-spacing:0;margin-bottom:0.8em;
+  }
+  .small-project h4 em{font-style:italic}
+  .small-project .number{
+    font-style:italic;font-weight:300;
+    font-size:0.9em;color:var(--rust);margin-bottom:0.2em;display:block;letter-spacing:0.04em;
+  }
+
+  .other-parts p{font-size:1em;line-height:1.72}
+
+  .preview-badge{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:var(--rust);color:var(--paper);text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+    padding:6px;
+  }
+  body{padding-top:30px}
+
+  footer{
+    margin-top:6em;padding:2em 0;text-align:center;border-top:1px solid var(--rule);
+  }
+  footer .contact{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.65em;color:var(--ink);
+    letter-spacing:0.1em;text-decoration:none;border-bottom:2px solid var(--rust);padding-bottom:0.1em;
+  }
+  footer .contact:hover{color:var(--rust)}
+
+  @media (max-width:32em){
+    main{padding:2em 1em 4em}
+    .masthead{grid-template-columns:1fr;gap:1.2em;padding-bottom:1.4em;margin-bottom:2.8em}
+    .photo-frame{width:6.4em;height:8.5em;justify-self:start}
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-badge">Preview v2 — text only, no interactive demos</div>
+
+<main>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div>
+    <h1>Svenja <em>Borgwardt</em></h1>
+    <p class="masthead-intro">Currently based in Cologne, Germany.</p>
+    <p class="masthead-intro">I like real conversations, spontaneous plans, and saying yes to things that scare me a little. I also happen to build things. Most of them are about the same question: how do we make AI genuinely good for learning, not just efficient?</p>
+  </div>
+  <figure>
+    <div class="photo-frame">
+      <img src="svenja.jpg" alt="Svenja Borgwardt" style="width:100%;height:100%;object-fit:cover;display:block">
+    </div>
+  </figure>
+</header>
+
+<!-- FEATURED WORK -->
+<div class="section-title">Featured Work</div>
+
+<!-- GEMMPEN -->
+<section class="chapter" id="gemmpen">
+  <header class="chapter-head">
+    <span class="chapter-num">I.</span>
+    <h2 class="chapter-title"><em>GemmPen</em></h2>
+  </header>
+
+  <p>I teach 240 students. Every exam round, I spend 20 to 30 minutes per paper, and while I'm grading I can see exactly what each student needs. One keeps dropping the third-person -s. Another writes beautiful arguments but forgets to connect them. I see all of it. But at the end, all they get is a number.</p>
+
+  <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
+
+  <p>I'd built a version of this before, a multi-agent pipeline that analysed each exam across separate steps and wrote individual feedback. It worked, but every round cost real money, and student data still had to leave the room, even with EU-based providers. A local model changes both: no cost pressure, and no data goes anywhere.</p>
+
+  <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
+
+  <p>When I review the feedback and disagree, that correction becomes training data. After about 30 corrections, one button retrains the model. Takes about 90 minutes on a free GPU, no ML knowledge needed. Over time, the model starts sounding more like me, because it learned from watching me correct it.</p>
+
+  <p>It runs on-device. With German school data, it has to be. But it also does something else. Running locally removes the trade-off between knowing a student well and keeping their data safe. A centralised system that tracks how each student writes, where they improve, where they stall? That's a privacy problem before it's a useful tool. A model on the teacher's machine that never sends anything anywhere can track all of it. The more it knows, the better it gets, and nobody has to make a policy decision about whether that's acceptable.</p>
+
+  <p>Right now GemmPen grades exams. That bothers me, because exams are part of an old system that I think we need to move past. We only have them because I can't sit down with 240 people individually. That's a workaround. It was never the point.</p>
+
+  <p>Exams are an artifact from an old system. Decontextualized knowledge checks that exist because we had no better way to find out whether someone learned something. What do you remember, in this room, right now, under time pressure? In a world with AI, that question matters less every year. What matters more: Can a student apply what they know somewhere else? Can they adjust when the situation changes? Do they notice when their own reasoning stops working? You never see that on an exam. You see it in how someone actually works.</p>
+
+  <p>I think we can do better. I want to work toward a version of education where we stop testing knowledge in isolation and start seeing it in what students actually do with it. Where a teacher doesn't need an exam to know what a student understands, because the learning itself makes that visible. We're not there yet. But I think we can get there, and that's the question I want to spend my time on.</p>
+</section>
+
+<hr class="hr-soft">
+
+<!-- COMPASS -->
+<section class="chapter" id="compass">
+  <header class="chapter-head">
+    <span class="chapter-num">II.</span>
+    <h2 class="chapter-title"><em>Compass</em></h2>
+  </header>
+
+  <p>Compass came from a different worry. Watching how my students use AI, I keep seeing the same thing: they produce good work and move on, reading the quality of the output as evidence of their own learning. That worries me. Cognitive science has a name for it: the illusion of fluency. The gap between how easy something feels and whether any of it has actually stuck. For something to be learned, it has to be slightly harder than easy. That's the idea behind Robert Bjork's <em>desirable difficulties</em>. What I see in my classroom is the opposite: AI making everything feel effortless, and students mistaking that feeling for understanding.</p>
+
+  <p>Socratic agents are the obvious counter-move. I've tried them, and honestly, if you just want to understand a concept, getting questions back is annoying. At least for some tasks, it makes learning more frustrating, not less.</p>
+
+  <p>So I started building something different. I wanted a tool where I upload a topic and the AI creates interactive learning material around it. Students work through it at their own pace, write directly inside the tool, and get individual feedback on what they produce. What I learned very quickly is that the AI is too helpful. It gives too much, explains too much, moves too fast. The whole point of learning is that it requires effort, and a model optimised for helpfulness removes exactly that.</p>
+
+  <p>I built Compass for argumentative writing in English, and basically tried to handcuff the model into being helpful without being too helpful. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level. Enough to push a student forward, not enough to do the thinking for them. The result works. Students like it, they engage with their own writing in a way I rarely see otherwise, and I can track where each of them struggles. But I had to hardcode every learning step to get there. Changing the topic means rebuilding most of it.</p>
+
+  <p>Making AI less helpful is harder than making it more helpful, and I don't think prompting will ever fully solve it. The model needs to learn what good teaching actually looks like: creating the conditions for someone to find the answer themselves. That's a fine-tuning problem.</p>
+
+  <p>I called it Compass because it's meant to give direction, not a destination. A compass points the way. It doesn't hand you the map.</p>
+</section>
+
+<hr class="hr-soft">
+
+<!-- UTE -->
+<section class="chapter" id="ute">
+  <header class="chapter-head">
+    <span class="chapter-num">III.</span>
+    <h2 class="chapter-title"><em>UTE</em></h2>
+  </header>
+
+  <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the BÄKO Hackathon with three other women, and we won first place.</p>
+
+  <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The warmth is gone, interrupted by technology.</p>
+
+  <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
+
+  <blockquote>What if the best way for an AI to be useful is to disappear?</blockquote>
+
+  <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there. Point it at a bakery counter, and you get UTE.</p>
+
+  <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which fit what we wanted: a presence at the counter, not a system.</p>
+</section>
+
+<hr class="hr-soft">
+
+<!-- ALSO BUILT -->
+<div class="section-title">Also Built</div>
+
+<section class="small-project" id="claudia">
+  <span class="number">IV.</span>
+  <h4><em>Claudia</em></h4>
+  <p>Claudia is my multi-agent infrastructure. She runs locally on a Mac Mini that's always on in my flat. During the day she orchestrates the agents I use for student feedback. The rest of the time she runs my home automation. Same framework, different endpoints. I named her Claudia because "the multi-agent framework on the Mac Mini" stopped being charming around the tenth mention.</p>
+  <p>Most of what I know about agent design I learned by building her and then watching her break. Agents in a pipeline don't just fail: they fail in ways that are hard to find. One agent misreads something, the next one builds on it, and by the time you see the output, the original mistake is buried three layers deep. I learned to build checkpoints between agents, places where the system pauses and verifies before moving on. I learned that memory is the hardest part: what the system remembers, for how long, and what happens when an old memory stops being true. And I learned that not everything needs an agent. Sometimes a function that does one thing reliably is worth more than an agent that does it creatively. Knowing when to use which is a skill that only comes from getting it wrong a few times.</p>
+  <p>Claudia also hosts my smart home assistant, Sarah, inspired by the old (and rather bad) sci-fi show <em>Eureka</em>. Since AI is actually capable now, this is what I'd always wanted: a home I can talk to, ask questions of, have it do things. Minus the part where it goes rogue and turns on me.</p>
+</section>
+
+<!-- THE OTHER PARTS -->
+<div class="section-title">The Other Parts</div>
+
+<section class="other-parts">
+  <p>I studied economics, linguistics, and literature and culture studies. After that I worked as a researcher and lecturer at a university chair for vocational education, where I started a PhD. During my studies I taught people in correctional education to earn their school diploma: a context where nothing about learning can be taken for granted. Later I became the EU coordinator at my school, got it certified as a Europaschule, and ran international education projects across Europe. The bank was a side job along the way, but eleven years of thinking in risk and compliance turned out to be surprisingly useful the moment I started building anything that touches student data.</p>
+</section>
+
+<footer>
+  <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
+</footer>
+
+</main>
+</body>
+</html>

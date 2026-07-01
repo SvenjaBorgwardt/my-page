@@ -15,3 +15,18 @@ node_modules/
 
 # Backup files from the upgrade process
 *.backup.html
+
+# Session artifacts from the llm-council skill (kept locally, never committed)
+council-report-*.html
+council-transcript-*.md
+
+# Source archives & heavy working assets (not used by the live page)
+*.zip
+sensei-scroll/scene_pingpong.mp4
+
+# Working notes, planning & drafts — kept local, not committed.
+# Everything in docs/ stays local except the two historic plans already in git history.
+docs/*
+!docs/editorial-theatre-plan.md
+!docs/upgrade-plan.md
+drafts/
