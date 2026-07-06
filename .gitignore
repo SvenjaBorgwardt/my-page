@@ -20,6 +20,9 @@ node_modules/
 council-report-*.html
 council-transcript-*.md
 
+# Playwright test artifacts from browser verification runs
+.playwright-mcp/
+
 # Source archives & heavy working assets (not used by the live page)
 *.zip
 sensei-scroll/scene_pingpong.mp4
@@ -30,3 +33,7 @@ docs/*
 !docs/editorial-theatre-plan.md
 !docs/upgrade-plan.md
 drafts/
+
+# Retired pages, old previews & archived assets — kept local, never published
+archive/
+previews/

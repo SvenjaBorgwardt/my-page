@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Svenja Borgwardt · AI for Learning</title>
-<meta name="description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. Debate Dojo, GemmPen, Compass, UTE, Claudia.">
+<meta name="description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. Debate Dojo, GemmPen, Compass, UTE, Claudia, Student Progress Analytics.">
 <meta property="og:title" content="Svenja Borgwardt">
-<meta property="og:description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. Debate Dojo, GemmPen, Compass, UTE, Claudia.">
+<meta property="og:description" content="I build AI systems for learning: fine-tuned models that help without doing the thinking for you. Debate Dojo, GemmPen, Compass, UTE, Claudia, Student Progress Analytics.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://svenjaborgwardt.github.io/my-page/">
-<meta property="og:image" content="https://svenjaborgwardt.github.io/my-page/svenja.jpg">
+<meta property="og:url" content="https://borgwardt.me/">
+<meta property="og:image" content="https://borgwardt.me/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="canonical" href="https://borgwardt.me/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
   /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
   :root{
@@ -608,6 +611,17 @@
     display:block;margin-top:1.2em;font-family:'JetBrains Mono',monospace;font-size:0.5em;
     color:var(--ink-dim);letter-spacing:0.2em;text-transform:uppercase;
   }
+  footer .legal-links{
+    margin-top:1.6em;font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.18em;text-transform:uppercase;
+  }
+  footer .legal-links a{
+    color:var(--ink-dim);text-decoration:none;
+    border-bottom:1px solid var(--rule);padding-bottom:1px;
+    transition:color .3s,border-color .3s;
+  }
+  footer .legal-links a:hover{color:var(--rust);border-color:var(--rust)}
+  footer .legal-links .sep{color:var(--rule);margin:0 0.8em}
 
   /* ========== COMPASS DEMO ========== */
   .compass-demo{margin:2.4em 0 1.6em}
@@ -665,7 +679,7 @@
 
   /* ========== CHAPTER TABS ========== */
   .chapter-tabs{
-    display:grid;grid-template-columns:1fr 1fr 1fr;
+    display:grid;grid-template-columns:1fr 1fr; /* TEMP: back to 1fr 1fr 1fr when the Think tab returns */
     margin:0;border-bottom:1px solid var(--rule);
   }
   .tab{
@@ -785,6 +799,8 @@
     position:relative;
   }
   /* (top fade overlay removed — the full story starts cleanly below the card) */
+  .et-expand-inner a{color:#6E5B7A;transition:color .3s}
+  .et-expand-inner a:hover{color:#564868}
   .et-expand-inner p,
   .et-expand-inner blockquote,
   .et-expand-inner .stack,
@@ -1071,9 +1087,14 @@
   <button class="tab active" data-section="build" role="tab" id="tab-build" aria-selected="true" aria-controls="section-build">
     <span class="tab-name">What I Build</span>
   </button>
+  <!-- TEMP: Think tab hidden until the first essay is ready. To restore:
+       uncomment this button, set .chapter-tabs back to 3 columns,
+       re-add 'think' to tabOrder + applyHash in the script below,
+       and restore the "More on that in What I Think" link in the GemmPen story.
   <button class="tab" data-section="think" role="tab" id="tab-think" aria-selected="false" aria-controls="section-think">
     <span class="tab-name">What I Think</span>
   </button>
+  -->
   <button class="tab" data-section="out" role="tab" id="tab-out" aria-selected="false" aria-controls="section-out">
     <span class="tab-name">Out There</span>
   </button>
@@ -1174,19 +1195,22 @@
 
         <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
 
-        <p>None of this started as a hackathon project. It began with MATE, a Python pipeline I built for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money, and even anonymised, the data still had to leave the room. A local model changes that: no cost pressure, and nothing goes anywhere.</p>
+        <p>I've been building toward this for a while. It started with MATE, a Python pipeline for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money. And in Europe, with GDPR and the EU AI Act, you can't just send student writing to a cloud model — even anonymised, the data still leaves the room. When Google DeepMind announced the Gemma 4 hackathon, I saw the moment: fine-tune a local model that does all of it on one device. No cost pressure, no data leaving the building, no compliance problem to solve.</p>
 
         <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
 
-        <p>When I review the feedback and disagree, that correction becomes training data. After about 30 corrections, one button retrains the model. Takes about 90 minutes on a free GPU, no ML knowledge needed. Over time, the model starts sounding more like me, because it learned from watching me correct it.</p>
+        <p>When I review the feedback and disagree, that correction becomes training data. After about 30 corrections, one button retrains the model. Takes about 90 minutes on a free GPU, you press a button, it handles the rest. Over time, the model starts sounding more like me, because it learned from watching me correct it.</p>
 
-        <p>It runs on-device. With German school data, it has to be. But it also does something else. Running locally removes the trade-off between knowing a student well and keeping their data safe. A centralised system that tracks how each student writes, where they improve, where they stall? That's a privacy problem before it's a useful tool. A model on the teacher's machine that never sends anything anywhere can track all of it. The more it knows, the better it gets, and nobody has to make a policy decision about whether that's acceptable.</p>
+        <p>It runs on-device. But the cool part is: I can compare a student's progress across exams and show them exactly how they got better. I can also see whether the individualised exercises I built around their mistakes were actually effective. I started building a whole system around that. You can read more under <a href="#spa">Student Progress Analytics</a>.</p>
 
-        <p>Right now GemmPen grades exams. That bothers me, because exams are part of an old system that I think we need to move past. We only have them because I can't sit down with 240 people individually. That's a workaround. It was never the point.</p>
+        <p>Right now GemmPen grades exams and creates individualised exercises based on each student's mistakes. But if I'm honest, exams are part of an old system that I think we need to move past. We only have them because I can't sit down with 240 people individually. That's a workaround, and I'm building toward something better than reproducing an old system.</p>
 
         <p>A decontextualised knowledge check asks: what do you remember, in this room, right now, under time pressure? In a world with AI, that question matters less every year. What matters more: Can a student apply what they know somewhere else? Can they adjust when the situation changes? Do they notice when their own reasoning stops working? You never see that on an exam. You see it in how someone actually works.</p>
 
         <p>I think we can do better. I want to work toward a version of education where we stop testing knowledge in isolation and start seeing it in what students actually do with it. Where a teacher doesn't need an exam to know what a student understands, because the learning itself makes that visible. We're not there yet. But I think we can get there, and that's the question I want to spend my time on.</p>
+        <!-- TEMP: restore when the Think tab returns — append to the paragraph above:
+             More on that in <a href="#think">What I Think</a>. -->
+
 
         <div class="stack">
           <span class="k">Stack</span>Gemma 4 + LoRA &middot; runs on-device &middot; retrains from teacher corrections<br>
@@ -1226,7 +1250,7 @@
 
       <!-- Dojo expand (now project 0) -->
       <div class="et-expand-inner" data-expand="0" style="display:none">
-        <p>Debate Dojo takes the principle behind Compass (help that waits until a student has genuinely tried) and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes.</p>
+        <p>Debate Dojo takes the principle behind Compass (help that waits until a student has genuinely tried) and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes. You can walk through a full training round in the <a href="https://debate-dojo.vercel.app/demo.html?demo" target="_blank" rel="noopener">guided demo</a>, sensei included.</p>
 
         <div class="uth-divider">Under the Hood</div>
         <p class="uth-lead">How I fine-tuned an 8B model that knows when to help and when to hold back.</p>
@@ -1362,11 +1386,11 @@
         <p>I think the deeper question is: what will always matter about humans, even as AI gets more capable? The ability to think for yourself. To build an argument. To evaluate your own work honestly. AI that centers what is strong in people means AI that does not quietly take those capabilities away by being too eager to help. That is not just an education problem. That is a design question for every model that interacts with humans in a developmental context.</p>
 
         <h4 class="uth-h">What comes next</h4>
-        <p>Larger evaluation sets and tighter confidence intervals. Testing ECH in at least one coaching domain outside of debate. And publishing the eval harness and anonymised dataset so others can run it on their own models &mdash; until then, both are available on request.</p>
+        <p>Larger evaluation sets and tighter confidence intervals. Testing ECH in at least one coaching domain outside of debate. And I want others to be able to run this eval on their own models. But the harness and the dataset are built on interactions with my students, and even anonymised, that is not data I am willing to put in a public repo. Protecting the people behind the data comes before publishing it. Both are available on request.</p>
 
         <div class="stack">
           <span class="k">Stack</span>Ministral 8B + QLoRA &middot; Vercel + Supabase (EU) &middot; HF Inference Endpoint &middot; Claude Haiku examiner<br>
-          <span class="k">Links</span><a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Try it live</a>
+          <span class="k">Links</span><a href="https://debate-dojo.vercel.app" target="_blank" rel="noopener">Try it live</a> &middot; <a href="https://debate-dojo.vercel.app/demo.html?demo" target="_blank" rel="noopener">Guided demo</a>
         </div>
       </div>
 
@@ -1441,7 +1465,7 @@
 
 <div class="sensei-scroll" id="sensei-scroll" style="display:none">
   <div class="sensei-scroll__scene">
-    <img class="sensei-scroll__bg" src="sensei-scroll/sensei_bg.png" alt="" loading="lazy">
+    <img class="sensei-scroll__bg" src="sensei-scroll/sensei_bg.webp" alt="" loading="lazy">
     <div class="sensei-scroll__figure">
       <div class="sensei-scroll__shadow"></div>
       <canvas class="sensei-scroll__canvas" id="senseiCanvas" width="514" height="680"></canvas>
@@ -1562,6 +1586,9 @@
 <footer class="reveal">
   <p class="colophon">I'm interested in how models behave with the people who use them &mdash; evals, model behaviour, AI that's actually good for learning. If that's your problem too, write me.</p>
   <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
+  <nav class="legal-links" aria-label="Legal">
+    <a href="impressum.html">Impressum</a><span class="sep">&middot;</span><a href="datenschutz.html">Datenschutz / Privacy</a>
+  </nav>
 </footer>
 
 </main>
@@ -1590,7 +1617,7 @@
   });
 
   // Arrow-key navigation on the tablist (ARIA tabs pattern)
-  var tabOrder = ['build', 'think', 'out'];
+  var tabOrder = ['build', 'out']; /* TEMP: re-add 'think' when the Think tab returns */
   var tablist = document.querySelector('.chapter-tabs');
   if(tablist){
     tablist.addEventListener('keydown', function(e){
@@ -1763,7 +1790,7 @@
   function applyHash(){
     var h = (location.hash || '').replace('#','');
     if(!h) return;
-    if(h === 'build' || h === 'think' || h === 'out'){ activateTab(h, false); return; }
+    if(h === 'build' || h === 'out'){ activateTab(h, false); return; } /* TEMP: re-add 'think' when the Think tab returns */
     if(h in hashToProject){
       activateTab('build', false);
       selectProject(hashToProject[h], false);
@@ -1772,20 +1799,6 @@
   window.addEventListener('hashchange', applyHash);
   applyHash();
 
-  /* ── Hero research deep-link ── */
-  var heroLink = document.getElementById('hero-research-link');
-  if(heroLink){
-    heroLink.addEventListener('click', function(e){
-      e.preventDefault();
-      selectProject(0);
-      if(!storyOpen) toggleStory();
-      setTimeout(function(){
-        var divider = document.querySelector('.uth-divider');
-        if(divider) divider.scrollIntoView({behavior:'smooth', block:'start'});
-      }, 700);
-    });
-  }
-
   /* ========== SENSEI SCROLL ANIMATION ========== */
   /* Wheel-capture approach: when the sensei scene is in view, scroll input
      drives the bow animation frame-by-frame instead of scrolling the page.
@@ -1793,7 +1806,7 @@
   (function(){
     var FC   = 38;                                // frames in the down-bow
     var PATH = 'sensei-scroll/sensei_frames/sensei_';
-    var EXT  = '.png';
+    var EXT  = '.webp';
     var SW = 514, SH = 680;
     var TOTAL_DELTA = 2400;                       // px of cumulative wheel delta for full cycle
 
