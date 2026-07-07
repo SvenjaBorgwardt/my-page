@@ -373,13 +373,13 @@
     // The assistant repeats everything — that's the confirmation.
     var SCENES = [
       {
-        explainFirst: true,   // first scene leads in: explain, then show
         dialog: [
-          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt']},
-        ],
-        actions: [
-          {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
-          {type:'filter', rule:'sesame'},
+          // Greeting → the register reacts at once: profile loads, sesame greys out.
+          {who:'assistant', text:'Good morning, Mrs. Schmidt! How are you today?', kw:['Mrs. Schmidt'],
+            then: [
+              {type:'customer', name:'Mrs. Schmidt', badge:'Sesame allergy'},
+              {type:'filter', rule:'sesame'},
+            ]},
         ],
         notes: [
           'Regular customer recognised by name — her profile loads, with allergies and intolerances on file.',
@@ -430,13 +430,16 @@
         dialog: [
           {who:'assistant', text:'Something savory too? The vegan quiche pairs nicely.'},
           {who:'mrs. schmidt', text:'Oh, good idea — yes please!'},
-          {who:'assistant', text:'One vegan quiche, then.', kw:['vegan quiche']},
+          // The spoken confirmation rings the quiche up right away.
+          {who:'assistant', text:'One vegan quiche, then.', kw:['vegan quiche'],
+            then: [
+              {type:'select', name:'Vegan quiche'},
+              {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
+            ]},
           {who:'mrs. schmidt', text:'That\'s everything, thank you!'},
           {who:'assistant', text:'Perfect — that comes to €16.60. I wish you a wonderful day, Mrs. Schmidt!'},
         ],
         actions: [
-          {type:'select', name:'Vegan quiche'},
-          {type:'cart',   name:'1\xD7 Vegan quiche', price:'3.90'},
           {type:'complete'},
         ],
         notes: ['Order closed and paid — the total settles automatically. Ready for the next customer.'],
@@ -472,6 +475,7 @@
       var i = 0;
       return new Promise(function(resolve) {
         function tick() {
+          if (cancelRequested) { resolve(); return; }
           if (i >= plain.length) {
             // Sentence finished — show it plain first (no colour yet).
             textEl.textContent = plain;
@@ -495,13 +499,21 @@
     }
 
     function addNote(text) {
-      // Add annotation to the last .dm in chat
+      // Add annotation to the last .dm in chat — a calm caption:
+      // a small live dot + label, then the plain-words explanation.
       var msgs = chatEl.querySelectorAll('.dm');
       var last = msgs[msgs.length - 1];
       if (!last) return;
       var n = document.createElement('div');
       n.className = 'dm-note';
-      n.textContent = text;
+      var head = document.createElement('div');
+      head.className = 'dm-note-head';
+      head.innerHTML = '<span class="dm-note-dot"></span><span class="dm-note-label">UTE &middot; live</span>';
+      var body = document.createElement('div');
+      body.className = 'dm-note-body';
+      body.textContent = text;
+      n.appendChild(head);
+      n.appendChild(body);
       last.appendChild(n);
       void n.offsetHeight;
       n.classList.add('show');
@@ -697,8 +709,26 @@
       d.classList.add('show');
     }
 
+    // Cancellable sleep: stop/replay wakes every pending timer at once, so
+    // the run unwinds immediately instead of after the longest pause.
+    var cancelRequested = false;
+    var sleepWakers = [];
     function sleep(ms) {
-      return new Promise(function(resolve) { setTimeout(resolve, ms); });
+      return new Promise(function(resolve) {
+        var t = setTimeout(function() { unregister(); resolve(); }, ms);
+        function waker() { clearTimeout(t); resolve(); }
+        function unregister() {
+          var i = sleepWakers.indexOf(waker);
+          if (i > -1) sleepWakers.splice(i, 1);
+        }
+        sleepWakers.push(waker);
+      }).then(function() {
+        if (cancelRequested) throw {__cancel: true};
+      });
+    }
+    function cancelRun() {
+      cancelRequested = true;
+      sleepWakers.splice(0).forEach(function(w) { w(); });
     }
 
     // Reading time scaled to text length, at a natural reading pace
@@ -742,6 +772,7 @@
             focusBoth();
             await sleep(450);
             for (var t = 0; t < line.then.length; t++) {
+              if (t > 0) await sleep(500);
               await applyAction(line.then[t]);
             }
             await sleep(1600); // let the register moment land
@@ -754,12 +785,10 @@
         }
       }
 
-      // Phase: actions — focus POS, blur chat, reader watches the register.
-      // keepChat: the explanation was just shown (explainFirst) — blurring it
-      // away and bringing it back reads as a glitch, so keep both sides sharp.
-      async function playActions(keepChat) {
+      // Phase: actions — focus POS, blur chat, reader watches the register
+      async function playActions() {
         if (!hasActions) return;
-        if (keepChat) focusBoth(); else focusPos();
+        focusPos();
         await sleep(600); // let the blur transition settle
         for (var a = 0; a < scene.actions.length; a++) {
           await sleep(550);
@@ -778,16 +807,12 @@
         }
       }
 
+      // The rule of the piece: something is said, the register reacts,
+      // then the plain-words explanation. Reactions tied to a specific
+      // line ride along via `then`; scene-level actions follow the dialog.
       await playDialog();
-      // First scene leads the reader in: explain BEFORE the register reacts.
-      // Later scenes show first, then explain (the pattern is established).
-      if (scene.explainFirst) {
-        await playNotes();
-        await playActions(true);
-      } else {
-        await playActions();
-        await playNotes();
-      }
+      await playActions();
+      await playNotes();
 
       // Let reader absorb the final state with both sides visible
       focusBoth();
@@ -842,49 +867,90 @@
     }
 
     var running = false;
+    var currentRun = null;
 
     async function runDemo() {
       if (running) return;
       running = true;
+      cancelRequested = false;
 
-      // activate recording
-      chatEl.innerHTML = '';
-      if (recEl) {
-        recEl.classList.remove('idle');
-        recEl.classList.add('on');
-        recEl.querySelector('.pos-rec-label').textContent = 'Listening';
+      try {
+        // activate recording
+        chatEl.innerHTML = '';
+        if (recEl) {
+          recEl.classList.remove('idle');
+          recEl.classList.add('on');
+          recEl.querySelector('.pos-rec-label').textContent = 'Listening';
+        }
+        statusEl.textContent = 'listening';
+        statusEl.classList.add('active');
+        await sleep(800);
+
+        // run all scenes
+        for (var i = 0; i < SCENES.length; i++) {
+          await runScene(i);
+        }
+
+        // stop recording, reveal both sides for final moment
+        focusBoth();
+        if (recEl) {
+          recEl.classList.remove('on');
+        }
+        statusEl.textContent = 'ready';
+        statusEl.classList.remove('active');
+
+        // hold final state, then reset
+        await sleep(4500);
+        resetToIdle();
+      } catch (e) {
+        if (!(e && e.__cancel)) throw e; // cancelled: the caller resets
+      } finally {
+        running = false;
       }
-      statusEl.textContent = 'listening';
-      statusEl.classList.add('active');
-      await sleep(800);
-
-      // run all scenes
-      for (var i = 0; i < SCENES.length; i++) {
-        await runScene(i);
-      }
-
-      // stop recording, reveal both sides for final moment
-      focusBoth();
-      if (recEl) {
-        recEl.classList.remove('on');
-      }
-      statusEl.textContent = 'ready';
-      statusEl.classList.remove('active');
-
-      // hold final state, then reset
-      await sleep(4500);
-      resetToIdle();
-      running = false;
     }
 
-    // Click handler on record button
+    var restarting = false; // guards the cancel→reset window against double clicks
+
+    function startDemo() {
+      if (running || restarting) return;
+      currentRun = runDemo();
+    }
+
+    // Stop mid-run: unwind the scene chain, back to the idle prompt.
+    function stopDemo() {
+      if (!running || restarting) return;
+      restarting = true;
+      cancelRun();
+      (currentRun || Promise.resolve()).then(function() {
+        resetAll();
+        restarting = false;
+      });
+    }
+
+    // Replay mid-run: unwind, reset, and start over from scene one.
+    function replayDemo() {
+      if (!running || restarting) return;
+      restarting = true;
+      cancelRun();
+      (currentRun || Promise.resolve()).then(function() {
+        resetAll();
+        restarting = false;
+        startDemo();
+      });
+    }
+
+    // Click handlers: record starts; replay/stop only exist while running
     if (recEl) {
       recEl.addEventListener('click', function() {
         if (recEl.classList.contains('idle')) {
-          runDemo();
+          startDemo();
         }
       });
     }
+    var replayBtn = document.getElementById('ute-replay');
+    var stopBtn = document.getElementById('ute-stop');
+    if (replayBtn) replayBtn.addEventListener('click', replayDemo);
+    if (stopBtn) stopBtn.addEventListener('click', stopDemo);
 
     // Show initial state when demo scrolls into view
     var inited = false;
