@@ -37,3 +37,8 @@ drafts/
 # Retired pages, old previews & archived assets — kept local, never published
 archive/
 previews/
+
+# interne Notizen – nicht veröffentlichen
+CLAUDE.md
+docs/
+.claude/
