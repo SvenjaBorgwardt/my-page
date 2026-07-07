@@ -388,14 +388,19 @@
       },
       {
         dialog: [
-          {who:'mrs. schmidt', text:'Morning! Very well, thank you. The usual, please.'},
+          // "The usual" → UTE prefills her regular order behind glass,
+          // BEFORE the assistant can read it back. Confirmation makes it real.
+          {who:'mrs. schmidt', text:'Morning! Very well, thank you. The usual, please.',
+            then: [{type:'prefill', items:[
+              {name:'2\xD7 Rye bread', price:'6.40'},
+              {name:'1\xD7 Sourdough', price:'3.80'},
+            ]}]},
           {who:'assistant', text:'Two rye breads and a sourdough, right?', kw:['Two rye breads','sourdough']},
         ],
         actions: [
-          {type:'cart',   name:'2\xD7 Rye bread', price:'6.40'},
-          {type:'cart',   name:'1\xD7 Sourdough', price:'3.80'},
+          {type:'confirm'},
         ],
-        notes: ['“The usual” — the assistant repeats it as items, and UTE rings up what it hears: 2× rye bread, 1× sourdough.'],
+        notes: ['“The usual” — UTE knows it from her profile and lays the order behind glass, like the counter display. The assistant reads it off, and her spoken confirmation is what rings it up.'],
       },
       {
         dialog: [
@@ -586,15 +591,62 @@
       }
     }
 
-    function addCartItem(name, price) {
+    function cartItemEl(name, price) {
       var d = document.createElement('div');
       d.className = 'pos-cart-item';
-      d.innerHTML = '<span class="cart-name">' + name + '</span><span class="cart-price">' + price + '</span>';
+      d.innerHTML = '<span class="cart-name">' + name + '</span><span class="cart-leader"></span><span class="cart-price">' + price + '</span>';
+      return d;
+    }
+
+    function addCartItem(name, price) {
+      var d = cartItemEl(name, price);
       cartEl.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
       flashGlow(d);
       runningTotal += parseFloat(price);
+      totalVal.textContent = '€' + runningTotal.toFixed(2);
+      flashGlow(totalVal.parentNode);
+    }
+
+    // UTE's guess waits behind the counter glass: items are on the bon
+    // but greyed, under a translucent pane — visible, not yet rung up.
+    function prefillPending(items) {
+      var wrap = document.createElement('div');
+      wrap.className = 'pos-pending';
+      for (var i = 0; i < items.length; i++) {
+        var d = cartItemEl(items[i].name, items[i].price);
+        d.classList.add('pending', 'show');
+        d.dataset.price = items[i].price;
+        wrap.appendChild(d);
+      }
+      var glass = document.createElement('div');
+      glass.className = 'pos-glass';
+      glass.innerHTML = '<span class="pos-glass-label">prefilled</span>';
+      wrap.appendChild(glass);
+      cartEl.appendChild(wrap);
+      void glass.offsetHeight;
+      glass.classList.add('show');
+    }
+
+    // The assistant's spoken confirmation lifts the pane; the items print
+    // for real and the total counts them.
+    async function confirmPending() {
+      var wrap = cartEl.querySelector('.pos-pending');
+      if (!wrap) return;
+      var glass = wrap.querySelector('.pos-glass');
+      if (glass) {
+        glass.classList.add('lift');
+        await sleep(prefersReduced ? 300 : 550);
+        glass.remove();
+      }
+      wrap.classList.add('confirmed');
+      var items = wrap.querySelectorAll('.pos-cart-item.pending');
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.remove('pending');
+        flashGlow(items[i]);
+        runningTotal += parseFloat(items[i].dataset.price || '0');
+      }
       totalVal.textContent = '€' + runningTotal.toFixed(2);
       flashGlow(totalVal.parentNode);
     }
@@ -656,13 +708,28 @@
       return Math.max(2600, Math.min(len * 52 + 700, 6800));
     }
 
+    async function applyAction(act) {
+      if (act.type === 'customer')        setCustomer(act.name, act.badge);
+      else if (act.type === 'badge')     addBadge(act.text, act.cls);
+      else if (act.type === 'filter')    filterBy(act.rule);
+      else if (act.type === 'select')    selectTile(act.name);
+      else if (act.type === 'crosssell') showCrossSell(act.product, act.reason);
+      else if (act.type === 'highlight') highlightTile(act.name);
+      else if (act.type === 'cart')      addCartItem(act.name, act.price);
+      else if (act.type === 'prefill')   prefillPending(act.items);
+      else if (act.type === 'confirm')   await confirmPending();
+      else if (act.type === 'complete')  showComplete();
+    }
+
     async function runScene(idx) {
       var scene = SCENES[idx];
       var hasDialog  = scene.dialog && scene.dialog.length > 0;
       var hasActions = scene.actions && scene.actions.length > 0;
       var notes = scene.notes || (scene.note ? [scene.note] : []);
 
-      // Phase: dialog — focus chat, blur POS, reader watches the conversation
+      // Phase: dialog — focus chat, blur POS, reader watches the conversation.
+      // A line with `then` triggers register actions mid-dialog (both sides
+      // sharp): UTE reacts to what was said before the next line lands.
       async function playDialog() {
         if (!hasDialog) return;
         focusChat();
@@ -670,26 +737,33 @@
         for (var d = 0; d < scene.dialog.length; d++) {
           var line = scene.dialog[d];
           await addMsg(line.who, line.text, line.kw);
+          if (line.then) {
+            await sleep(500);
+            focusBoth();
+            await sleep(450);
+            for (var t = 0; t < line.then.length; t++) {
+              await applyAction(line.then[t]);
+            }
+            await sleep(1600); // let the register moment land
+            if (d < scene.dialog.length - 1) {
+              focusChat();
+              await sleep(450);
+            }
+          }
           await sleep(Math.max(1500, line.text.length * 26));
         }
       }
 
-      // Phase: actions — focus POS, blur chat, reader watches the register
-      async function playActions() {
+      // Phase: actions — focus POS, blur chat, reader watches the register.
+      // keepChat: the explanation was just shown (explainFirst) — blurring it
+      // away and bringing it back reads as a glitch, so keep both sides sharp.
+      async function playActions(keepChat) {
         if (!hasActions) return;
-        focusPos();
+        if (keepChat) focusBoth(); else focusPos();
         await sleep(600); // let the blur transition settle
         for (var a = 0; a < scene.actions.length; a++) {
-          var act = scene.actions[a];
           await sleep(550);
-          if (act.type === 'customer')        setCustomer(act.name, act.badge);
-          else if (act.type === 'badge')     addBadge(act.text, act.cls);
-          else if (act.type === 'filter')    filterBy(act.rule);
-          else if (act.type === 'select')    selectTile(act.name);
-          else if (act.type === 'crosssell') showCrossSell(act.product, act.reason);
-          else if (act.type === 'highlight') highlightTile(act.name);
-          else if (act.type === 'cart')      addCartItem(act.name, act.price);
-          else if (act.type === 'complete')  showComplete();
+          await applyAction(scene.actions[a]);
         }
       }
 
@@ -709,7 +783,7 @@
       // Later scenes show first, then explain (the pattern is established).
       if (scene.explainFirst) {
         await playNotes();
-        await playActions();
+        await playActions(true);
       } else {
         await playActions();
         await playNotes();
@@ -780,6 +854,8 @@
         recEl.classList.add('on');
         recEl.querySelector('.pos-rec-label').textContent = 'Listening';
       }
+      statusEl.textContent = 'listening';
+      statusEl.classList.add('active');
       await sleep(800);
 
       // run all scenes
@@ -792,6 +868,8 @@
       if (recEl) {
         recEl.classList.remove('on');
       }
+      statusEl.textContent = 'ready';
+      statusEl.classList.remove('active');
 
       // hold final state, then reset
       await sleep(4500);

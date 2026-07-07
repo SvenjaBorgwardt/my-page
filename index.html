@@ -208,7 +208,7 @@
 
   /* ========== UTE ANIMATED DEMO ========== */
   .ute-demo{
-    display:grid;grid-template-columns:35% 65%;grid-template-rows:380px;
+    display:grid;grid-template-columns:35% 65%;grid-template-rows:420px;
     margin:2.4em 0 0.4em;overflow:hidden;
   }
   .ute-demo-chat{
@@ -241,41 +241,27 @@
   }
   .ute-demo .dm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85em;line-height:1.5;color:var(--ink)}
   .ute-demo-pos{
-    background:var(--paper);
-    border:1px solid var(--rule);border-radius:4px;
     grid-row:1;grid-column:2;
     display:flex;flex-direction:column;
-    max-height:380px;overflow:hidden;
-    box-shadow:0 2px 16px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);
+    min-height:0;overflow:hidden;
   }
-  /* -- title bar (register style) -- */
+  /* -- masthead line (printed, not chrome) -- */
   .ute-demo .pos-head{
     font-family:'JetBrains Mono',monospace;
-    padding:7px 10px;border-bottom:1px solid var(--rule);
-    background:var(--paper-warm);flex:0 0 auto;
-    border-radius:4px 4px 0 0;
-    display:flex;align-items:center;gap:8px;
-    position:relative;
-  }
-  .ute-demo .pos-head::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:var(--rust);opacity:0.35;border-radius:4px 4px 0 0;
+    padding:0 0 7px;border-bottom:1px solid var(--rule);
+    flex:0 0 auto;
+    display:flex;align-items:baseline;gap:8px;
   }
   .ute-demo .pos-head-title{
-    font-size:9px;font-weight:700;letter-spacing:0.12em;
+    font-size:9px;font-weight:700;letter-spacing:0.16em;
     text-transform:uppercase;color:var(--ink);flex:1;
     display:flex;align-items:baseline;gap:6px;
   }
-  .ute-demo .pos-head-title .pos-subtitle{
-    font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:9px;font-weight:400;letter-spacing:0.02em;
-    color:var(--ink-dim);text-transform:none;
-  }
   .ute-demo .pos-head-title .pos-divider{
-    color:var(--rule);font-size:10px;margin:0 2px;
+    color:var(--rule);font-size:9px;margin:0 1px;
   }
   .ute-demo .pos-head-terminal{
-    font-size:8px;letter-spacing:0.05em;
+    font-size:8px;font-weight:400;letter-spacing:0.16em;
     color:var(--ink-dim);text-transform:uppercase;
   }
   .ute-demo .pos-head-status{
@@ -292,46 +278,42 @@
   .ute-demo .pos-head-status.active::before{
     background:var(--rust);opacity:1;
   }
-  /* -- customer bar -- */
+  /* -- customer line (a note in the margin, not a bar) -- */
   .ute-demo .pos-customer{
-    font-family:'Cormorant Garamond',serif;font-size:11px;
+    font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;
     color:var(--ink-dim);
-    padding:5px 10px;background:var(--paper);
+    padding:6px 0;
     border-bottom:1px solid var(--rule);
-    flex:0 0 auto;min-height:22px;
-    display:flex;align-items:center;gap:5px;
+    flex:0 0 auto;min-height:30px;
+    display:flex;align-items:baseline;gap:9px;
   }
   .ute-demo .pos-customer .cust-name{font-weight:500;color:var(--ink)}
   .ute-demo .pos-customer .cust-badge{
-    font-family:'Cormorant Garamond',serif;font-size:10px;
-    padding:1px 6px;border-radius:3px;
-    background:rgba(159,58,31,0.1);color:var(--rust);
-    border:1px solid rgba(159,58,31,0.2);
+    font-family:'JetBrains Mono',monospace;font-size:8px;font-style:normal;
+    letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--rust);
     transition:opacity .3s ease;
   }
-  .ute-demo .pos-customer .cust-badge.vegan{
-    background:rgba(46,125,50,0.1);color:#2e7d32;
-    border-color:rgba(46,125,50,0.25);
-  }
+  .ute-demo .pos-customer .cust-badge.vegan{color:#2e7d32}
   .ute-demo .pos-customer .cust-badge.badge-enter{opacity:0}
   .ute-demo .pos-customer .cust-badge.badge-show{opacity:1}
-  /* -- body: grid + sidebar -- */
+  /* -- body: grid + bon -- */
   .ute-demo .pos-body{
-    display:grid;grid-template-columns:1fr 120px;
+    display:grid;grid-template-columns:1fr 132px;
     flex:1 1 0;min-height:0;overflow:hidden;
+    border-bottom:1px solid var(--rule);
   }
   /* -- product grid -- */
   .ute-demo .pos-grid{
     display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
     gap:0;
-    background:var(--paper);
     min-height:0;
   }
   .ute-demo .pos-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:'Cormorant Garamond',serif;font-size:0.55em;
     text-align:center;line-height:1.2;
-    padding:0.15em;background:var(--paper);min-height:0;overflow:hidden;
+    padding:0.15em;min-height:0;overflow:hidden;
     transition:background .5s ease;
     position:relative;
   }
@@ -349,7 +331,7 @@
     transition:color .4s ease;
   }
   /* disabled */
-  .ute-demo .pos-tile.disabled{background:var(--paper)}
+  .ute-demo .pos-tile.disabled{background:transparent}
   .ute-demo .pos-tile.disabled .tile-icon{filter:grayscale(1) brightness(1.1) contrast(0.9);opacity:0.45}
   .ute-demo .pos-tile.disabled .tile-name{color:var(--rule)}
   .ute-demo .pos-tile.disabled .tile-price{color:var(--rule)}
@@ -360,53 +342,80 @@
   .ute-demo .pos-tile.suggest{background:var(--paper-deep);border-left:2px solid var(--ink-dim);animation:suggest-pulse 1.5s ease-in-out infinite}
   .ute-demo .pos-tile.suggest .tile-name{color:var(--ink)}
   @keyframes suggest-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
-  /* -- sidebar / order panel -- */
+  /* -- bon (receipt column, set in mono on warmer paper) -- */
   .ute-demo .pos-sidebar{
     display:flex;flex-direction:column;
-    background:var(--paper);
-    border-left:1px solid var(--rule);
+    background:var(--paper-warm);
     overflow:hidden;min-height:0;
+    padding:9px 10px 8px;
   }
   .ute-demo .pos-cart-head{
-    font-family:'Cormorant Garamond',serif;font-size:11px;
-    font-style:italic;color:var(--ink-dim);
-    padding:6px 8px 5px;
-    border-bottom:1px dashed var(--rule);
+    font-family:'JetBrains Mono',monospace;font-size:8px;
+    letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-dim);
+    padding:0 0 7px;
     flex:0 0 auto;
-    display:flex;align-items:center;gap:4px;
   }
-  .ute-demo .pos-cart-icon{width:10px;height:10px;stroke:var(--ink-dim)}
   .ute-demo .pos-cart-items{
     flex:1 1 0;overflow:hidden;min-height:0;
-    padding:4px 8px;
   }
   .ute-demo .pos-cart-item{
-    font-family:'Cormorant Garamond',serif;font-size:11px;
-    display:flex;justify-content:space-between;gap:4px;
-    padding:2px 0;opacity:0;flex:0 0 auto;
-    color:var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    display:flex;align-items:baseline;
+    padding:2.5px 0;opacity:0;flex:0 0 auto;
+    color:var(--ink-soft);
   }
   .ute-demo .pos-cart-item.show{opacity:1;transition:opacity .3s ease}
-  .ute-demo .pos-cart-item .cart-price{color:var(--ink-soft);white-space:nowrap}
+  .ute-demo .pos-cart-item .cart-leader{
+    flex:1 1 auto;min-width:8px;margin:0 4px;
+    border-bottom:1px dotted var(--rule);transform:translateY(-2px);
+  }
+  .ute-demo .pos-cart-item .cart-price{color:var(--ink);white-space:nowrap}
+  /* -- the counter glass: UTE's prefilled guess waits behind a pane.
+        One glass moment on the whole page — paper-toned, no gloss. -- */
+  .ute-demo .pos-pending{position:relative;flex:0 0 auto;margin:1px 0 15px;transition:margin .4s ease}
+  .ute-demo .pos-pending.confirmed{margin-bottom:1px}
+  .ute-demo .pos-pending .pos-cart-item.pending,
+  .ute-demo .pos-pending .pos-cart-item.pending .cart-price{color:var(--ink-soft)}
+  .ute-demo .pos-glass{
+    position:absolute;inset:-3px -4px -15px;
+    background:linear-gradient(165deg,rgba(246,241,230,0.4) 0%,rgba(246,241,230,0.12) 55%,rgba(246,241,230,0.3) 100%);
+    -webkit-backdrop-filter:blur(1.6px) saturate(0.9);
+    backdrop-filter:blur(1.6px) saturate(0.9);
+    border:1px solid var(--rule);
+    display:flex;align-items:flex-end;justify-content:flex-end;
+    padding:2px 4px;
+    opacity:0;
+    transition:opacity .5s ease,transform .5s ease;
+  }
+  .ute-demo .pos-glass.show{opacity:1}
+  .ute-demo .pos-glass.lift{opacity:0;transform:translateY(-9px)}
+  .ute-demo .pos-glass-label{
+    font-family:'JetBrains Mono',monospace;font-size:6.5px;
+    letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  @media(prefers-reduced-motion:reduce){
+    .ute-demo .pos-glass{transition:opacity .3s ease}
+    .ute-demo .pos-glass.lift{transform:none}
+  }
   .ute-demo .pos-alert{
-    font-family:'Cormorant Garamond',serif;font-size:10px;
+    font-family:'Cormorant Garamond',serif;font-size:10px;font-style:italic;
     color:var(--rust);
-    padding:3px 8px;flex:0 0 auto;opacity:0;
+    padding:2px 0 2px 7px;flex:0 0 auto;opacity:0;
     border-left:2px solid var(--rust);
-    margin:2px 8px;line-height:1.4;
+    margin:4px 0;line-height:1.4;
   }
   .ute-demo .pos-alert.show{opacity:1;transition:opacity .3s ease}
-  /* -- cross-sell suggestion card -- */
+  /* -- cross-sell suggestion (a rust-ruled aside, not a card) -- */
   .ute-demo .pos-crosssell{
-    flex:0 0 auto;margin:4px 8px;padding:6px 8px;
-    background:rgba(159,58,31,0.06);border:1px solid rgba(159,58,31,0.2);
-    border-radius:3px;opacity:0;transform:translateY(4px);
+    flex:0 0 auto;margin:6px 0;padding:2px 0 2px 7px;
+    border-left:2px solid var(--rust);
+    opacity:0;transform:translateY(4px);
     transition:opacity .4s ease,transform .4s ease;
   }
   .ute-demo .pos-crosssell.show{opacity:1;transform:translateY(0)}
   .ute-demo .pos-crosssell-label{
     font-family:'JetBrains Mono',monospace;font-size:7px;
-    letter-spacing:0.1em;text-transform:uppercase;
+    letter-spacing:0.14em;text-transform:uppercase;
     color:var(--rust);margin-bottom:2px;
   }
   .ute-demo .pos-crosssell-text{
@@ -438,65 +447,73 @@
   .ute-demo .dm-note.show{opacity:1;transform:translateY(0);transition:opacity .35s ease,transform .35s ease}
   .ute-demo .dm-note::before{content:'\2192 '}
   .ute-demo .dm.fade-out .dm-note{opacity:0}
-  /* -- footer: total + complete -- */
+  /* -- footer: total set like a ledger sum -- */
   .ute-demo .pos-footer{
-    flex:0 0 auto;padding:0 8px 6px;margin-top:auto;
+    flex:0 0 auto;margin-top:auto;
   }
   .ute-demo .pos-total{
-    display:flex;justify-content:space-between;
-    font-family:'Cormorant Garamond',serif;font-size:13px;
-    padding:6px 0 0;border-top:1.5px solid var(--ink);
-    color:var(--ink);font-weight:500;
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:0.1em;text-transform:uppercase;
+    padding:6px 0;margin-top:4px;
+    border-top:1px solid var(--ink);
+    border-bottom:3px double var(--ink);
+    color:var(--ink);
+    transition:color .4s ease,border-color .4s ease;
   }
   .ute-demo .pos-total.paid{
-    color:var(--rust);font-weight:700;border-top-color:var(--rust);
+    color:var(--rust);font-weight:700;
+    border-top-color:var(--rust);border-bottom-color:var(--rust);
   }
   .ute-demo .pos-complete{
-    font-family:'Cormorant Garamond',serif;font-size:12px;
-    letter-spacing:0.03em;text-align:center;
-    padding:5px;margin-top:5px;border-radius:3px;
-    background:var(--paper-warm);color:var(--rust);
-    border:1px solid rgba(159,58,31,0.3);flex:0 0 auto;opacity:0;
+    font-family:'JetBrains Mono',monospace;font-size:8px;
+    letter-spacing:0.22em;text-transform:uppercase;text-align:center;
+    padding:7px 0 0;color:var(--rust);flex:0 0 auto;opacity:0;
     display:flex;align-items:center;justify-content:center;gap:5px;
   }
   .ute-demo .pos-complete .pos-check{font-weight:700;line-height:1;color:var(--rust)}
   .ute-demo .pos-complete.show{opacity:1;transition:opacity .35s ease}
-  /* -- record bar -- */
+  /* -- record button (same vocabulary as the story CTA: circle + spaced mono label) -- */
   .ute-demo .pos-rec{
-    flex:0 0 auto;
-    display:flex;align-items:center;justify-content:center;gap:6px;
-    padding:6px 10px;
-    border-top:1px solid var(--rule);
-    background:var(--paper);
-    border-radius:0 0 4px 4px;
+    flex:0 0 auto;align-self:center;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    margin-top:13px;padding:0;
+    background:none;border:none;font-size:inherit;
     cursor:default;
   }
+  .ute-demo .pos-rec:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:2px}
+  .ute-demo .pos-rec-circle{
+    width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--rule);
+    display:flex;align-items:center;justify-content:center;
+    background:transparent;
+    transition:background .4s ease,border-color .4s ease,transform .3s ease;
+  }
   .ute-demo .pos-rec-icon{
-    width:13px;height:13px;color:var(--ink-dim);
+    width:14px;height:14px;color:var(--ink-dim);
     transition:color .4s ease;
   }
+  .ute-demo .pos-rec-line{display:flex;align-items:center;gap:6px}
   .ute-demo .pos-rec-label{
-    font-family:'Cormorant Garamond',serif;font-size:11px;
-    letter-spacing:0.02em;color:var(--ink-dim);
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);
     transition:color .4s ease;
   }
   .ute-demo .pos-rec-dot{
-    width:6px;height:6px;border-radius:50%;
-    background:var(--rule);
-    transition:background .4s ease;
+    display:none;width:5px;height:5px;border-radius:50%;
+    background:var(--rust);
   }
-  /* idle: editorial record button */
-  .ute-demo .pos-rec.idle{
-    cursor:pointer;
-  }
-  .ute-demo .pos-rec.idle .pos-rec-icon{color:var(--rust)}
-  .ute-demo .pos-rec.idle .pos-rec-label{color:var(--rust);font-weight:600}
-  .ute-demo .pos-rec.idle .pos-rec-dot{background:var(--rust)}
-  /* on: listening state */
+  /* idle: the circle is the page's one filled element — the invitation */
+  .ute-demo .pos-rec.idle{cursor:pointer}
+  .ute-demo .pos-rec.idle .pos-rec-circle{background:var(--rust);border-color:var(--rust)}
+  .ute-demo .pos-rec.idle .pos-rec-icon{color:var(--paper)}
+  .ute-demo .pos-rec.idle .pos-rec-label{color:var(--rust)}
+  .ute-demo .pos-rec.idle:hover .pos-rec-circle{transform:translateY(2px)}
+  /* on: circle empties, the dot keeps time */
   .ute-demo .pos-rec.on .pos-rec-icon{color:var(--rust)}
   .ute-demo .pos-rec.on .pos-rec-label{color:var(--ink-soft)}
   .ute-demo .pos-rec.on .pos-rec-dot{
-    background:var(--rust);
+    display:inline-block;
     animation:rec-pulse 1.8s ease-in-out infinite;
   }
   @keyframes rec-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
@@ -511,6 +528,7 @@
   .ute-demo .glow{animation:action-glow .8s ease-out}
   @media(prefers-reduced-motion:reduce){
     .ute-demo .glow{animation:none}
+    .ute-demo .pos-rec.on .pos-rec-dot{animation:none}
   }
   /* -- eye-guidance: blur + dim the inactive side -- */
   .ute-demo-chat,
@@ -531,8 +549,12 @@
   }
 
   @media(max-width:600px){
-    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto;max-height:30em}
-    .ute-demo-pos{border:1px solid var(--rule);grid-row:2;grid-column:1}
+    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto 400px;height:auto}
+    .ute-demo-chat{grid-row:1;grid-column:1;max-height:11em;padding:0 0 1em}
+    .ute-demo-pos{grid-row:2;grid-column:1}
+    .ute-demo .pos-body{grid-template-columns:1fr 96px}
+    .ute-demo .pos-sidebar{padding:8px 6px 6px}
+    .ute-demo .pos-tile .tile-icon{width:34px;height:34px}
   }
 
   /* ========== STICKY TOP NAV ========== */
@@ -1418,25 +1440,24 @@
           <div class="ute-demo-chat" id="ute-chat"></div>
           <div class="ute-demo-pos">
             <div class="pos-head">
-              <span class="pos-head-title">ute <span class="pos-subtitle">Voice POS</span><span class="pos-divider">&#x2502;</span><span class="pos-head-terminal">Register 01</span></span>
+              <span class="pos-head-title">ute <span class="pos-divider">&middot;</span> <span class="pos-head-terminal">voice register</span></span>
               <span class="pos-head-status" id="ute-status">ready</span>
             </div>
             <div class="pos-customer" id="ute-customer"><span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span></div>
             <div class="pos-body">
               <div class="pos-grid" id="ute-grid"></div>
               <div class="pos-sidebar" id="ute-cart-wrap">
-                <div class="pos-cart-head"><svg class="pos-cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l1.5 9h8L14 3.5H4"/><circle cx="5.5" cy="13" r="1"/><circle cx="11.5" cy="13" r="1"/></svg> Order</div>
+                <div class="pos-cart-head">Bon</div>
                 <div class="pos-cart-items" id="ute-cart"></div>
                 <div class="pos-footer">
                   <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
                 </div>
               </div>
             </div>
-            <div class="pos-rec idle" id="ute-rec">
-              <svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-              <span class="pos-rec-label">Record</span>
-              <span class="pos-rec-dot"></span>
-            </div>
+            <button class="pos-rec idle" id="ute-rec" type="button" aria-label="Play the UTE demo">
+              <span class="pos-rec-circle"><svg class="pos-rec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+              <span class="pos-rec-line"><span class="pos-rec-label">Record</span><span class="pos-rec-dot"></span></span>
+            </button>
           </div>
         </div>
       </div>
