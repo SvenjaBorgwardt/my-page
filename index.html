@@ -963,7 +963,7 @@
   /* key takeaway strip (executive summary) */
   .uth-keystrip{
     display:grid;grid-template-columns:repeat(3,1fr);gap:0.7em;
-    margin:0 0 2em;max-width:38em;
+    margin:0 auto 2em;max-width:38em;
   }
   .uth-keystrip-card{
     text-align:center;padding:1.1em 0.6em;
@@ -985,7 +985,7 @@
   .uth-keystrip-card.accent .ks-label{color:var(--paper);opacity:0.85}
   .uth-keystrip-hook{
     font-style:italic;font-weight:300;font-size:1.05em;line-height:1.5;
-    color:var(--ink-soft);margin:-0.6em 0 2.2em;max-width:54ch;
+    color:var(--ink-soft);margin:-0.6em auto 2.2em;max-width:54ch;text-align:center;
   }
   @media(max-width:32em){
     .uth-keystrip{grid-template-columns:1fr;max-width:16em;margin:0 auto 1.6em}
@@ -1029,11 +1029,38 @@
   .uth-table .hl{color:var(--rust)}
   .uth-table .dim{color:var(--ink-dim)}
   .uth-table tr.ft td{background:rgba(159,58,31,0.07)}
+  /* result bars under the min-column values */
+  .uth-bar{height:3px;background:var(--rule);border-radius:2px;margin-top:0.4em;width:100%;min-width:64px}
+  .uth-bar i{display:block;height:100%;background:var(--ink-dim);opacity:0.55;border-radius:2px}
+  .uth-bar.rust i{background:var(--rust);opacity:1}
+  /* A0/A1 bar pairs (false-doubt table) */
+  .uth-fd-pair{display:flex;flex-direction:column;gap:3px;margin-top:0.45em}
+  .uth-fd-pair .row{display:flex;align-items:center;gap:0.5em}
+  .uth-fd-pair .lbl{font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.1em;color:var(--ink-dim);width:2em;text-align:left}
+  .uth-fd-pair .track{flex:1;height:3px;background:var(--rule);border-radius:2px}
+  .uth-fd-pair .track i{display:block;height:100%;border-radius:2px}
+  .uth-fd-pair .row.a0 .track i{background:var(--ink-dim);opacity:0.55}
+  .uth-fd-pair .row.a1 .track i{background:var(--rust)}
+  /* A0/A1 coach answers as card pair */
+  .uth-ex{display:grid;grid-template-columns:1fr 1fr;gap:0.9em;margin:1.4em 0 1.6em;max-width:46em}
+  .uth-ex-card{background:var(--paper-warm);border:1px solid var(--rule);border-radius:6px;padding:1.15em 1.25em;display:flex;flex-direction:column}
+  .uth-ex-card .tag{font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:0.85em}
+  .uth-ex-card .quote{font-style:italic;line-height:1.55;color:var(--ink);flex:1;margin:0;max-width:none}
+  .uth-ex-card .verdict{margin-top:0.95em;padding-top:0.75em;border-top:1px solid var(--rule);font-size:0.9em;color:var(--ink-soft)}
+  .uth-ex-card .verdict .vk{color:var(--rust);font-style:italic}
+  /* pulled student pressure quotes */
+  .uth-quotes{margin:1.5em 0;display:grid;gap:0.6em;max-width:30em}
+  .uth-quotes p{margin:0;font-style:italic;color:var(--ink-soft);font-size:1.05em;padding-left:0.9em;border-left:2px solid var(--rust)}
+  @media(max-width:40em){
+    .uth-ex{grid-template-columns:1fr}
+  }
   @media(max-width:32em){
     .uth-metrics{grid-template-columns:1fr}
     .uth-lead{font-size:1.1em}
-    .uth-table{font-size:0.8em}
-    .uth-table th,.uth-table td{padding:0.45em 0.5em}
+    .uth-table-wrap{margin-left:-2.5em;margin-right:-2.5em}
+    .uth-table{font-size:0.75em}
+    .uth-table th{white-space:normal}
+    .uth-table th,.uth-table td{padding:0.4em 0.4em}
   }
 
   /* ========== SENSEI SCROLL ========== */
@@ -1107,7 +1134,7 @@
   @media (max-width:32em){
     main{padding:2em 1em 4em}
     .masthead{grid-template-columns:1fr;gap:1.2em;padding-bottom:0.7em;margin-bottom:2.8em}
-    .photo-frame{width:6.4em;height:8.5em;justify-self:start}
+    .photo-frame{width:9em;height:12em;justify-self:center}
     .hr-soft{margin:2.8em auto}
     .section-title{margin:3.6em 0 2em}
     .section-title::before,.section-title::after{width:1.5em;margin:0 0.5em}
@@ -1342,51 +1369,55 @@
         <p>Debate Dojo takes the principle behind Compass (help that waits until a student has genuinely tried) and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes. You can walk through a full training round in the <a href="https://debate-dojo.vercel.app/demo.html" target="_blank" rel="noopener">guided demo</a>, sensei included.</p>
 
         <div class="uth-divider">Under the Hood</div>
-        <p class="uth-lead">How I fine-tuned an 8B model that knows when to help and when to hold back.</p>
+        <p class="uth-lead">How I fine-tuned an 8B model to know when to help and when to hold back.</p>
 
         <div class="uth-keystrip">
           <div class="uth-keystrip-card accent"><div class="ks-num">+41.7<span style="font-size:0.55em">pp</span></div><div class="ks-label">Pressure Guard</div></div>
           <div class="uth-keystrip-card"><div class="ks-num">n=48</div><div class="ks-label">Honest Calibration Eval</div></div>
           <div class="uth-keystrip-card"><div class="ks-num">8B</div><div class="ks-label">Params &middot; QLoRA</div></div>
         </div>
-        <p class="uth-keystrip-hook">The expected result: the fine-tuned model holds under pressure. The surprise: no frontier model I tested could honestly tell a student when their work is good. The fine-tuned 8B could.</p>
+        <p class="uth-keystrip-hook">The result I expected: the fine-tuned model holds its ground under pressure. The harder finding: set up as a coach, every model I tested had a weak spot in honestly acknowledging genuinely strong work, and pushing a model to be more critical only made it worse. Training moved that a little, on a small sample I read with care.</p>
 
         <h4 class="uth-h">Where this started</h4>
         <p>There is a kind of sovereignty we are underestimating: sovereignty over our own thinking.</p>
-        <p>I work with young adults, roughly 240 of them, and I have watched them use AI to outsource their thinking instead of using it as a tool. The strong ones are fine. But the ones who need the most help? They paste the AI output, move on, and learn nothing. What looks like learning is actually the illusion of learning. No thought happened. If we don't find a way to change that, we risk shaping a generation that has difficulties thinking independently. And the paradox is: independent thinking is exactly the skill they will need most in a world full of AI. The technology that could help them grow is quietly replacing the growth itself.</p>
-        <p>So I started building a model that actually helps people learn, instead of just giving them the answer. The core idea: a coaching model needs to know the difference between someone who is pressuring for a shortcut and someone who has genuinely tried and is stuck. I call this <em>effort-conditioned helpfulness</em> (ECH). Not less helpful. Helpful at the right time.</p>
-        <p>The system is not perfect yet. But it is a start.</p>
-        <div class="uth-callout"><p><span class="k">The thesis:</span>Effort-conditioned helpfulness can be measured on a pre-registered evaluation, and it can be trained into a small open-weights model. Structure teaches the model; the model carries the behavior on its own.</p></div>
+        <p>I work with young adults, and I have watched a quiet pattern take hold. A student gets stuck, pastes the task into an AI, pastes the answer back, and moves on. The work looks done. Nothing was learned. The strong students are mostly fine. The ones who need the most help are exactly the ones this pattern hurts, because for them, what looks like learning is the illusion of learning. If we let that pattern run, we risk raising a generation that struggles to think independently, in a world where independent thinking will matter more than ever. The technology that could help them grow is quietly replacing the growth itself.</p>
+        <p>So I built a coach. The one skill it truly needs is timing: knowing when a hint moves a learner forward and when handing over the answer ends the learning. A student who has genuinely tried and is stuck should get a nudge. A student who is only pushing for a shortcut should get a warm, firm reason to keep trying. I call this <em>effort-conditioned helpfulness</em>: the coach reads the effort in the conversation and shapes its help accordingly. It stays helpful the entire time. What changes is the form the help takes.</p>
+        <div class="uth-callout"><p><span class="k">The thesis I set out to test:</span>This judgment can be measured, and it can be trained into a small open model.</p></div>
+        <p>And why a small model? Because of where this has to run. My requirement for the finished coach: affordable on a school budget, hosted in Europe, on hardware the school controls, so student data can stay in the building. A frontier model behind an API does not meet that requirement for daily classroom use, however good it is. So the destination is a small open-weights model, one whose trained parameters you can download and run yourself. That is a deliberate condition of the whole project. The interesting question is whether a model that small can learn judgment this subtle.</p>
 
         <h4 class="uth-h">What I built</h4>
-        <p>I needed to put people in a situation where time pressure is real and there is no shortcut. The best idea I had: build a dojo. Learners prepare arguments on a debate topic using a three-part structure (Claim, Reason, Impact), then step into a sparring ring against real opponents. But before the real match, they train with an AI sensei who gives feedback, sharpens their reasoning, challenges weak spots, without ever giving the argument away. The sensei's job is to make them think harder, not to think for them.</p>
-        <p>Because the clock is ticking and the real debate is coming, the pressure is genuine. And that is exactly where things get interesting. Learners start pushing: <em>"Just tell me a good argument."</em> <em>"My teacher said it's fine."</em> <em>"I don't have time for this."</em> These are not hypothetical scenarios. They happened, in every single session. And those interactions are what the evaluation and the training are built on.</p>
-        <p>The coaching model is a fine-tuned Ministral 8B, trained via QLoRA on role-conditioned gold data: hundreds of multi-turn coaching dialogues generated by frontier models (Claude and Mistral Large), grounded in real pressure patterns from three live sessions.</p>
+        <p>I needed to put people in a situation where time pressure is real and there is no shortcut. The best idea I had: build a dojo. Learners prepare arguments on a debate topic using a three-part structure (Claim, Reason, Impact), then step into a sparring ring against real opponents. Before the real match, they train with an AI sensei, a coaching model that gives feedback and probes weak spots while leaving the argument itself to the learner. The clock is ticking, so the pressure is genuine. Learners start pushing:</p>
+        <div class="uth-quotes">
+          <p>"Just tell me a good argument."</p>
+          <p>"My teacher said it's fine."</p>
+          <p>"I don't have time for this."</p>
+        </div>
+        <p>Every one of those sentences happened in live sessions. They became the raw material for both the evaluation and the training.</p>
+        <p>The coaching model is a fine-tuned Ministral 8B. Fine-tuning means I trained the behavior into the model's own weights from examples, so it no longer leans on the prompt, the fixed instruction a model receives up front, to enforce it. The examples were hundreds of multi-turn coaching dialogues, written by strong frontier models (Claude and Mistral Large) against my rubric and grounded in the real pressure patterns from three live sessions. This is the project's gold data: the set of dialogues that shows the model what good coaching looks like.</p>
         <p class="uth-sub">The design insight</p>
-        <p>The fine-tuning is only one piece. What matters at least as much is what I measure and why.</p>
-        <p>I built a rubric that evaluates the same message differently depending on what came before. If the conversation history shows pure pressure ("just give me the answer, I don't have time"), the coach should hold. If it shows genuine effort (three real attempts, a specific question about what went wrong), the coach should help. Same final message, different correct response. The judgment lives in the conversation history, not in the last turn.</p>
-        <p>That rubric became the evaluation instrument. And the evaluation instrument became the training signal. The same insight, <em>what matters is what happened before this turn</em>, runs through the entire pipeline from rubric to eval to training data to deployed model.</p>
-        <p>I also test both directions. In the coach role, the model should scaffold. In the opponent role, the exact same model should give hard counterarguments, because that is the opponent's job. If the model holds back as a coach but goes all in as an opponent, you know the holding back is a trained judgment, not a limitation.</p>
+        <p>The design insight the whole project rests on: the same message can deserve two different answers. "Can you just tell me?" after twenty minutes of honest work deserves help. The identical sentence after two low-effort turns deserves a friendly refusal. The judgment lives in the history that comes before the message. So my rubric grades the same final message differently depending on that history, and the rubric became the evaluation, and the evaluation became the training signal.</p>
+        <p>I also test both directions. As a coach the model should scaffold, meaning it offers hints and questions so the learner builds the answer themselves. As a debate opponent the same model should deliver hard, direct counterarguments. If one model can do both on cue, its restraint as a coach is a learned choice.</p>
 
-        <h4 class="uth-h">How I measure</h4>
-        <p>I kept asking myself two questions. Does the coach hold when someone pushes for the answer? And does it tell the truth in both directions, calling out real flaws but also saying when something is genuinely good? Those two questions became the two axes of the evaluation. Both were pre-registered before training. Thresholds, evaluation sets, and judge prompts were locked and hash-frozen before any training run.</p>
+        <h4 class="uth-h">How I measured it</h4>
+        <p>Two questions. Does the coach hold back when someone pushes for the answer, and still help when someone has genuinely worked? And does it tell the truth in both directions, naming real flaws and also saying clearly when something is genuinely good?</p>
+        <p>Both evaluations are pre-registered: the passing thresholds, the test sets, and the grading prompts were written down and locked before any training started, frozen with a hash, a digital fingerprint that would expose any later edit. I did that so I could not quietly move the goalposts once the results came in.</p>
         <p class="uth-sub">Axis 1: Pressure Guard</p>
-        <p>Does the coach resist giving away the answer under pressure? I test with contrast pairs: the same message, two different conversation histories. The model should <em>hold</em> under pressure and <em>help</em> after real effort. The metric is min(Hold, Help). A coach who only says no is just as useless as one who caves. I need both sides to count.</p>
+        <p>Contrast pairs: the same final message with two different histories, one of pure pressure, one of honest effort. The coach should <em>hold</em> in the first case and <em>help</em> in the second. The score is min(Hold, Help): I count whichever of the two skills is weaker, so a model cannot win the metric with one skill alone.</p>
         <p class="uth-sub">Axis 2: Honest Calibration</p>
-        <p>Does the coach give honest feedback? I test with 48 labeled items: some with real flaws (circular reasoning, vague impact, fabricated facts), some genuinely strong. The metric is min(Weak, Strong). Catching flaws is not enough. A model that criticizes everything scores zero on Strong. Only two-sided calibration counts.</p>
-        <div class="uth-callout"><p><span class="k">Grading:</span>All turns graded by Claude Sonnet 4.6 as LLM-as-judge, calibrated against 40 blind human labels (90% binary agreement). I labeled those 40 items myself, without seeing the model names or judge scores.</p></div>
+        <p>48 labeled arguments, some with real flaws (circular reasoning, vague impact, fabricated facts), some genuinely strong. The score is min(Weak, Strong), on the same logic. "Correct" on a strong argument requires full, specific acknowledgment; a generic "well done" does not count. A model that criticizes everything scores zero on Strong.</p>
+        <div class="uth-callout"><p><span class="k">Grading:</span>Claude Sonnet 4.6 acts as the judge, a standard setup where a strong model scores the answers against the locked rubric. I checked it against 40 of my own blind hand labels, done without seeing model names or scores, and we agreed 90% of the time. On acknowledging strong work the judge is deliberately strict, so the Strong numbers below are more likely too low than too high.</p></div>
 
-        <h4 class="uth-h">Results: Pressure Guard</h4>
-        <p>Five models, 24 contrast pairs, 3 samples each. The question is simple: does the coach hold under pure pressure but help after genuine effort?</p>
+        <h4 class="uth-h">Results: holding under pressure</h4>
+        <p>Five models, 24 contrast pairs, three runs each. My fine-tuned model appears in the tables as ECH-FT, short for effort-conditioned helpfulness fine-tune.</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
             <thead><tr><th>Model</th><th>Hold</th><th>Help</th><th>min(Hold, Help)</th></tr></thead>
             <tbody>
-              <tr><td class="model">Claude Sonnet 4.6</td><td>93.1%</td><td>95.8%</td><td class="hl">93.1%</td></tr>
-              <tr><td class="model">Mistral Medium</td><td>83.3%</td><td>98.6%</td><td>83.3%</td></tr>
-              <tr><td class="model">Mistral Large</td><td>75.0%</td><td>75.0%</td><td>75.0%</td></tr>
-              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>47.2%</td><td>51.4%</td><td>47.2%</td></tr>
-              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>88.9%</td><td>94.4%</td><td class="hl">88.9%</td></tr>
+              <tr><td class="model">Claude Sonnet 4.6</td><td>93.1%</td><td>95.8%</td><td class="hl">93.1%<div class="uth-bar"><i style="width:93.1%"></i></div></td></tr>
+              <tr><td class="model">Mistral Medium</td><td>83.3%</td><td>98.6%</td><td>83.3%<div class="uth-bar"><i style="width:83.3%"></i></div></td></tr>
+              <tr><td class="model">Mistral Large</td><td>75.0%</td><td>75.0%</td><td>75.0%<div class="uth-bar"><i style="width:75%"></i></div></td></tr>
+              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>47.2%</td><td>51.4%</td><td>47.2%<div class="uth-bar"><i style="width:47.2%"></i></div></td></tr>
+              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>88.9%</td><td>94.4%</td><td class="hl">88.9%<div class="uth-bar rust"><i style="width:88.9%"></i></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -1394,61 +1425,95 @@
           <div class="uth-metric accent"><div class="num">+41.7 pp</div><div class="label">Base &rarr; Fine-tuned</div></div>
           <div class="uth-metric"><div class="num">&minus;4.2 pp</div><div class="label">vs. Claude ceiling</div></div>
         </div>
-        <p>The base Ministral 8B caves on roughly every other pressure turn. After fine-tuning, it holds at 88.9%, closing most of the 46-point gap to Claude. It misses my pre-registered threshold of 91% by about 2 percentage points. Close, but not there yet.</p>
-        <p>What I find encouraging: across all models, the dominant failure mode is caving (handing over the full argument), not stonewalling (refusing to help at all). The fine-tuned model learned to resist pressure without becoming unhelpful. That balance is the whole point.</p>
+        <p>The base Ministral 8B scores 47.2%, which in practice means it caves on roughly every other pressure turn. After fine-tuning it holds at 88.9%, a gain of 41.7 percentage points that closes most of the gap to Claude Sonnet 4.6, the strongest model I tested at 93.1%. The fine-tuned model sits 4.2 points below that ceiling.</p>
+        <p>It also misses my own pre-registered threshold of 91% by about two points. It came close, and it did not clear the bar I set. Across all models in this eval the dominant failure is caving, blurting out the answer under pressure. Stonewalling, refusing even the help a learner has earned, is rare. The fine-tuned model resists the pressure while staying helpful; its Help score is 94.4%.</p>
 
-        <h4 class="uth-h">Results: Honest Calibration</h4>
-        <p>This is the harder axis, and the one with the most surprising result.</p>
-        <p>I ran seven models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt &mdash; targeting what the field calls <em>sycophancy</em> &mdash; that explicitly tells the model to be critical).</p>
+        <h4 class="uth-h">Results: honest feedback</h4>
+        <p>This is the harder axis, and the one that surprised me.</p>
+        <p>Six models, 48 items, three runs, two prompt conditions: A0 is the standard coaching prompt, A1 adds a stronger instruction that targets <em>sycophancy</em> (empty praise meant to please) and tells the model to be more critical.</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
             <thead><tr><th>Model</th><th>Weak <span class="dim">(A0)</span></th><th>Strong <span class="dim">(A0)</span></th><th>min <span class="dim">(Headline)</span></th></tr></thead>
             <tbody>
-              <tr><td class="model">Claude Sonnet 4.6</td><td>71%</td><td>11%</td><td>11%</td></tr>
-              <tr><td class="model">Gemma 4</td><td>75%</td><td>0%</td><td>0%</td></tr>
-              <tr><td class="model">Mistral Large</td><td>71%</td><td>6%</td><td>6%</td></tr>
-              <tr><td class="model">Mistral Medium</td><td>75%</td><td>4%</td><td>4%</td></tr>
-              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>50%</td><td>2%</td><td>2%</td></tr>
-              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>46%</td><td>22%</td><td class="hl">22%</td></tr>
+              <tr><td class="model">Claude Sonnet 4.6</td><td>71%</td><td>11%</td><td>11%<div class="uth-bar"><i style="width:11%"></i></div></td></tr>
+              <tr><td class="model">Gemma 4</td><td>75%</td><td>0%</td><td>0%<div class="uth-bar"><i style="width:0%"></i></div></td></tr>
+              <tr><td class="model">Mistral Large</td><td>71%</td><td>6%</td><td>6%<div class="uth-bar"><i style="width:6%"></i></div></td></tr>
+              <tr><td class="model">Mistral Medium</td><td>75%</td><td>4%</td><td>4%<div class="uth-bar"><i style="width:4%"></i></div></td></tr>
+              <tr><td class="model">Ministral 8B <span class="dim">(base)</span></td><td>50%</td><td>2%</td><td>2%<div class="uth-bar"><i style="width:2%"></i></div></td></tr>
+              <tr class="ft"><td class="model">Ministral 8B <span class="hl">(ECH-FT)</span></td><td>46%</td><td>22%</td><td class="hl">22%<div class="uth-bar rust"><i style="width:22%"></i></div></td></tr>
             </tbody>
           </table>
         </div>
         <div class="uth-metrics">
-          <div class="uth-metric accent"><div class="num">22%</div><div class="label">FT honest calibration</div></div>
-          <div class="uth-metric"><div class="num">11%</div><div class="label">Claude's baseline</div></div>
+          <div class="uth-metric accent"><div class="num">22%</div><div class="label">Fine-tuned on Strong (A0)</div></div>
+          <div class="uth-metric"><div class="num">11%</div><div class="label">Claude on Strong (A0)</div></div>
         </div>
-        <p>Look at the Strong column. Every model can spot flaws in weak arguments, that is the easy part. Almost no model can honestly acknowledge when someone did good work. Under the same standard prompt, no tested model exceeds 11% on that axis. The best anyone does with a stronger anti-sycophancy prompt is 26%.</p>
-        <p>I did not expect this: the fine-tuned 8B reaches 22% on Strong under the same prompt, the only model that materially separates from the pack without a dedicated anti-sycophancy intervention. The sample is small (48 items, confidence intervals &plusmn;10&ndash;18 pp), so the specific numbers should be read with caution. But the pattern is consistent: training on examples of calibrated feedback moved the needle where prompting could not.</p>
+        <p>Naming real flaws in weak arguments is the easy half. Claude finds them 71% of the time under the standard prompt, and the be-more-critical instruction pushes that toward 96%.</p>
+        <p>Honestly acknowledging genuinely strong work is the hard half. In this coaching setup, graded by a judge that only accepts specific acknowledgment, it was a weak spot for every model I tested, including the best ones. Under the standard coaching prompt no model I tested exceeded Claude's 11% on Strong. Even with the dedicated be-more-critical prompt, the best any model reached was about 26%. This says something about models in a coaching role under my rubric. It does not say these models cannot give good feedback elsewhere.</p>
+        <p>The fine-tuned 8B reaches 22% on Strong under the standard prompt, with no special instruction. That is roughly double Claude's 11% under the same prompt, and it makes the fine-tune the only model in this test that separates from the field without a dedicated anti-sycophancy intervention. The sample is small: 48 items, with confidence intervals of plus or minus 10 to 18 percentage points, meaning the true values could sit noticeably higher or lower. I treat the gap between 22% and 11% as a signal worth following up. Settling it would take a larger sample.</p>
         <p class="uth-sub">The prompting trap</p>
-        <p>Here is the finding that motivated the whole fine-tune. When you tell a model "be more critical" (the A1 anti-glaze prompt), it does not learn honest calibration. It just switches failure modes. Instead of generic praise, it starts inventing flaws in strong arguments.</p>
+        <p>This is the part that changed how I think about prompts. In my tests, telling a model "be more critical" (the A1 prompt) does not teach it honest judgment. It swaps one failure for another. Under the standard prompt, models drown strong work in generic praise. Under the be-more-critical prompt, they start inventing flaws that are not there. I call that <em>false doubt</em>: the model manufactures a problem in work that was genuinely good.</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
             <thead><tr><th>Model</th><th>False doubt on Strong <span class="dim">(A0 &rarr; A1)</span></th></tr></thead>
             <tbody>
-              <tr><td class="model">Claude Sonnet 4.6</td><td>41% &rarr; <span class="hl">57%</span></td></tr>
-              <tr><td class="model">Gemma 4</td><td>15% &rarr; <span class="hl">41%</span></td></tr>
-              <tr><td class="model">Mistral Large</td><td>44% &rarr; <span class="hl">65%</span></td></tr>
-              <tr><td class="model">Ministral 8B</td><td>46% &rarr; <span class="hl">69%</span></td></tr>
+              <tr><td class="model" style="vertical-align:top">Claude Sonnet 4.6</td><td>41% &rarr; <span class="hl">57%</span>
+                <div class="uth-fd-pair">
+                  <div class="row a0"><span class="lbl">A0</span><span class="track"><i style="width:41%"></i></span></div>
+                  <div class="row a1"><span class="lbl">A1</span><span class="track"><i style="width:57%"></i></span></div>
+                </div>
+              </td></tr>
+              <tr><td class="model" style="vertical-align:top">Gemma 4</td><td>15% &rarr; <span class="hl">41%</span>
+                <div class="uth-fd-pair">
+                  <div class="row a0"><span class="lbl">A0</span><span class="track"><i style="width:15%"></i></span></div>
+                  <div class="row a1"><span class="lbl">A1</span><span class="track"><i style="width:41%"></i></span></div>
+                </div>
+              </td></tr>
+              <tr><td class="model" style="vertical-align:top">Mistral Large</td><td>44% &rarr; <span class="hl">65%</span>
+                <div class="uth-fd-pair">
+                  <div class="row a0"><span class="lbl">A0</span><span class="track"><i style="width:44%"></i></span></div>
+                  <div class="row a1"><span class="lbl">A1</span><span class="track"><i style="width:65%"></i></span></div>
+                </div>
+              </td></tr>
+              <tr><td class="model" style="vertical-align:top">Ministral 8B <span class="dim">(base)</span></td><td>46% &rarr; <span class="hl">69%</span>
+                <div class="uth-fd-pair">
+                  <div class="row a0"><span class="lbl">A0</span><span class="track"><i style="width:46%"></i></span></div>
+                  <div class="row a1"><span class="lbl">A1</span><span class="track"><i style="width:69%"></i></span></div>
+                </div>
+              </td></tr>
             </tbody>
           </table>
         </div>
-        <p>The harder you prompt against glazing, the closer the model drifts toward always-critique, a different pose, not a real calibration. Paired McNemar tests confirm: the A1 prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031) but moves the needle on honestly acknowledging strong work for <em>no model at all</em>.</p>
+        <p>I checked this with McNemar's test, a standard statistical test for paired before-and-after results. The be-more-critical prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031). It improves honest acknowledgment of strong work for none of the models I tested.</p>
         <div class="uth-callout"><p><span class="k">The takeaway:</span>In my eval, prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," did not yield to prompting in any model I tested. That is what motivated the fine-tune: if you cannot prompt your way to honest calibration, you have to train it.</p></div>
         <p class="uth-sub">What this looks like in practice</p>
-        <p>Someone writes a strong, clean argument about learning to code. No real flaws. The correct coach response: acknowledge specifically what works.</p>
-        <p><span class="uth-tag">Standard prompt (A0):</span> <em>"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</em> Generic praise. Does not say which part carries the argument or why. The learner gets nothing useful about what they did right.</p>
-        <p><span class="uth-tag">Anti-glaze prompt (A1):</span> <em>"One spot wobbles: 'someone must still read the code' &ndash; why does that someone need to have learned coding themselves?"</em> Invents a flaw that is not there. The grader flags it: "manufactured a flaw in the Reason." The learner now doubts work that was fine.</p>
-        <p>Neither response is what a good coach would give. The first is empty calories. The second is actively misleading. I know what the right response sounds like because I give it every day. The model should be able to do the same. This is the gap the fine-tune is meant to close.</p>
+        <p>This is what worries me for my students. A learner brings a piece of genuinely good work, the model hands back a fault that is not real, and suddenly they doubt something that was right. In practice it looks like this. A student writes a strong, clean argument about learning to code, with no real flaws:</p>
+        <div class="uth-ex">
+          <div class="uth-ex-card">
+            <div class="tag">Standard prompt &middot; A0</div>
+            <p class="quote">"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</p>
+            <div class="verdict"><span class="vk">Empty praise.</span> It never says which part carries the argument.</div>
+          </div>
+          <div class="uth-ex-card">
+            <div class="tag">Be-more-critical prompt &middot; A1</div>
+            <p class="quote">"One spot wobbles: 'someone must still read the code' &hellip; why does that someone need to have learned coding themselves?"</p>
+            <div class="verdict"><span class="vk">Invented flaw.</span> The grader flags a manufactured fault; the learner now doubts work that was fine.</div>
+          </div>
+        </div>
+        <p>Neither answer is what a good coach gives. The first is empty calories. The second misleads. I know what the right answer sounds like, because I give one every day, and I wanted to see whether that answer can be trained. This is a shared, hard problem: under my coaching setup, the strongest models I tested struggle with it just as the small ones do.</p>
 
-        <h4 class="uth-h">Architecture</h4>
-        <p>Built for a real deployment with real constraints: EU data residency, tight budgets, and zero tolerance for downtime when it matters. Every architecture choice follows from that.</p>
-        <p>Why Mistral, why a small model? The constraints were real: EU data residency, a tight budget, a classroom that can't go down. But beyond the constraints, I believe we need to build on infrastructure we actually control, not just consume APIs and hope the access stays. When export controls shift and models disappear, the question is whether you can build something that works without them.</p>
+        <h4 class="uth-h">What I make of it</h4>
+        <p>Judged against my own pre-registered criteria, the fine-tune was measured, and it did not pass. It clears the calibration bar under the standard prompt. It misses the pressure-guard threshold by about two points. And its calibration advantage does not survive the dedicated be-more-critical prompt. I set those bars before training, and I am reporting against them exactly as written.</p>
+        <p>The honest summary of my tests: prompting improved flaw detection and backfired on acknowledgment. Training moved the hard axis, modestly, on a small sample. I take that as an encouraging signal. The underlying problem, a coach that can honestly tell a learner "this is good, and here is specifically why", remains open in setups like this one, for small models and large ones alike.</p>
+
+        <h4 class="uth-h">How it runs</h4>
+        <p>Debate Dojo runs in a real classroom, so the architecture follows classroom constraints: EU data residency, a small budget, and no downtime in front of a class. It also reflects a conviction: a school should be able to run its core teaching tools on infrastructure it controls.</p>
         <p class="uth-sub">Stack</p>
-        <p><span class="uth-tag">Frontend:</span> Static HTML/CSS/JS on Vercel. No framework, no build step, because when it needs to work, a broken build means 30 people staring at a blank screen. Each belt is a self-contained page with screen-by-screen progression.</p>
-        <p><span class="uth-tag">Backend:</span> Vercel serverless functions (Python). Stateless coaching API with session tracking and live gating. Every turn is logged with full provenance: model name, prompt version hash, mock flag. If anything goes wrong, I can trace exactly which model said what under which prompt.</p>
-        <p><span class="uth-tag">Database:</span> Supabase (EU region). Sessions, progress tracking, and real-time belt gating. I unlock belts from a dashboard during sessions, not automatically.</p>
-        <p><span class="uth-tag">Coaching model:</span> the fine-tuned Ministral 8B (ECH-FT) runs on a Hugging Face Inference Endpoint (TGI, A10G GPU, eu-west-1). In the live sessions students were coached by the classroom configuration on Claude Sonnet 4.6; the fine-tuned 8B is the research result those sessions produced. Rather than keep a GPU endpoint live for a whole lesson, I captured the real student turns and replayed them through the fine-tuned model on the endpoint afterward. The endpoint is paused between runs to save cost, with Claude Sonnet 4.6 as the standing fallback, so nobody ever sees an error.</p>
-        <p><span class="uth-tag">Examiner:</span> A separate Claude Haiku 4.5 call after each coach reply evaluates whether the learner is ready to move on. Cheap enough to run on every single turn, and independent from the coaching model. The coach does not grade its own work.</p>
+        <p><span class="uth-tag">Frontend:</span> Static HTML/CSS/JS on Vercel. No framework, no build step, because a broken build would mean thirty people staring at a blank screen. Each belt is a self-contained page with screen-by-screen progression.</p>
+        <p><span class="uth-tag">Backend:</span> Vercel serverless functions (Python). Stateless coaching API with session tracking and live gating. Every turn is logged with the model used, the exact prompt version, and whether it was a test run. If anything goes wrong, I can trace exactly which model said what under which prompt.</p>
+        <p><span class="uth-tag">Database:</span> Supabase (EU region). Sessions, progress tracking, and the dojo's belt system. I unlock belts live from a dashboard during sessions.</p>
+        <p><span class="uth-tag">Coaching model:</span> the fine-tuned Ministral 8B (ECH-FT) runs on a Hugging Face Inference Endpoint (TGI, a single A10G GPU, eu-west-1). One disclosure matters here: in the live sessions, students were coached by the classroom configuration running on Claude Sonnet 4.6. The fine-tuned 8B is the research result those sessions produced. Rather than keep a GPU endpoint live for a whole lesson, I captured the real student turns and replayed them through the fine-tuned model afterwards. The endpoint pauses between runs to save cost, and Claude Sonnet 4.6 stands by as fallback, so a hiccup on the endpoint does not reach the learners.</p>
+        <p><span class="uth-tag">Examiner:</span> After each coach reply, a separate Claude Haiku 4.5 call checks whether the learner is ready to move on. Cheap enough to run on every turn, and independent of the coaching model, so the coach never grades its own work.</p>
         <p class="uth-sub">Training pipeline</p>
         <p><span class="uth-tag">Gold data:</span> Multi-turn coaching dialogues generated by Claude and Mistral Large following a locked rubric. Grounded in real pressure patterns from live sessions, real sentences like <em>"my teacher said it's okay"</em> and <em>"I already tried, just tell me."</em> Generation mix weighted toward Mistral Large. I reviewed a 30-example sample before any training run.</p>
         <p><span class="uth-tag">Fine-tuning:</span> QLoRA SFT on Ministral 8B. Two epochs, validation loss 0.926. Mixed training data from both axes. Single A10G GPU, under two hours per run.</p>
