@@ -92,6 +92,16 @@
     color:var(--ink-dim);
   }
 
+  /* ========== CREED — the through-line, between masthead and the work ========== */
+  .creed{margin:2.8em auto 3.2em;text-align:center}
+  .creed p{
+    max-width:16em;margin:0 auto;
+    font-family:'Cormorant Garamond',serif;font-weight:300;
+    font-size:clamp(23px,3.3vw,32px);line-height:1.36;letter-spacing:0.005em;
+    color:var(--ink);
+  }
+  .creed em{font-style:italic;color:var(--rust);font-weight:300}
+
   .photo-frame{
     width:7.8em;height:10.4em;position:relative;flex-shrink:0;
     border:1px solid var(--rule);
@@ -1153,6 +1163,11 @@
   </figure>
   <p class="masthead-location reveal">Currently based in Cologne, Germany</p>
 </header>
+
+<!-- CREED — the through-line, before the work -->
+<section class="creed reveal" aria-label="Guiding idea">
+  <p>Now that machines are starting to do the work, education is finally free to do the deeper task: make us <em>human</em>.</p>
+</section>
 
 <!-- CHAPTER TABS -->
 <nav class="chapter-tabs" role="tablist" aria-label="Site sections">
