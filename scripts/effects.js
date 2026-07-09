@@ -424,6 +424,15 @@
 
     var tileEls = [];
 
+    // The mobile chat is a short scroll box, so a long line can push the sentence
+    // being "spoken" out of sight. Keep the newest line in view. Mobile only —
+    // on desktop the chat is 440px tall and this must not move anything.
+    var narrowChat = matchMedia('(max-width:600px)').matches;
+    function keepChatInView() {
+      if (!narrowChat) return;
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
     function addMsg(who, text, keywords) {
       var d = document.createElement('div');
       d.className = 'dm';
@@ -439,6 +448,7 @@
       chatEl.appendChild(d);
       void d.offsetHeight;
       d.classList.add('show');
+      keepChatInView();
 
       // Typewriter: strip tags to get plain text, type char by char
       var textEl = d.querySelector('.dm-text');
@@ -446,6 +456,7 @@
       // Reduced motion: show the finished line at once, keywords included.
       if (prefersReduced) {
         textEl.innerHTML = fullHTML;
+        keepChatInView();
         return Promise.resolve();
       }
       var i = 0;
@@ -468,6 +479,7 @@
           }
           i++;
           textEl.textContent = plain.substring(0, i);
+          keepChatInView();          // the line grows as it types; follow it
           setTimeout(tick, 38);
         }
         tick();
@@ -493,6 +505,7 @@
       last.appendChild(n);
       void n.offsetHeight;
       n.classList.add('show');
+      keepChatInView();
     }
 
     function fadeAllMessages() {

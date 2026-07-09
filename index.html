@@ -23,7 +23,11 @@
     --paper-deep:#E4D8B8;
     --ink:#141018;
     --ink-soft:#3A3440;
-    --ink-dim:#8A8493;
+    /* The small mono microcopy (dates, labels, colophon) is set in this. The old
+       #8A8493 sat at 3.21:1 on --paper — under WCAG AA's 4.5:1 for small text.
+       #6A6472 is the same warm grey a step down: 5.07:1 on --paper, 4.60:1 on
+       --paper-warm. The UTE register overrides it (see .ute-demo). */
+    --ink-dim:#6A6472;
     --rule:#D4C9AF;
     --rust:#9F3A1F;
   }
@@ -222,6 +226,11 @@
   .ute-demo{
     display:grid;grid-template-columns:35% 65%;grid-template-rows:440px;
     margin:2.4em 0 0.4em;
+    /* The register's labels sit on the frosted pane and on --paper-deep tiles,
+       the darkest backgrounds on the page: --ink-dim's #6A6472 only reaches
+       4.03:1 there. One step darker clears AA (4.70:1). Custom properties
+       inherit, so this re-points every label inside the demo at once. */
+    --ink-dim:#5F5A69;
   }
   .ute-demo-chat{
     padding:0 1.2em 0 0;display:flex;flex-direction:column;gap:0.5em;
@@ -604,13 +613,57 @@
     .ute-demo-pos.inactive{filter:none!important;opacity:0.25}
   }
 
+  /* ── Mobile UTE (STUFE B) ──
+     The desktop register is two columns side by side. Shrunk onto a phone that
+     left the receipt in a ~96px gutter (prices broke onto their own line) and
+     squeezed the tiles to ~39px (names and the bottom row of prices clipped).
+     On mobile the register unfolds vertically instead: masthead → customer →
+     product grid → receipt at full width → total → record. Every fixed height
+     becomes auto so nothing is ever cut off. effects.js is untouched; the same
+     IDs get filled, they just sit in a different flow. */
   @media(max-width:600px){
-    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto 420px;height:auto}
-    .ute-demo-chat{grid-row:1;grid-column:1;max-height:11em;padding:0 0 1em}
-    .ute-demo-pos{grid-row:2;grid-column:1}
-    .ute-demo .pos-body{grid-template-columns:1fr 96px}
-    .ute-demo .pos-sidebar{padding:8px 6px 6px}
-    .ute-demo .pos-tile .tile-icon{width:34px;height:34px}
+    .ute-demo{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto}
+    .ute-demo-chat{grid-row:1;grid-column:1;max-height:13em;padding:0 0 1em}
+    .ute-demo-pos{grid-row:2;grid-column:1;padding:13px 12px 14px}
+    /* long transcript lines must wrap, never ride out past the right edge */
+    .ute-demo .dm-text,
+    .ute-demo .dm-note-body{overflow-wrap:anywhere}
+
+    /* the register grows with its content — no 420px box to clip against */
+    .ute-demo .pos-body{
+      display:flex;flex-direction:column;
+      flex:0 0 auto;min-height:0;overflow:visible;
+    }
+    .ute-demo .pos-grid{
+      grid-template-columns:repeat(2,1fr);
+      grid-template-rows:auto;
+      flex:0 0 auto;
+    }
+    .ute-demo .pos-tile{overflow:visible;padding:0.5em 0.2em}
+    .ute-demo .pos-tile .tile-icon{width:40px;height:40px}
+
+    /* the bon leaves its gutter and becomes a full-width receipt */
+    .ute-demo .pos-sidebar{
+      border-left:0;border-top:1px solid var(--rule);
+      border-radius:0;
+      padding:11px 2px 6px;
+      flex:0 0 auto;overflow:visible;
+      background:transparent;
+    }
+    .ute-demo .pos-cart-items{flex:0 0 auto;overflow:visible}
+    .ute-demo .pos-cart-item{font-size:10px;padding:3px 0}
+    .ute-demo .pos-cart-head{font-size:8.5px;padding-bottom:6px}
+    .ute-demo .pos-total{font-size:11px}
+    .ute-demo .pos-alert,
+    .ute-demo .pos-crosssell{margin-left:0}
+
+    /* replay / stop were 36x10 and 24x10 — under the thumb minimum.
+       The row keeps reserving its height, so nothing shifts when it appears. */
+    .ute-demo .pos-controls{height:auto;gap:0;margin-top:3px}
+    .ute-demo .pos-controls button{
+      min-height:44px;min-width:44px;padding:0 12px;
+      display:flex;align-items:center;justify-content:center;
+    }
   }
 
   /* ========== STICKY TOP NAV ========== */
@@ -652,6 +705,43 @@
     .topnav{grid-template-columns:1fr auto 1fr;gap:0.4em;padding:0.5em 0.7em}
     .topnav .nav-left,.topnav .nav-right{font-size:0.5em;letter-spacing:0.08em}
     .topnav .nav-center a{width:1.5em;height:1.5em}
+  }
+
+  /* ── Mobile nav touch targets (STUFE D) ──
+     The links were 136x17, 82x13 and 30x30 — all under the thumb minimum. The
+     boxes themselves cannot grow: at 320px only 8px separate the email from the
+     icons. So the *hit area* grows instead, via a transparent ::after, and the
+     nav keeps its exact height and its delicate 30px bordered squares. */
+  @media (max-width:600px){
+    .topnav .nav-left a,
+    .topnav .nav-right a,
+    .topnav .nav-center a{position:relative}
+    .topnav .nav-left a::after,
+    .topnav .nav-right a::after{
+      content:"";position:absolute;left:0;right:0;
+      top:50%;transform:translateY(-50%);height:44px;
+    }
+    /* 0.7em gap puts the icon centres 44px apart, so the two 44px hit areas
+       meet exactly and never steal each other's taps */
+    .topnav .nav-center{gap:0.7em}
+    .topnav .nav-center a::after{
+      content:"";position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%);width:44px;height:44px;
+    }
+    /* the whole tap lands as one gesture, no 300ms double-tap-zoom wait */
+    .topnav a{touch-action:manipulation}
+
+    /* footer legal links sit at 15px tall — same treatment, underline untouched.
+       The small proof links under an Out There entry (demo · code · model) are
+       35x18; they keep their width (they sit inline, a wider area would collide
+       with the neighbour) and gain the full 44px of height. */
+    footer .legal-links a,
+    .link-proof a{position:relative;touch-action:manipulation}
+    footer .legal-links a::after,
+    .link-proof a::after{
+      content:"";position:absolute;left:0;right:0;
+      top:50%;transform:translateY(-50%);height:44px;
+    }
   }
 
   /* ========== SMALLER PROJECTS ========== */
@@ -758,6 +848,27 @@
   .compass-response.visible{opacity:1}
   @media(prefers-reduced-motion:reduce){
     .compass-response{transition:none}
+  }
+
+  /* ── Mobile Compass options (STUFE C) ──
+     Three mono labels in a centred row need ~300px; a phone gives ~250px, so
+     "STANDARD AI" wrapped and the active option's ▶ marker pushed "MY VISION"
+     off the right edge. Stack them instead, and park the marker in reserved
+     space so switching the active option never changes a button's width. */
+  @media (max-width:600px){
+    .compass-options{
+      flex-direction:column;align-items:flex-start;
+      gap:0;margin-top:1.4em;
+    }
+    .compass-opt{
+      display:flex;align-items:center;
+      min-height:44px;padding:0 0 0 1.5em;
+      position:relative;text-align:left;
+    }
+    .compass-opt::before{
+      position:absolute;left:0;top:50%;transform:translateY(-50%);
+      margin-right:0;
+    }
   }
 
   /* ========== CHAPTER TABS ========== */
@@ -1142,6 +1253,50 @@
     .cf-card{width:16em;padding:1.5em 1.4em}
   }
 
+  /* ── Mobile carousel (STUFE A) ──
+     The arrows used to flank a stage that was narrower than the card itself, so
+     the card lay on top of them: invisible, and no tap ever reached them. On a
+     phone the stage now takes the full width and the controls sit underneath it.
+     The neighbour cards stay — they dissolve into the paper at the edges instead
+     of being sliced mid-word by #editorial-theatre's overflow:hidden. */
+  @media (max-width:600px){
+    #editorial-theatre{padding:0}
+    .et-wrapper{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      grid-template-areas:"stage stage" "prev next";
+      align-items:center;gap:0.3em 0;
+    }
+    .et-wrapper #cf-viewport{grid-area:stage;min-width:0}
+    .et-wrapper #et-prev{grid-area:prev;justify-self:end;margin-right:1.1em}
+    .et-wrapper #et-next{grid-area:next;justify-self:start;margin-left:1.1em}
+    .et-arrow-btn{
+      min-width:44px;min-height:44px;padding:0.5em;
+      position:relative;z-index:60;
+    }
+    .et-arrow-btn svg{width:24px;height:22px}
+    .cf-viewport::before,
+    .cf-viewport::after{
+      content:"";position:absolute;top:0;bottom:0;width:10%;z-index:60;
+      pointer-events:none;
+    }
+    .cf-viewport::before{left:0;background:linear-gradient(90deg,var(--paper),rgba(246,241,230,0))}
+    .cf-viewport::after{right:0;background:linear-gradient(270deg,var(--paper),rgba(246,241,230,0))}
+    .cf-card{width:92%;padding:1.5em 1.2em}
+    /* A narrower card would make the 20px teaser run very tall (819px at 320px
+       wide). 0.9em holds the card at roughly its previous height. */
+    .cf-card .et-teaser{font-size:0.9em}
+    /* layoutCarousel() writes the neighbour opacity inline, so !important is the
+       only lever CSS has here. Keeps them as depth, not as legible text. */
+    .cf-card:not(.cf-active){opacity:0.18!important}
+    .cf-card .cf-cta{padding:0.55em 0.5em}
+  }
+  /* Very narrow phones: buy the text column back so the card stays a card. */
+  @media (max-width:24em){
+    .cf-card{width:96%;padding:1.4em 1em}
+    .cf-card .et-teaser{font-size:0.85em}
+  }
+
   /* Link list for Out There */
   .link-list{list-style:none;padding:0;max-width:64ch}
   .link-list li{padding:1.2em 0;border-bottom:1px solid var(--rule)}
@@ -1183,6 +1338,60 @@
     .example .who{margin-top:0.3em}
     .tab-name{font-size:1.35em}
   }
+
+  /* ══════════ STUFE F — mobile polish. Nothing here reaches the desktop:
+     every block is gated on (pointer:coarse) or a mobile width. ══════════ */
+
+  /* F1 — 60fps. The page stacks three GPU-expensive effects on a phone: a 9px
+     backdrop-filter on the register, and a blur(3.5px) *transition* on the
+     eye-guidance dim. Animating `filter` on a large element is the costly part,
+     so on touch the dim is done with opacity alone and the pane blurs less.
+     `data-perf="low"` (set by effects.js) already existed with nothing hanging
+     off it; it now buys the cheapest path. Desktop keeps the full 9px blur. */
+  @media (pointer:coarse){
+    .ute-demo-chat.inactive,
+    .ute-demo-pos.inactive{filter:none;opacity:0.3}
+    .ute-demo-pos{
+      -webkit-backdrop-filter:blur(3px) saturate(1.03);
+      backdrop-filter:blur(3px) saturate(1.03);
+    }
+    html[data-perf="low"] .ute-demo-pos,
+    html[data-perf="low"] .ute-demo .pos-glass{
+      -webkit-backdrop-filter:none;backdrop-filter:none;
+    }
+  }
+
+  /* F2 — a tap should feel deliberate, not like an OS flash. Kill the grey
+     highlight box, drop the 300ms double-tap-zoom wait, and answer every tap
+     with the same gesture the mouse gets on hover. */
+  @media (pointer:coarse){
+    a,button,.tab,.compass-opt,.cf-card{-webkit-tap-highlight-color:transparent}
+    .topnav a,.tab,.compass-opt,.et-arrow-btn,.cf-cta,
+    .link-list a,.link-proof a,footer .legal-links a,
+    .ute-demo .pos-rec,.ute-demo .pos-controls button{touch-action:manipulation}
+
+    .et-arrow-btn:active{color:var(--rust)}
+    .tab:active{color:var(--ink)}
+    .compass-opt:active{color:var(--ink)}
+    .topnav .nav-left a:active,
+    .topnav .nav-right a:active{color:var(--rust)}
+    .topnav .nav-center a:active{border-color:var(--rust);color:var(--rust)}
+    .link-list a:active{color:var(--rust)}
+    footer .legal-links a:active,
+    .link-proof a:active{color:var(--rust);border-color:var(--rust)}
+    .ute-demo .pos-controls button:active{color:var(--rust)}
+    .cf-card .cf-cta:active .et-cta-circle{border-color:var(--rust);transform:translateY(2px)}
+    .ute-demo .pos-rec.idle:active .pos-rec-circle{transform:translateY(2px)}
+  }
+  @media (pointer:coarse) and (prefers-reduced-motion:reduce){
+    .cf-card .cf-cta:active .et-cta-circle,
+    .ute-demo .pos-rec.idle:active .pos-rec-circle{transform:none}
+  }
+
+  /* F5 — contrast. Svenja's call: fixed site-wide, not just on mobile, so the
+     token itself moved (see :root and .ute-demo). The decorative --rule (dotted
+     leaders, ornaments, the counter) stays exactly as it was — WCAG exempts
+     purely decorative marks, and darkening those would wreck the look. */
 </style>
 </head>
 <body>
@@ -1964,13 +2173,35 @@
   // horizontal gesture; we track pointermove and also honour pointercancel so a
   // swipe registers even if it's flung off a side card).
   var dragX = 0, dragY = 0, dragCurX = 0, dragCurY = 0, dragging = false, suppressClick = false;
+
+  /* Live drag (F4): on touch the cards follow the finger and snap on release.
+     Damped, and only once the gesture is clearly horizontal — a vertical scroll
+     must never drag the stage sideways. Desktop and reduced motion never enter:
+     there the deck keeps jumping only on release, exactly as before. */
+  var cfTrack = document.getElementById('cf-track');
+  var liveDrag = window.matchMedia('(pointer:coarse)').matches &&
+                 !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DRAG_DAMP = 0.32;
+  function setTrackOffset(px, animate){
+    if(!cfTrack) return;
+    cfTrack.style.transition = animate ? 'transform 0.45s cubic-bezier(.16,1,.3,1)' : 'none';
+    cfTrack.style.transform  = px ? 'translateX(' + px + 'px)' : '';
+  }
+
   cfViewport.addEventListener('pointerdown', function(e){ dragX = dragCurX = e.clientX; dragY = dragCurY = e.clientY; dragging = true; });
-  cfViewport.addEventListener('pointermove', function(e){ if(dragging){ dragCurX = e.clientX; dragCurY = e.clientY; } });
+  cfViewport.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    dragCurX = e.clientX; dragCurY = e.clientY;
+    if(!liveDrag) return;
+    var dx = dragCurX - dragX, dy = dragCurY - dragY;
+    if(Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) setTrackOffset(dx * DRAG_DAMP, false);
+  });
   function endSwipe(e){
     if(!dragging) return; dragging = false;
     var ex = (e && typeof e.clientX === 'number') ? e.clientX : dragCurX;
     var ey = (e && typeof e.clientY === 'number') ? e.clientY : dragCurY;
     var dx = ex - dragX, dy = ey - dragY;
+    if(liveDrag) setTrackOffset(0, true);                     // glide back under the snapping cards
     // Only a clearly horizontal gesture counts as a swipe. A vertical scroll —
     // even one that drifts sideways — must leave the carousel alone so the page
     // keeps scrolling.
@@ -2026,13 +2257,19 @@
   /* ========== SENSEI SCROLL ANIMATION ========== */
   /* Wheel-capture approach: when the sensei scene is in view, scroll input
      drives the bow animation frame-by-frame instead of scrolling the page.
-     Releases at boundaries so normal scrolling works above/below. */
+     Releases at boundaries so normal scrolling works above/below.
+
+     On a touch device that same capture hijacked the page: the touch handlers
+     called preventDefault() and ate ~1200px of finger travel per bow, so the
+     page felt stuck. There, the scroll handlers are never attached — the bow
+     plays once when it scrolls into view, and a tap replays it. */
   (function(){
     var FC   = 38;                                // frames in the down-bow
     var PATH = 'sensei-scroll/sensei_frames/sensei_';
     var EXT  = '.webp';
     var SW = 514, SH = 680;
     var TOTAL_DELTA = 2400;                       // px of cumulative wheel delta for full cycle
+    var AUTO_MS = 3200;                           // touch: duration of one bow-and-return
 
     var canvas = document.getElementById('senseiCanvas');
     if(!canvas) return;
@@ -2040,9 +2277,14 @@
     var wrap = document.getElementById('sensei-scroll');
     var dpr  = Math.max(1, window.devicePixelRatio || 1);
 
-    var frames = [], loaded = 0, drawn = -1, framesReady = false;
+    var coarse = window.matchMedia('(pointer:coarse)').matches ||
+                 window.matchMedia('(max-width:600px)').matches;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var frames = [], loaded = 0, drawn = -1, framesReady = false, framesLoaded = false;
     var progress = 0;                             // 0 → 1 = full bow-and-return cycle
     var target = 0, current = 0, rafId = 0;
+    var bowing = false, autoPlayed = false;
 
     function pad(n){ return ('00' + n).slice(-3); }
 
@@ -2058,9 +2300,13 @@
     function paint(idx){
       idx = Math.max(0, Math.min(FC - 1, idx));
       if(idx === drawn) return;
-      drawn = idx;
       var img = frames[idx];
+      /* Record `drawn` only once the frame is actually on the canvas. Marking it
+         before the decode check meant that if the first onload to fire wasn't
+         frame 0, sizeCanvas()'s paint(0) claimed frame 0 without drawing it, and
+         every later paint(0) then no-opped — the standing pose never appeared. */
       if(!img || !img.complete) return;
+      drawn = idx;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     }
@@ -2097,7 +2343,7 @@
       target = progressToFrame(progress);
       if(!rafId) rafId = requestAnimationFrame(ease);
     }
-    document.addEventListener('wheel', onWheel, {passive: false});
+    if(!coarse) document.addEventListener('wheel', onWheel, {passive: false});
 
     /* ── Touch support ── */
     var lastTouchY = null;
@@ -2118,9 +2364,35 @@
       if(!rafId) rafId = requestAnimationFrame(ease);
     }
     function onTouchEnd(){ lastTouchY = null; }
-    document.addEventListener('touchstart', onTouchStart, {passive: true});
-    document.addEventListener('touchmove', onTouchMove, {passive: false});
-    document.addEventListener('touchend', onTouchEnd);
+    /* These are the scroll-jack. A coarse pointer never gets them. */
+    if(!coarse){
+      document.addEventListener('touchstart', onTouchStart, {passive: true});
+      document.addEventListener('touchmove', onTouchMove, {passive: false});
+      document.addEventListener('touchend', onTouchEnd);
+    }
+
+    /* ── Touch: play the bow on its own, and again on tap ── */
+    function playBow(){
+      if(reduceMotion || bowing || !framesLoaded) return;
+      bowing = true;
+      var startTs = null;
+      function step(ts){
+        if(startTs === null) startTs = ts;
+        progress = Math.min(1, (ts - startTs) / AUTO_MS);
+        paint(progressToFrame(progress));
+        if(progress < 1){ requestAnimationFrame(step); }
+        else { bowing = false; }
+      }
+      requestAnimationFrame(step);
+    }
+    if(coarse){
+      canvas.addEventListener('click', function(){
+        if(wrap.style.display === 'none') return;
+        progress = 0;                       // a tap always replays from standing
+        playBow();
+      });
+      canvas.style.cursor = 'pointer';
+    }
 
     /* ── Also start capturing when the scene first scrolls fully into view ── */
     function onFirstScroll(){
@@ -2132,7 +2404,7 @@
         lastTouchY = null;   // arm touch capture for next touchstart
       }
     }
-    window.addEventListener('scroll', onFirstScroll, {passive: true});
+    if(!coarse) window.addEventListener('scroll', onFirstScroll, {passive: true});
 
     /* ── Lazy-load frames ── */
     function loadFrames(){
@@ -2140,7 +2412,15 @@
       framesReady = true;
       for(var i = 1; i <= FC; i++){
         var img = new Image();
-        img.onload = function(){ loaded++; if(loaded === 1) sizeCanvas(); if(loaded === FC) paint(0); };
+        img.onload = function(){
+          loaded++;
+          if(loaded === 1) sizeCanvas();
+          if(loaded === FC){
+            framesLoaded = true;
+            paint(0);            // standing pose; paint() now waits for the decode
+            maybeAutoPlay();
+          }
+        };
         img.src = PATH + pad(i) + EXT;
         frames.push(img);
       }
@@ -2151,11 +2431,28 @@
       }, {rootMargin: '400px'}).observe(wrap);
     }
 
+    /* Touch: bow once, on its own, the first time the scene is really on screen.
+       Waits for the frames — otherwise the first play would paint nothing. */
+    var senseiVisible = false;
+    function maybeAutoPlay(){
+      if(!coarse || autoPlayed || !framesLoaded || !senseiVisible) return;
+      if(wrap.style.display === 'none') return;
+      autoPlayed = true;
+      playBow();
+    }
+    if(coarse && window.IntersectionObserver){
+      new IntersectionObserver(function(entries){
+        senseiVisible = entries[0].isIntersecting;
+        if(senseiVisible) maybeAutoPlay();
+      }, {threshold: 0.55}).observe(wrap);
+    }
+
     window.addEventListener('resize', function(){ if(framesReady) sizeCanvas(); });
 
     /* Reset when the Dojo story closes (called from applyStoryState) */
     window._senseiReset = function(){
       progress = 0; target = 0; current = 0; drawn = -1;
+      bowing = false; autoPlayed = false;   // reopening the story bows again
     };
 
     /* Reduced motion: show standing pose, skip animation */
@@ -2165,6 +2462,6 @@
   })();
 })();
 </script>
-<script defer src="scripts/effects.js?v=41"></script>
+<script defer src="scripts/effects.js?v=42"></script>
 </body>
 </html>
