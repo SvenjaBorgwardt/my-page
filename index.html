@@ -2068,6 +2068,20 @@
 
   // The full story is one global mode: open once → stays open while you browse the cards
   var storyOpen = false;
+
+  /* #et-expand is max-height clipped so it can animate open, and that height was
+     measured once, at the moment of opening. But the Compass demo types its
+     question in afterwards and prints an answer when you pick an option, so the
+     panel grew past its own ceiling and cut the last paragraphs — and the whole
+     "Links · Try it live" block — off the bottom. Keep the ceiling in step with
+     the content for as long as the story is open. */
+  var expandRO = window.ResizeObserver ? new ResizeObserver(function(entries){
+    if(!storyOpen || !entries.length) return;
+    var inner = entries[0].target;
+    var h = inner.scrollHeight + 'px';
+    if(etExpand.style.maxHeight !== h) etExpand.style.maxHeight = h;
+  }) : null;
+
   function applyStoryState(){
     if(storyOpen){
       var inner = document.querySelector('.et-expand-inner[data-expand="' + currentProject + '"]');
@@ -2075,8 +2089,10 @@
         inner.style.display = '';
         etExpand.style.maxHeight = inner.scrollHeight + 'px';
         etExpand.classList.add('open');
+        if(expandRO){ expandRO.disconnect(); expandRO.observe(inner); }
       }
     } else {
+      if(expandRO) expandRO.disconnect();
       etExpand.classList.remove('open');
       etExpand.style.maxHeight = '0';
     }
