@@ -65,24 +65,23 @@
   .flip-overlay{position:absolute;overflow:hidden;clip-path:inset(0);z-index:10;pointer-events:none;will-change:transform;isolation:isolate}
   .flip-overlay>div{text-align:center;position:relative}
 
-  /* Pronunciation — clickable line below the name */
+  /* Pronunciation — the line below the name. Plain text, not a control: there is
+     no pronunciation audio, so there is nothing to click. Sizes are fixed px and
+     not em: everything here inherits body's fixed 20px, so an em would track the
+     type scale, never the viewport. Only vw does that, and a caption should not
+     grow with the display name above it. */
   .pronounce{
-    display:inline-flex;gap:0.8em;align-items:baseline;
-    background:none;border:none;cursor:pointer;padding:0;margin-top:0.5em;
-    transition:color .2s;
+    display:inline-flex;gap:10.67px;align-items:baseline;
+    margin-top:6.67px;
   }
-  .pronounce:hover{color:var(--rust)}
-  .pronounce:focus-visible{outline:2px solid var(--rust);outline-offset:0.2em;border-radius:2px}
   .pronounce-ipa{
-    font-family:'JetBrains Mono',monospace;font-size:clamp(12px,0.6em,16px);letter-spacing:0.04em;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.04em;
     color:var(--rust);
   }
   .pronounce-approx{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,0.8em,20px);
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;
     color:var(--rust);
   }
-  .pronounce:hover .pronounce-ipa,
-  .pronounce:hover .pronounce-approx{color:var(--rust)}
 
   .masthead-intro{
     font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
@@ -1216,10 +1215,12 @@
 <header class="masthead">
   <div class="name-block">
     <h1>Svenja <em>Borgwardt</em></h1>
-    <button class="pronounce" aria-label="Listen to pronunciation: SVEN-yah BORK-vart">
-      <span class="pronounce-ipa">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
+    <div class="pronounce">
+      <!-- The IPA is hidden from screen readers: read aloud, the symbols are
+           noise. The approximation beside it says the same thing, out loud. -->
+      <span class="pronounce-ipa" aria-hidden="true">[&#x2C8;sf&#x25B;nja &#x2C8;b&#x254;&#x281;kva&#x281;t]</span>
       <span class="pronounce-approx">SVEN-yah BORK-vart</span>
-    </button>
+    </div>
   </div>
   <figure class="photo-block">
     <div class="photo-frame">
@@ -2164,6 +2165,6 @@
   })();
 })();
 </script>
-<script defer src="scripts/effects.js?v=40"></script>
+<script defer src="scripts/effects.js?v=41"></script>
 </body>
 </html>

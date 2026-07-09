@@ -183,30 +183,6 @@
     });
   }
 
-  // ── Pronunciation helper (Phase C) ──────────────────────────
-  function initPronounce() {
-    var btn = document.querySelector('.pronounce');
-    if (!btn) return;
-
-    var audio = new Audio('audio/svenja-borgwardt.mp3');
-    audio.preload = 'metadata';
-
-    // No mp3 yet → quietly turn off the click affordance instead of
-    // presenting a button that does nothing.
-    audio.addEventListener('error', function () {
-      btn.disabled = true;
-      btn.style.cursor = 'default';
-      btn.setAttribute('aria-label', 'Pronunciation: SVEN-yah BORK-vart');
-    });
-
-    btn.addEventListener('click', function () {
-      audio.currentTime = 0;
-      audio.play().catch(function (err) {
-        console.warn('[pronounce] audio play failed:', err);
-      });
-    });
-  }
-
   // ── Compass demo (Phase D) ──────────────────────────────────
   function initCompassDemo() {
     var demo = document.getElementById('compass-demo');
@@ -982,7 +958,6 @@
     initPhotoTilt();
   }
 
-  initPronounce();
   initCompassDemo();
   initUteDemo();
 
