@@ -1423,15 +1423,28 @@
     }
     .cf-viewport::before{left:0;background:linear-gradient(90deg,var(--paper),rgba(246,241,230,0))}
     .cf-viewport::after{right:0;background:linear-gradient(270deg,var(--paper),rgba(246,241,230,0))}
-    /* The deck takes the height of the card in the centre, not the height of
+    /* ── Deck height on a phone ──
+       The deck takes the height of the card in the centre, not the height of
        the longest of the seven — a short teaser used to sit in 170px of empty
-       card. The height morphs along with the slide, so the stage and the arrows
-       under it settle in one motion. Neighbours carry the centre card's height
-       while they wait, hence the clipping. */
-    .cf-card{width:92%;padding:1.5em 1.2em;overflow:hidden}
+       card. Two rules make that motion honest:
+
+       No card ever changes height. Each one keeps the height of its own text,
+       so no card is ever squeezed and no paragraph is ever cut mid-sentence.
+       Only the stage resizes.
+
+       The stage grants room at once and gives it back late. A card arriving at
+       the centre needs its full height from the first frame, so a taller deck
+       snaps open. A shorter deck waits until the departing card has dimmed
+       (CLAMP_DELAY in the script) and only then glides shut. Every card fits
+       inside the stage in every single frame.
+
+       Cards hang from the top of the stage, not from its middle: with the stage
+       exactly one card plus 12px tall that is the same place, but it means the
+       title cannot drift while the stage below it moves. */
+    .cf-card{width:92%;padding:1.5em 1.2em;overflow:hidden;top:6px}
     .cf-card .et-teaser-wrap{overflow:hidden}
-    .cf-card{transition:transform 0.72s cubic-bezier(.16,1,.3,1),opacity 0.72s cubic-bezier(.16,1,.3,1),box-shadow 0.4s cubic-bezier(.16,1,.3,1),translate 0.3s cubic-bezier(.16,1,.3,1),height 0.6s cubic-bezier(.16,1,.3,1)}
-    .cf-viewport{transition:height 0.6s cubic-bezier(.16,1,.3,1)}
+    .cf-card{transition:transform 0.72s cubic-bezier(.16,1,.3,1),opacity 0.3s cubic-bezier(.16,1,.3,1),box-shadow 0.4s cubic-bezier(.16,1,.3,1),translate 0.3s cubic-bezier(.16,1,.3,1)}
+    .cf-viewport{transition:height 0.5s cubic-bezier(.16,1,.3,1)}
     @media (prefers-reduced-motion:reduce){
       .cf-card,.cf-viewport{transition:none}
     }
@@ -2433,8 +2446,15 @@
         .forEach(function(child, i){ child.style.transitionDelay = (Math.min(i, 10) * 80) + 'ms'; });
     }
 
-    applyCardHeights();  // on a phone the centred card sets the height of the deck
+    /* Heights are written AFTER the layout, and this order is load-bearing.
+       layoutCarousel() forces a synchronous reflow (void c.offsetWidth) for the
+       cards that jump across the seam; a height written before that reflow gets
+       committed instantly and never transitions. Written after, card and stage
+       start their height animation in the same frame — and because the stage is
+       always the card plus 12px, the card's top edge then stays perfectly
+       still while the deck grows or shrinks. */
     layoutCarousel();
+    applyCardHeights();  // on a phone the centred card sets the height of the deck
     updateProjectIndex();
     applyStoryState();   // keep the global open/closed state across cards
     if(updateHash !== false) history.replaceState(null, '', '#' + projectKeys[idx]);
@@ -2463,12 +2483,16 @@
   // Place every card in 3D space based on its offset from the centre
   function layoutCarousel(){
     var cw = cfCards[0].offsetWidth || 300;
+    /* Desktop hangs the cards from their middle (top:50%), the phone from the
+       top of the stage (top:6px) so the title holds still while the stage
+       below it grows or collapses. */
+    var ty = cfNarrow.matches ? '0' : '-50%';
     cfCards.forEach(function(c, i){
       var o = circOffset(i), a = Math.abs(o), s = o < 0 ? -1 : 1, t, op, z;
       if(a === 0){
-        t = 'translate(-50%,-50%) translateZ(0) scale(1)'; op = 1; z = 50;
+        t = 'translate(-50%,' + ty + ') translateZ(0) scale(1)'; op = 1; z = 50;
       } else {
-        t = 'translate(-50%,-50%) translateX(' + (s * (cw * 0.40 + (a - 1) * cw * 0.18)) + 'px) translateZ(' + (-a * cw * 0.60) + 'px) rotateY(' + (-s * 40) + 'deg) scale(' + (1 - a * 0.14) + ')';
+        t = 'translate(-50%,' + ty + ') translateX(' + (s * (cw * 0.40 + (a - 1) * cw * 0.18)) + 'px) translateZ(' + (-a * cw * 0.60) + 'px) rotateY(' + (-s * 40) + 'deg) scale(' + (1 - a * 0.14) + ')';
         op = a === 1 ? 0.60 : 0.24; z = 50 - a;
       }
       // A card crossing the seam jumps instantly (it lives in the faded far slot, so it's invisible)
@@ -2511,9 +2535,18 @@
     b.addEventListener('click', function(){ if(i !== currentProject) selectProject(i); });
   });
 
-  // Re-place cards on resize (offsets are derived from the live card width)
-  var resizeT;
-  window.addEventListener('resize', function(){ clearTimeout(resizeT); resizeT = setTimeout(function(){ equalizeCards(); layoutCarousel(); }, 120); });
+  /* Re-place cards on resize (offsets are derived from the live card width).
+     Width only: a phone fires resize every time the address bar slides away
+     under a scroll, and re-measuring there means a forced layout of seven
+     cards in the middle of the gesture. Card heights follow the column width,
+     so a height-only resize has nothing to tell us. */
+  var resizeT, lastCfWidth = window.innerWidth;
+  window.addEventListener('resize', function(){
+    if(window.innerWidth === lastCfWidth) return;
+    lastCfWidth = window.innerWidth;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function(){ equalizeCards(); layoutCarousel(); }, 120);
+  });
 
   // Drag / swipe — works anywhere on the stage (touch-action:pan-y hands us the
   // horizontal gesture; we track pointermove and also honour pointercancel so a
@@ -2624,24 +2657,67 @@
   var cfNarrow = window.matchMedia('(max-width:600px)');
   var naturalH = [];
 
-  function applyCardHeights(){
+  /* The departing card is down to its 0.18 resting opacity after 0.3s (see the
+     opacity transition on .cf-card). Only then is it safe to take room away
+     from it: whatever gets clipped past this point is invisible. */
+  var CLAMP_DELAY = 340;
+  var clampTimer = null;
+
+  function cfReduced(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  /* Hold the faded neighbours to the height of the stage, so a long teaser
+     cannot hang over the arrows below it. Shorter ones are stretched, taller
+     ones clipped — both invisible at their 0.18 resting opacity. The centred
+     card is never touched: it is the one being read. */
+  function clampNeighbours(h){
+    cfCards.forEach(function(c){
+      if(!c.classList.contains('cf-active')) c.style.height = h + 'px';
+    });
+  }
+
+  function applyCardHeights(snap){
     if(!naturalH || !naturalH.length) return;
-    var h = cfNarrow.matches
-      ? naturalH[currentProject]
-      : Math.max.apply(Math, naturalH);
-    cfCards.forEach(function(c){ c.style.height = h + 'px'; });
-    cfViewport.style.height = (h + 12) + 'px';
+    clearTimeout(clampTimer);
+
+    if(!cfNarrow.matches){
+      // Desktop: one row of equal cards, exactly as before.
+      var max = Math.max.apply(Math, naturalH);
+      cfCards.forEach(function(c){ c.style.height = max + 'px'; });
+      cfViewport.style.transition = 'none';
+      cfViewport.style.height = (max + 12) + 'px';
+      void cfViewport.offsetWidth;
+      cfViewport.style.transition = '';
+      return;
+    }
+
+    var h = naturalH[currentProject], target = h + 12;
+    /* Only the centred card is released to its own height. The neighbours keep
+       the height they were clamped to until the timer below re-clamps them —
+       release them now and a long one would spring open over the arrows while
+       the stage is still collapsing. */
+    cfCards[currentProject].style.height = '';
+
+    if(snap || cfReduced() || target >= cfViewport.offsetHeight){
+      // Room is granted at once: the arriving card needs its full height now.
+      cfViewport.style.transition = 'none';
+      cfViewport.style.height = target + 'px';
+      void cfViewport.offsetWidth;
+      cfViewport.style.transition = '';
+      clampNeighbours(h);
+    } else {
+      // Room is given back late, once the card that is leaving has dimmed.
+      cfViewport.style.transition = 'height 0.5s cubic-bezier(.16,1,.3,1) ' + CLAMP_DELAY + 'ms';
+      cfViewport.style.height = target + 'px';
+      clampTimer = setTimeout(function(){ clampNeighbours(h); }, CLAMP_DELAY);
+    }
   }
 
   function equalizeCards(){
-    // Measure unstyled, with transitions off so the reset never animates
+    // Measure unclamped and unstyled, with transitions off so nothing animates
     cfCards.forEach(function(c){ c.style.transition = 'none'; c.style.height = 'auto'; });
-    cfViewport.style.transition = 'none';
     naturalH = cfCards.map(function(c){ return c.offsetHeight; });
-    applyCardHeights();
-    void cfViewport.offsetWidth;                                   // commit before transitions return
-    cfCards.forEach(function(c){ c.style.transition = ''; });
-    cfViewport.style.transition = '';
+    applyCardHeights(true);
+    cfCards.forEach(function(c){ void c.offsetWidth; c.style.transition = ''; });
   }
 
   cfNarrow.addEventListener('change', function(){ equalizeCards(); layoutCarousel(); });
