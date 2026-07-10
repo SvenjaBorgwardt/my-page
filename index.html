@@ -1335,6 +1335,38 @@
     .cf-card .et-teaser{font-size:0.85em}
   }
 
+  /* ── Project index — the quiet line beneath the stage ──
+     All seven titles at a glance, composed with the prev/next arrows: same mono
+     caps as the eyebrows, separated by the ·-convention. The active title speaks
+     the same language as the chapter tabs (ink + rust underline). */
+  .cf-index{
+    margin:1em 0 0;
+    display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;
+  }
+  .cf-index button{
+    background:none;border:none;cursor:pointer;
+    font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;
+    color:var(--ink-dim);                 /* 5.07:1 on --paper — AA for small text */
+    padding:0.5em 0.15em 0.35em;
+    border-bottom:2px solid transparent;
+    transition:color .3s;
+  }
+  .cf-index button:hover{color:var(--ink)}
+  .cf-index button:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .cf-index button.active{color:var(--ink);border-bottom-color:var(--rust)}
+  .cf-index-sep{color:var(--rule);margin:0 0.55em}
+  @media(prefers-reduced-motion:reduce){.cf-index button{transition:none}}
+  /* Mobile: seven titles don't hold one line, so the set breaks into a centred
+     two-line block. The dots go (a · stranded at a line edge reads like a typo);
+     fine gaps take over. Taps get their 40px. */
+  @media (max-width:600px){
+    .cf-index{padding:0 1em;column-gap:1.3em}
+    .cf-index-sep{display:none}
+    .cf-index button{min-height:40px;padding:0 0.2em}
+  }
+
   /* Link list for Out There */
   .link-list{list-style:none;padding:0;max-width:64ch}
   .link-list li{padding:1.2em 0;border-bottom:1px solid var(--rule)}
@@ -1404,7 +1436,7 @@
      with the same gesture the mouse gets on hover. */
   @media (pointer:coarse){
     a,button,.tab,.compass-opt,.cf-card{-webkit-tap-highlight-color:transparent}
-    .topnav a,.tab,.compass-opt,.et-arrow-btn,.cf-cta,
+    .topnav a,.tab,.compass-opt,.et-arrow-btn,.cf-cta,.cf-index button,
     .link-list a,.link-proof a,footer .legal-links a,
     .ute-demo .pos-rec,.ute-demo .pos-controls button{touch-action:manipulation}
 
@@ -1611,6 +1643,20 @@
       </svg>
     </button>
   </div><!-- /et-wrapper -->
+
+  <!-- Project index — every title at a glance; click to jump -->
+  <nav class="cf-index" aria-label="projects">
+    <button type="button" aria-current="true">Debate Dojo</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <button type="button">GemmPen</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <button type="button">Compass</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <button type="button">UTE</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <button type="button">Claudia</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <!-- Shortened from the card's "Student Progress Analytics": the full title
+         pushes the seven-title line past the column on desktop and onto a third
+         line at 390px. -->
+    <button type="button">Progress Analytics</button><span class="cf-index-sep" aria-hidden="true">·</span>
+    <button type="button">Ohm City</button>
+  </nav>
 
   <!-- Expand zone (shared, opens beneath the centred card) -->
   <div class="et-expand" id="et-expand">
@@ -2146,6 +2192,7 @@
   var cfViewport = document.getElementById('cf-viewport');
   var cfCards = Array.prototype.slice.call(document.querySelectorAll('.cf-card'));
   var projectKeys = ['dojo','gemmpen','compass','ute','claudia','spa','ohm'];
+  var cfIndexBtns = Array.prototype.slice.call(document.querySelectorAll('.cf-index button'));
   var prevOffset = [];
 
   // The full story is one global mode: open once → stays open while you browse the cards
@@ -2213,8 +2260,21 @@
     }
 
     layoutCarousel();
+    updateProjectIndex();
     applyStoryState();   // keep the global open/closed state across cards
     if(updateHash !== false) history.replaceState(null, '', '#' + projectKeys[idx]);
+  }
+
+  // Keep the index line beneath the stage in step with the centred card.
+  // selectProject is the one gate every path goes through (arrows, swipe,
+  // keyboard, hash, card click), so this is the only place it needs updating.
+  function updateProjectIndex(){
+    cfIndexBtns.forEach(function(b, i){
+      var on = i === currentProject;
+      b.classList.toggle('active', on);
+      if(on) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
   }
 
   // Shortest circular distance from the centred card (so ends wrap seamlessly)
@@ -2263,6 +2323,12 @@
   // Arrows loop around
   etPrev.addEventListener('click', function(){ selectProject(currentProject - 1); });
   etNext.addEventListener('click', function(){ selectProject(currentProject + 1); });
+
+  // Index line: a title click jumps straight to its card — same wrap-around
+  // path as everything else, so the deck takes the shortest way there.
+  cfIndexBtns.forEach(function(b, i){
+    b.addEventListener('click', function(){ if(i !== currentProject) selectProject(i); });
+  });
 
   // Re-place cards on resize (offsets are derived from the live card width)
   var resizeT;
