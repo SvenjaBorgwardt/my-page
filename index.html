@@ -1592,6 +1592,14 @@
           <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
         </article>
 
+        <article class="cf-card" data-project="6">
+          <div class="et-tag">agent-run classroom economy</div>
+          <h3 class="et-title">Ohm City</h3>
+          <div class="et-date">In progress</div>
+          <div class="et-teaser-wrap"><p class="et-teaser">Economics, taught from a textbook, stays theory: you calculate a price on paper and nothing happens. I want my students to feel what happens. So I'm building them a city. Ohm City is a simulated economy run by Claude agents in which my vocational IT classes operate a company and learn economics by playing: setting prices, making decisions, living with the consequences. The agents make the city feel alive, but none of them runs free. Every agent action is code-directed and teacher-gated. It launches with my classes in the school year 2026/27.</p></div>
+          <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+        </article>
+
       </div>
     </div>
 
@@ -1922,6 +1930,19 @@
         </div>
       </div>
 
+      <!-- Ohm City expand (project 6, in progress) -->
+      <div class="et-expand-inner" data-expand="6" style="display:none">
+        <p>Ohm City is what I'm building for the school year 2026/27: a simulated city run by Claude agents, in which my classes operate a company and learn economics by playing. The city has its own currency, the Watt, and the students' firm, Kirchhoff Systems, has to earn it: set a price, watch the city react, live with the result.</p>
+
+        <p>I teach economics to IT apprentices, in English, and taught from the front of the room it stays abstract. You define supply and demand, you calculate a margin, and nothing happens. In a simulated economy something happens. A wrong price costs Watt you don't get back. That's the whole bet: decisions with consequences instead of definitions on a slide.</p>
+
+        <p>The technically interesting part is what the agents are not allowed to do. Ohm City's agents don't live; they get woken. There are no free agent-to-agent loops where the model decides what happens next: code decides who acts and when, and the language model only decides what is said. Nothing free-generated reaches a student without passing my approval queue first. Every agent action is code-directed and teacher-gated, and in a classroom that isn't a limitation, it's the design: I want a city that feels alive, and I want to be able to account for every sentence in it. Most of what I know about keeping agents on that kind of leash I learned building <a href="#claudia">Claudia</a>.</p>
+
+        <p>The same discipline runs through the rest. Grades stay individual and stay mine: teams share their company's account and reputation, never their marks, and the agents only ever propose. Students appear in the system under pseudonyms. And every economic number is checked by script before it reaches a class, because a simulation that teaches economics can't afford to get its own arithmetic wrong.</p>
+
+        <p>What exists so far: the series bible, the architecture, and the first fully written episodes. I'm building the year like a season of a show, with a cast, missions, and a finale in which the whole thing comes to a head in a referendum on a universal basic income. My classes enter the city in 2026/27; I'll report what actually happens when they do.</p>
+      </div>
+
     </div><!-- /et-expand -->
 </div><!-- /editorial-theatre -->
 
@@ -2112,7 +2133,7 @@
   // ── Coverflow carousel state ──
   var cfViewport = document.getElementById('cf-viewport');
   var cfCards = Array.prototype.slice.call(document.querySelectorAll('.cf-card'));
-  var projectKeys = ['dojo','gemmpen','compass','ute','claudia','spa'];
+  var projectKeys = ['dojo','gemmpen','compass','ute','claudia','spa','ohm'];
   var prevOffset = [];
 
   // The full story is one global mode: open once → stays open while you browse the cards
@@ -2351,7 +2372,7 @@
   }
 
   /* ── Hash routing ── */
-  var hashToProject = {dojo:0, gemmpen:1, compass:2, ute:3, claudia:4, spa:5};
+  var hashToProject = {dojo:0, gemmpen:1, compass:2, ute:3, claudia:4, spa:5, ohm:6};
 
   function applyHash(){
     var h = (location.hash || '').replace('#','');
