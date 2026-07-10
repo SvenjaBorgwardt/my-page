@@ -993,6 +993,7 @@
   .et-expand{
     max-height:0;overflow:hidden;
     transition:max-height 0.6s cubic-bezier(0.16,1,0.3,1);
+    scroll-margin-top:3.2em;   /* deep-link scroll target — clear the sticky nav, like #editorial-theatre */
   }
   .et-expand-inner{
     padding:1.8em 2em 2em;
@@ -2452,17 +2453,57 @@
   /* ── Hash routing ── */
   var hashToProject = {dojo:0, gemmpen:1, compass:2, ute:3, claudia:4, spa:5, ohm:6};
 
-  function applyHash(){
+  /* A project hash is a deep link into the story itself (the CV links to
+     borgwardt.me/#dojo): select the card, open the panel through the one
+     existing open path, then bring the story into view. 'instant', not
+     'auto', under reduced motion — html has scroll-behavior:smooth and
+     'auto' would fall back to that. */
+  function scrollToStory(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    etExpand.scrollIntoView({behavior: reduce ? 'instant' : 'smooth', block:'start'});
+  }
+
+  /* The panel opens by animating max-height, so for a moment the document is
+     still short — a smooth scrollIntoView issued right away clamps at the old
+     page end and strands the reader above the story. Scroll once the panel
+     has its height: immediately if it already does (or under reduced motion,
+     where it opens without transition), otherwise after the max-height
+     transition, with a timeout as safety net. */
+  function scrollToStoryWhenReady(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ scrollToStory(); return; }
+    var target = parseFloat(etExpand.style.maxHeight) || 0;
+    if(etExpand.offsetHeight >= target - 1){ scrollToStory(); return; }
+    var done = false;
+    function go(){
+      if(done) return; done = true;
+      etExpand.removeEventListener('transitionend', onEnd);
+      scrollToStory();
+    }
+    function onEnd(e){ if(e.target === etExpand && e.propertyName === 'max-height') go(); }
+    etExpand.addEventListener('transitionend', onEnd);
+    setTimeout(go, 700);   // just past the 0.6s panel transition
+  }
+
+  function applyHash(onLoad){
     var h = (location.hash || '').replace('#','');
     if(!h) return;
     if(h === 'build' || h === 'out'){ activateTab(h, false); return; } /* TEMP: re-add 'think' when the Think tab returns */
     if(h in hashToProject){
       activateTab('build', false);
       selectProject(hashToProject[h], false);
+      if(!storyOpen){ storyOpen = true; applyStoryState(); }
+      if(onLoad === true && document.fonts && document.fonts.ready){
+        /* On load, scroll only after the font-driven equalizeCards/layout
+           pass (registered above, so it runs first) — otherwise the panel
+           top moves under the reader when the webfonts land. */
+        document.fonts.ready.then(scrollToStoryWhenReady);
+      } else {
+        scrollToStoryWhenReady();
+      }
     }
   }
   window.addEventListener('hashchange', applyHash);
-  applyHash();
+  applyHash(true);
 
   /* ========== SENSEI SCROLL ANIMATION ========== */
   /* Wheel-capture approach: when the sensei scene is in view, scroll input
