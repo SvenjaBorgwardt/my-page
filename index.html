@@ -87,6 +87,15 @@
     color:var(--rust);
   }
 
+  /* The positioning line — Svenja's own sentence from the meta description.
+     A roman statement between the name and the personal intros: a step above
+     the italic bio, far below the display name. It carries the 1.6em gap that
+     .masthead-intro:first-of-type used to add (as a <p> it takes that slot). */
+  .masthead-subline{
+    font-weight:400;font-size:1.15em;line-height:1.45;color:var(--ink);
+    letter-spacing:0.005em;max-width:26em;
+    margin:1.6em 0 0.5em;
+  }
   .masthead-intro{
     font-style:italic;font-size:1em;line-height:1.6;color:var(--ink-soft);
     margin-bottom:0.3em;
@@ -1448,6 +1457,7 @@
     </div>
   </figure>
   <div class="masthead-bio">
+    <p class="masthead-subline reveal">I build AI systems for learning: fine-tuned models that help without doing the thinking for you.</p>
     <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little.</p>
     <p class="masthead-intro reveal">I studied economics, linguistics, and literature and cultural studies. I've done education research, taught in several different institutions and countries, run and organized EU projects across Europe, and spent my early years thinking in risk and compliance at a bank.</p>
   </div>
