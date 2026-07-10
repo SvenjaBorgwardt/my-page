@@ -1359,12 +1359,16 @@
   .cf-index button.active{color:var(--ink);border-bottom-color:var(--rust)}
   .cf-index-sep{color:var(--rule);margin:0 0.55em}
   @media(prefers-reduced-motion:reduce){.cf-index button{transition:none}}
-  /* Mobile: seven titles don't hold one line, so the set breaks into a centred
-     two-line block. The dots go (a · stranded at a line edge reads like a typo);
-     fine gaps take over. Taps get their 40px. */
-  @media (max-width:600px){
+  /* Below 758px the seven titles no longer hold one line (measured with the
+     dots in place), so the set breaks into a centred two-line block. The dots
+     go as soon as wrapping is possible (a · stranded at a line edge reads
+     like a typo); fine gaps take over. */
+  @media (max-width:760px){
     .cf-index{padding:0 1em;column-gap:1.3em}
     .cf-index-sep{display:none}
+  }
+  /* Touch sizes only where fingers are likely: taps get their 40px. */
+  @media (max-width:600px){
     .cf-index button{min-height:40px;padding:0 0.2em}
   }
 
