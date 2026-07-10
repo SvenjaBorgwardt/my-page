@@ -1003,11 +1003,35 @@
   /* (top fade overlay removed — the full story starts cleanly below the card) */
   .et-expand-inner a{color:#6E5B7A;transition:color .3s}
   .et-expand-inner a:hover{color:#564868}
+  /* ── Story figures — plates in the expand stories, like in a well-set
+     non-fiction book. The stories sit on --paper, so the matte takes the
+     other paper nuance (the same move as .stack and the blockquotes); the
+     1px rule holds the dark screenshots, the shadow speaks the cards'
+     language. width/height attributes on the media guard against layout
+     shift while the lazy images arrive. ── */
+  .et-figure{
+    margin:1.8em 0;padding:0.8em;
+    background:var(--paper-warm);
+    border:1px solid var(--rule);border-radius:12px;
+    box-shadow:0 6px 26px rgba(20,16,24,0.07);
+  }
+  .et-figure img,
+  .et-figure video{
+    display:block;width:100%;max-width:100%;height:auto;
+    border:1px solid var(--rule);border-radius:6px;
+  }
+  .et-figure figcaption{
+    margin-top:0.8em;padding:0 0.2em;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--ink-soft);line-height:1.8;
+  }
   .et-expand-inner p,
   .et-expand-inner blockquote,
   .et-expand-inner .stack,
   .et-expand-inner .compass-demo,
   .et-expand-inner .ute-demo,
+  .et-expand-inner .et-figure,
   .et-expand-inner .project-example{
     opacity:0;transform:translateY(8px);
     transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1),transform 0.5s cubic-bezier(0.16,1,0.3,1);
@@ -1017,6 +1041,7 @@
   .et-expand.open .et-expand-inner .stack,
   .et-expand.open .et-expand-inner .compass-demo,
   .et-expand.open .et-expand-inner .ute-demo,
+  .et-expand.open .et-expand-inner .et-figure,
   .et-expand.open .et-expand-inner .project-example{
     opacity:1;transform:translateY(0);
   }
@@ -1063,6 +1088,7 @@
     .et-expand-inner .stack,
     .et-expand-inner .compass-demo,
     .et-expand-inner .ute-demo,
+    .et-expand-inner .et-figure,
     .et-expand-inner .project-example{transition:none;opacity:1;transform:none}
   }
 
@@ -1286,6 +1312,18 @@
   .cf-card .cf-cta{align-self:center;margin-top:1.4em;flex-shrink:0;font-size:inherit}
   .cf-card .cf-cta .et-cta-text{font-family:'Cormorant Garamond',serif;font-style:italic;text-transform:none;letter-spacing:0;font-size:1em}
   .cf-card.cf-open .cf-cta .et-cta-circle svg{transform:rotate(180deg)}
+  /* A quiet second line under the CTA on the cards whose story holds an
+     interactive demo. Clicking it walks the exact same path as the CTA. */
+  .cf-card .et-demo-hint{
+    align-self:center;flex-shrink:0;margin-top:0.7em;
+    background:none;border:none;cursor:pointer;padding:0;
+    font-family:'JetBrains Mono',monospace;font-size:0.55em;
+    letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);
+    transition:color .3s;
+  }
+  .cf-card .et-demo-hint:hover{color:var(--rust)}
+  .cf-card .et-demo-hint:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  @media(prefers-reduced-motion:reduce){.cf-card .et-demo-hint{transition:none}}
   @media(prefers-reduced-motion:reduce){.cf-card{transition:none}}
   @media(max-width:32em){
     .cf-viewport{height:20em;perspective:1000px}
@@ -1603,6 +1641,7 @@
           <div class="et-date">April 2026</div>
           <div class="et-teaser-wrap"><p class="et-teaser">It worries me how easily a perfect AI answer can feel like real understanding, when the thinking was the model’s and not the student’s. I wanted something that helps without quietly taking that thinking away. Compass walks my students through building an argument, giving just enough of a nudge to keep them going but never the answer itself. Like a real compass, it points the way; it doesn’t hand you the map.</p></div>
           <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+          <button class="et-demo-hint" type="button" tabindex="-1">try the three tutors in the story &darr;</button>
         </article>
 
         <article class="cf-card" data-project="3">
@@ -1611,6 +1650,7 @@
           <div class="et-date">March 2026</div>
           <div class="et-teaser-wrap"><p class="et-teaser">At a bakery counter, the register always gets in the way of a good conversation. Instead of really talking to you, the person serving has to look down and type. UTE quietly listens along and handles the ordering in the background, so they can stay with what actually matters: the customer in front of them.</p></div>
           <button class="et-cta cf-cta" type="button" aria-expanded="false" aria-controls="et-expand" tabindex="-1"><span class="et-cta-text">read the full story</span><span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 6 8 10 12 6"/></svg></span></button>
+          <button class="et-demo-hint" type="button" tabindex="-1">watch her take an order &darr;</button>
         </article>
 
         <article class="cf-card" data-project="4">
@@ -1672,11 +1712,21 @@
 
         <p>GemmPen reads student handwriting, evaluates it against my rubric, and writes individual feedback with exercises built around each student's actual mistakes. I built it so the things I see while grading actually reach the student.</p>
 
+        <figure class="et-figure">
+          <img src="img/story/gemmpen-review.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="GemmPen review screen for one student: the scanned handwritten exam above the transcript with highlighted errors, and next to it the editable feedback with score sliders and approve, edit and regenerate controls.">
+          <figcaption>The review screen: the scanned exam next to the transcript, every error category highlighted, and the feedback I can still edit before it goes out.</figcaption>
+        </figure>
+
         <p>I've been building toward this for a while. It started with MATE, a Python pipeline for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money. And in Europe, with GDPR and the EU AI Act, you can't just send student writing to a cloud model — even anonymised, the data still leaves the room. When Google DeepMind announced the Gemma 4 hackathon, I saw the moment: fine-tune a local model that does all of it on one device. No cost pressure, no data leaving the building, no compliance problem to solve.</p>
 
         <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. That's exactly wrong when someone is trying to learn. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
 
         <p>When I review the feedback and disagree, that correction becomes training data. After about 30 corrections, one button retrains the model. Takes about 90 minutes on a free GPU, you press a button, it handles the rest. Over time, the model starts sounding more like me, because it learned from watching me correct it.</p>
+
+        <figure class="et-figure">
+          <img src="img/story/gemmpen-class-overview.webp" width="1600" height="944" loading="lazy" decoding="async" alt="GemmPen class overview: the grade distribution of 21 students as a dot plot with the class average marked, class insights, and the first row of the sortable student table.">
+          <figcaption>The class view: 21 students, the grade distribution, and the one insight that decides what next week's lesson is about.</figcaption>
+        </figure>
 
         <p>It runs on-device. But the cool part is: I can compare a student's progress across exams and show them exactly how they got better. I can also see whether the individualised exercises I built around their mistakes were actually effective. I started building a whole system around that. You can read more under <a href="#spa">Student Progress Analytics</a>.</p>
 
@@ -1718,6 +1768,11 @@
 
         <p>I built Compass for argumentative writing in English, and basically tried to handcuff the model into being helpful without being too helpful. I ended up scalpelling each learning step into a hardcoded process that only helps at a very low level. Enough to push a student forward, not enough to do the thinking for them. The result works. Students like it, they engage with their own writing in a way I rarely see otherwise, and I can track where each of them struggles. But I had to hardcode every learning step to get there. Changing the topic means rebuilding most of it.</p>
 
+        <figure class="et-figure">
+          <img src="img/story/compass-hourglass.webp" width="1600" height="933" loading="lazy" decoding="async" alt="Compass hourglass step: counter-argument cards ordered from strongest to weakest in the top half, the student's own argument cards building from weakest to strongest below.">
+          <figcaption>The hourglass step: counter-arguments ordered strongest to weakest, own arguments building up to the climax. The student places every card; the tool only holds the shape.</figcaption>
+        </figure>
+
         <p>Making AI less helpful is harder than making it more helpful, and I don't think prompting will ever fully solve it. The model needs to learn what good teaching actually looks like: creating the conditions for someone to find the answer themselves. That's a fine-tuning problem.</p>
 
         <p>I called it Compass because it's meant to give direction, not a destination.</p>
@@ -1730,6 +1785,11 @@
       <!-- Dojo expand (now project 0) -->
       <div class="et-expand-inner" data-expand="0" style="display:none">
         <p>Debate Dojo takes the principle behind Compass (help that waits until a student has genuinely tried) and brings it from argumentative writing into live debate. Instead of hardcoding every learning step, I fine-tuned a model that matches its help to the effort a student puts in. The more a student engages, the more the sensei gives back. The less effort, the more it pushes. You can walk through a full training round in the <a href="https://debate-dojo.vercel.app/demo.html" target="_blank" rel="noopener">guided demo</a>, sensei included.</p>
+
+        <figure class="et-figure">
+          <img src="img/story/debate-dojo-sensei-chat.webp" width="1600" height="973" loading="lazy" decoding="async" alt="Debate Dojo coaching chat: a student's argument for banning phones in schools, and below it the sensei's reply, which names the strong parts and highlights one follow-up question.">
+          <figcaption>The sensei never hands over the answer: it names what is already strong, then asks the one question that leads to the missing piece.</figcaption>
+        </figure>
 
         <div class="uth-divider">Under the Hood</div>
         <p class="uth-lead">How I fine-tuned an 8B model to know when to help and when to hold back.</p>
@@ -1756,6 +1816,12 @@
           <p>"I don't have time for this."</p>
         </div>
         <p>Every one of those sentences happened in live sessions. They became the raw material for both the evaluation and the training.</p>
+        <figure class="et-figure">
+          <video controls preload="none" playsinline width="1280" height="800" poster="img/story/debate-dojo-walkthrough-poster.webp" aria-label="Debate Dojo demo walkthrough, 40 seconds, no sound">
+            <source src="img/story/debate-dojo-walkthrough.webm" type="video/webm">
+          </video>
+          <figcaption>A 40-second pass through the demo: the sensei chat, the belts, the gate. No sound.</figcaption>
+        </figure>
         <p>The coaching model is a fine-tuned Ministral 8B. Fine-tuning means I trained the behavior into the model's own weights from examples, so it no longer leans on the prompt, the fixed instruction a model receives up front, to enforce it. The examples were hundreds of multi-turn coaching dialogues, written by strong frontier models (Claude and Mistral Large) against my rubric and grounded in the real pressure patterns from three live sessions. This is the project's gold data: the set of dialogues that shows the model what good coaching looks like.</p>
         <p class="uth-sub">The design insight</p>
         <p>The design insight the whole project rests on: the same message can deserve two different answers. "Can you just tell me?" after twenty minutes of honest work deserves help. The identical sentence after two low-effort turns deserves a friendly refusal. The judgment lives in the history that comes before the message. So my rubric grades the same final message differently depending on that history, and the rubric became the evaluation, and the evaluation became the training signal.</p>
@@ -1970,6 +2036,16 @@
         <p>Every correction I make says something about a student. Then I hand the paper back, and it's gone. A grade is one number at the end of a long process, and it throws away everything that happened on the way there: where someone started, what they fixed, where they're still stuck. I wanted to keep that and give it back to the student as something they can actually see.</p>
 
         <p>Student Progress Analytics turns the corrections I already make into a picture of each student across a semester. It tracks their grade against the class average, counts errors by category (grammar, vocabulary, IT terminology, content) and shows them shrinking task by task. A skills profile compares where someone was on the first assignment to where they are on the latest, and an XP and level system makes progress visible enough to be motivating. On my side, the same data aggregates across all three of my classes and quietly flags the students who are slipping, often before it would show up in a grade.</p>
+
+        <figure class="et-figure">
+          <img src="img/story/mate-grade-trajectory.webp" width="1568" height="962" loading="lazy" decoding="async" alt="Line chart of one student's grades across a semester: the student's line starts below the class average in September and crosses it in January, annotated with 'Catches class avg'.">
+          <figcaption>One student's semester: started below the class average in September, caught it in January. This is the part a single grade throws away.</figcaption>
+        </figure>
+
+        <figure class="et-figure">
+          <img src="img/story/mate-class-comparison.webp" width="1600" height="767" loading="lazy" decoding="async" alt="Teacher dashboard comparing three classes side by side: latest average, growth, grade distribution as colour bars, counts of improving and flagged students, and a short note per class.">
+          <figcaption>The same data from my side of the desk: three classes side by side, and the students who need attention flagged before it shows up in a grade.</figcaption>
+        </figure>
 
         <p>The whole thing is built around one constraint: knowing a student this well is exactly the kind of data you have no right to mishandle. Student text is anonymised before any model touches it, names never leave my device, and what a student sees is a static file: no tracking, no cookies, no server calling home. The dashboards were the easy part. The hard part was earning the right to know this much.</p>
 
@@ -2260,7 +2336,7 @@
     });
     var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
     if(activeInner){
-      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .project-example')
+      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .et-figure, .project-example')
         .forEach(function(child, i){ child.style.transitionDelay = (Math.min(i, 10) * 80) + 'ms'; });
     }
 
@@ -2320,6 +2396,12 @@
     card.addEventListener('click', function(){ if(suppressClick) return; if(i !== currentProject) selectProject(i); });
     var cta = card.querySelector('.cf-cta');
     if(cta) cta.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(i === currentProject) toggleStory(); else selectProject(i);
+    });
+    // The demo hint under the CTA walks the exact same path as the CTA.
+    var hint = card.querySelector('.et-demo-hint');
+    if(hint) hint.addEventListener('click', function(e){
       e.stopPropagation();
       if(i === currentProject) toggleStory(); else selectProject(i);
     });
