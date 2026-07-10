@@ -675,10 +675,10 @@
     padding:0.7em 1.6em;
   }
   .topnav .nav-left{display:flex;gap:1.1em;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.525em;letter-spacing:0.18em;text-transform:uppercase}
-  .topnav .nav-left a{color:var(--ink);text-decoration:none;position:relative;padding-left:0.7em;transition:color .3s}
-  .topnav .nav-left a::before{content:"\25B6";position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--rust);font-size:0.4em;opacity:0;transition:opacity .3s}
-  .topnav .nav-left a:hover{color:var(--rust)}
-  .topnav .nav-left a:hover::before{opacity:1}
+  /* Rust, because in this design rust is the colour of a category label
+     (.et-tag, .compass-label) — which is what a strapline is. Ink would sit
+     next to "Get in touch" in link colour and invite a click that goes nowhere. */
+  .topnav .nav-strap{color:var(--rust);white-space:nowrap}
   .topnav .nav-center{display:flex;gap:0.5em}
   .topnav .nav-center a{
     display:flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
@@ -713,10 +713,8 @@
      icons. So the *hit area* grows instead, via a transparent ::after, and the
      nav keeps its exact height and its delicate 30px bordered squares. */
   @media (max-width:600px){
-    .topnav .nav-left a,
     .topnav .nav-right a,
     .topnav .nav-center a{position:relative}
-    .topnav .nav-left a::after,
     .topnav .nav-right a::after{
       content:"";position:absolute;left:0;right:0;
       top:50%;transform:translateY(-50%);height:44px;
@@ -1373,7 +1371,6 @@
     .et-arrow-btn:active{color:var(--rust)}
     .tab:active{color:var(--ink)}
     .compass-opt:active{color:var(--ink)}
-    .topnav .nav-left a:active,
     .topnav .nav-right a:active{color:var(--rust)}
     .topnav .nav-center a:active{border-color:var(--rust);color:var(--rust)}
     .link-list a:active{color:var(--rust)}
@@ -1398,9 +1395,13 @@
 
 <!-- STICKY TOP NAV -->
 <header class="topnav">
-  <nav class="nav-left">
-    <a href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
-  </nav>
+  <!-- The wordmark slot. It used to hold the e-mail address, which "Get in touch"
+       on the right already links to — the same mailto, twice. It now says what
+       the site is, and because the bar is sticky, it says it at every scroll
+       position. Not a link: plain text, so it is not a <nav> landmark either. -->
+  <div class="nav-left">
+    <span class="nav-strap">AI for learning</span>
+  </div>
   <div class="nav-center">
     <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener" aria-label="LinkedIn">
       <svg viewBox="0 0 24 24" fill="currentColor">
