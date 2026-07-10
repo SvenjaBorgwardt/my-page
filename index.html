@@ -1020,6 +1020,33 @@
     opacity:1;transform:translateY(0);
   }
 
+  /* Sticky collapse — the quiet way out of a very long open story. The only
+     collapse control sits at the top of the card, ~14,000px above the end of
+     the Dojo story, so once the reader is well inside, a small pill floats in
+     bottom right: circle + spaced label, the same vocabulary as the card CTA.
+     JS shows it only after real scroll depth (see updateCollapseFab). */
+  .et-collapse-fab{
+    position:fixed;right:1.1em;bottom:calc(1.2em + env(safe-area-inset-bottom,0px));z-index:40;
+    display:inline-flex;align-items:center;gap:0.55em;
+    padding:0.5em 1em 0.5em 0.6em;
+    background:var(--paper);border:1px solid var(--rule);border-radius:999px;
+    box-shadow:0 6px 26px rgba(20,16,24,0.07);
+    cursor:pointer;font-size:inherit; /* a <button> must inherit, or the em-sized label collapses */
+    opacity:0;visibility:hidden;transform:translateY(6px);
+    transition:opacity .35s ease,transform .35s ease,border-color .3s,
+               visibility 0s linear .35s;
+  }
+  .et-collapse-fab.visible{
+    opacity:1;visibility:visible;transform:translateY(0);
+    transition:opacity .35s ease,transform .35s ease,border-color .3s;
+  }
+  .et-collapse-fab:hover{border-color:var(--rust)}
+  .et-collapse-fab:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){
+    .et-collapse-fab,
+    .et-collapse-fab.visible{transition:none;transform:none}
+  }
+
   /* Reduced motion */
   @media(prefers-reduced-motion:reduce){
     .et-arrow,.et-arrow-fixed{transition:none}
@@ -1204,7 +1231,7 @@
   .sensei-active footer{margin-top:0.5em}
 
   /* ========== COVERFLOW CAROUSEL ========== */
-  #editorial-theatre{position:relative;overflow:hidden;padding:0 1.3em}
+  #editorial-theatre{position:relative;overflow:hidden;padding:0 1.3em;scroll-margin-top:3.2em}
   .cf-viewport{
     flex:1;min-width:0;position:relative;
     perspective:1700px;height:22em;outline:none;
@@ -1908,6 +1935,13 @@
   </div>
 </div>
 
+<!-- Sticky collapse for long open stories (shown by JS after real scroll depth).
+     Lives inside #section-build, so switching tabs hides it with the section. -->
+<button class="et-collapse-fab" id="et-collapse-fab" type="button" aria-label="Collapse the story and return to the projects">
+  <span class="et-cta-circle"><svg viewBox="0 0 16 16"><polyline points="4 10 8 6 12 10"/></svg></span>
+  <span class="et-cta-text">collapse</span>
+</button>
+
 </div><!-- /section-build -->
 
 <!-- ============================================================ -->
@@ -2126,6 +2160,7 @@
     if(senseiEl) senseiEl.style.display = showSensei ? '' : 'none';
     if(mainEl)   mainEl.classList.toggle('sensei-active', showSensei);
     if(window._senseiReset && !showSensei) window._senseiReset();
+    updateCollapseFab();
   }
   function toggleStory(){ storyOpen = !storyOpen; applyStoryState(); }
 
@@ -2253,6 +2288,35 @@
       else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleStory(); }
     });
   }
+
+  /* ── Sticky collapse — the way back out of a long open story ──
+     The pill appears only once the reader has scrolled well past the top of
+     the open panel (where the only other collapse control lives) and hides
+     again when the story's end rises above mid-viewport, so it never floats
+     over the footer or the sensei. Closing goes through the exact same path
+     as the card CTA (storyOpen + applyStoryState), then the page returns to
+     the carousel — smoothly, unless the reader prefers reduced motion. */
+  var collapseFab = document.getElementById('et-collapse-fab');
+  function updateCollapseFab(){
+    if(!collapseFab) return;
+    var show = false;
+    if(storyOpen){
+      var r = etExpand.getBoundingClientRect();
+      show = r.top < -400 && r.bottom > window.innerHeight * 0.5;
+    }
+    collapseFab.classList.toggle('visible', show);
+  }
+  window.addEventListener('scroll', updateCollapseFab, {passive:true});
+  if(collapseFab) collapseFab.addEventListener('click', function(){
+    storyOpen = false;
+    applyStoryState();
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var stage = document.getElementById('editorial-theatre');
+    /* 'instant', not 'auto': html has scroll-behavior:smooth, and 'auto'
+       would fall back to that — reduced motion must really jump. */
+    if(stage) stage.scrollIntoView({behavior: reduce ? 'instant' : 'smooth', block:'start'});
+    cfViewport.focus({preventScroll:true});   // hand focus back to the stage the reader returns to
+  });
 
   // Make every card the height of the tallest, so the full text always fits
   function equalizeCards(){
