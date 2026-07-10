@@ -2271,7 +2271,7 @@
     // Only a clearly horizontal gesture counts as a swipe. A vertical scroll —
     // even one that drifts sideways — must leave the carousel alone so the page
     // keeps scrolling.
-    if(Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.3){
+    if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3){
       selectProject(currentProject + (dx < 0 ? 1 : -1));
       suppressClick = true;                                   // don't let the trailing click re-centre a card
       setTimeout(function(){ suppressClick = false; }, 350);
@@ -2288,6 +2288,22 @@
       else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleStory(); }
     });
   }
+
+  /* Arrow keys work page-wide, not just with the stage focused. Never while
+     someone is typing (input/textarea/contenteditable), never over an event
+     the stage or the tab bar already handled (both call preventDefault), and
+     only while the carousel is actually on screen — width 0 also means its
+     tab is hidden. Same code path as the prev/next buttons. */
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if(e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    var t = e.target;
+    if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    var r = cfViewport.getBoundingClientRect();
+    if(r.width === 0 || r.bottom < 0 || r.top > window.innerHeight) return;
+    e.preventDefault();
+    selectProject(currentProject + (e.key === 'ArrowRight' ? 1 : -1));
+  });
 
   /* ── Sticky collapse — the way back out of a long open story ──
      The pill appears only once the reader has scrolled well past the top of
