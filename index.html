@@ -1031,6 +1031,7 @@
   .et-expand-inner .stack,
   .et-expand-inner .compass-demo,
   .et-expand-inner .ute-demo,
+  .et-expand-inner .ech-demo,
   .et-expand-inner .et-figure,
   .et-expand-inner .project-example{
     opacity:0;transform:translateY(8px);
@@ -1041,6 +1042,7 @@
   .et-expand.open .et-expand-inner .stack,
   .et-expand.open .et-expand-inner .compass-demo,
   .et-expand.open .et-expand-inner .ute-demo,
+  .et-expand.open .et-expand-inner .ech-demo,
   .et-expand.open .et-expand-inner .et-figure,
   .et-expand.open .et-expand-inner .project-example{
     opacity:1;transform:translateY(0);
@@ -1088,6 +1090,7 @@
     .et-expand-inner .stack,
     .et-expand-inner .compass-demo,
     .et-expand-inner .ute-demo,
+    .et-expand-inner .ech-demo,
     .et-expand-inner .et-figure,
     .et-expand-inner .project-example{transition:none;opacity:1;transform:none}
   }
@@ -1239,6 +1242,67 @@
     .uth-table{font-size:0.75em}
     .uth-table th{white-space:normal}
     .uth-table th,.uth-table td{padding:0.4em 0.4em}
+  }
+
+  /* ── ECH contrast-pair widget (Dojo story, "The design insight") ──
+     One student message, two histories, two answers: the Pressure-Guard
+     rubric played out by hand — scripted illustration, not a live model
+     (the note under the card says so). Same vocabulary as the Compass
+     demo: italic rust speaker labels, mono-caps option buttons with the
+     reserved ▶ marker, a paper-warm answer card in the .uth-callout
+     family. All inner elements are divs/spans on purpose: the panel's
+     reveal rules (.et-expand-inner p …) would out-specify the widget's
+     own .visible fade on a <p>. */
+  .ech-demo{margin:2.2em 0 2em;max-width:62ch}
+  .ech-label{
+    font-style:italic;font-weight:300;font-size:0.9em;color:var(--rust);
+    display:block;letter-spacing:0.02em;
+  }
+  .ech-message{font-size:1em;line-height:1.72;margin:0.3em 0 0}
+  .ech-options{
+    display:flex;flex-direction:column;align-items:flex-start;
+    margin:1.1em 0 0;font-size:0.55em;
+  }
+  .ech-opt{
+    font-family:'JetBrains Mono',monospace;font-size:inherit;
+    letter-spacing:0.14em;text-transform:uppercase;
+    background:none;border:none;cursor:pointer;
+    color:var(--ink-dim);text-align:left;
+    display:flex;align-items:center;
+    min-height:44px;padding:0 0 0 1.5em;position:relative;
+    transition:color .2s;
+  }
+  .ech-opt::before{
+    content:"\25B6";font-size:0.7em;color:var(--rust);
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    opacity:0;transition:opacity .2s;
+  }
+  .ech-opt:hover{color:var(--ink)}
+  .ech-opt:hover::before{opacity:1}
+  .ech-opt:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
+  .ech-opt[aria-pressed="true"]{color:var(--rust)}
+  .ech-opt[aria-pressed="true"]::before{opacity:1}
+  .ech-card{
+    margin-top:1.1em;padding:1em 1.3em 1.1em;
+    background:var(--paper-warm);border:1px solid var(--rule);border-radius:6px;
+  }
+  .ech-card-head{display:flex;align-items:baseline;justify-content:space-between;gap:1em}
+  .ech-verdict{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  .ech-response{
+    font-style:italic;font-size:1em;line-height:1.72;
+    color:var(--ink-soft);margin:0.5em 0 0;
+  }
+  .ech-response,.ech-verdict{opacity:0;transition:opacity .35s ease}
+  .ech-response.visible,.ech-verdict.visible{opacity:1}
+  .ech-note{
+    margin:0.9em 0 0;font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);
+  }
+  @media(prefers-reduced-motion:reduce){
+    .ech-opt,.ech-opt::before,.ech-response,.ech-verdict{transition:none}
   }
 
   /* ========== SENSEI SCROLL ========== */
@@ -1825,6 +1889,24 @@
         <p>The coaching model is a fine-tuned Ministral 8B. Fine-tuning means I trained the behavior into the model's own weights from examples, so it no longer leans on the prompt, the fixed instruction a model receives up front, to enforce it. The examples were hundreds of multi-turn coaching dialogues, written by strong frontier models (Claude and Mistral Large) against my rubric and grounded in the real pressure patterns from three live sessions. This is the project's gold data: the set of dialogues that shows the model what good coaching looks like.</p>
         <p class="uth-sub">The design insight</p>
         <p>The design insight the whole project rests on: the same message can deserve two different answers. "Can you just tell me?" after twenty minutes of honest work deserves help. The identical sentence after two low-effort turns deserves a friendly refusal. The judgment lives in the history that comes before the message. So my rubric grades the same final message differently depending on that history, and the rubric became the evaluation, and the evaluation became the training signal.</p>
+
+        <div class="ech-demo" id="ech-demo">
+          <span class="ech-label">Student</span>
+          <div class="ech-message">&ldquo;Can you just tell me a good argument?&rdquo;</div>
+          <div class="ech-options" role="group" aria-label="Pick the history behind the message">
+            <button type="button" class="ech-opt" data-key="effort" aria-pressed="true">After twenty minutes of honest work</button>
+            <button type="button" class="ech-opt" data-key="pressure" aria-pressed="false">After two low-effort turns</button>
+          </div>
+          <div class="ech-card">
+            <div class="ech-card-head">
+              <span class="ech-label">Sensei</span>
+              <span class="ech-verdict visible" id="ech-verdict">The coach helps</span>
+            </div>
+            <div class="ech-response visible" id="ech-response" aria-live="polite">&ldquo;You&rsquo;ve done the work, so here is the piece you&rsquo;re missing: your claim and your reason stand, but they don&rsquo;t yet hit anyone. Picture the person your claim affects most &mdash; what happens to them if nothing changes? Name that, and the argument is yours.&rdquo;</div>
+          </div>
+          <div class="ech-note">The rubric, played out &mdash; not a live model</div>
+        </div>
+
         <p>I also test both directions. As a coach the model should scaffold, meaning it offers hints and questions so the learner builds the answer themselves. As a debate opponent the same model should deliver hard, direct counterarguments. If one model can do both on cue, its restraint as a coach is a learned choice.</p>
 
         <h4 class="uth-h">How I measured it</h4>
@@ -2336,7 +2418,7 @@
     });
     var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
     if(activeInner){
-      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .et-figure, .project-example')
+      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .ech-demo, .et-figure, .project-example')
         .forEach(function(child, i){ child.style.transitionDelay = (Math.min(i, 10) * 80) + 'ms'; });
     }
 
@@ -2590,6 +2672,55 @@
   }
   window.addEventListener('hashchange', applyHash);
   applyHash(true);
+
+  /* ── ECH contrast-pair widget (Dojo story) ──
+     Same message, two histories, two scripted answers: the Pressure-Guard
+     rubric played out by hand, no model involved. State A is pre-rendered
+     in the HTML (works without JS); a click swaps only the answer and the
+     verdict tag, with the same fade the Compass demo uses. */
+  (function(){
+    var echDemo = document.getElementById('ech-demo');
+    if(!echDemo) return;
+    var echResponse = document.getElementById('ech-response');
+    var echVerdict = document.getElementById('ech-verdict');
+    var echBtns = echDemo.querySelectorAll('.ech-opt');
+    var echAnswers = {
+      effort: {
+        verdict: 'The coach helps',
+        text: '“You’ve done the work, so here is the piece you’re missing: your claim and your reason stand, but they don’t yet hit anyone. Picture the person your claim affects most — what happens to them if nothing changes? Name that, and the argument is yours.”'
+      },
+      pressure: {
+        verdict: 'The coach holds',
+        text: '“Not like this. If I hand you an argument, it stays mine, and in the ring you would be defending something you never built. Give me one claim in your own words, however rough — then we sharpen it together.”'
+      }
+    };
+    var echActive = 'effort';
+    function echShow(key){
+      if(key === echActive || !echAnswers[key]) return;
+      echActive = key;
+      echBtns.forEach(function(b){
+        b.setAttribute('aria-pressed', b.dataset.key === key ? 'true' : 'false');
+      });
+      function swap(){
+        echResponse.textContent = echAnswers[key].text;
+        echVerdict.textContent = echAnswers[key].verdict;
+      }
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        swap();
+        return;
+      }
+      echResponse.classList.remove('visible');
+      echVerdict.classList.remove('visible');
+      setTimeout(function(){
+        swap();
+        echResponse.classList.add('visible');
+        echVerdict.classList.add('visible');
+      }, 300);
+    }
+    echBtns.forEach(function(b){
+      b.addEventListener('click', function(){ echShow(b.dataset.key); });
+    });
+  })();
 
   /* ========== SENSEI SCROLL ANIMATION ========== */
   /* Wheel-capture approach: when the sensei scene is in view, scroll input
