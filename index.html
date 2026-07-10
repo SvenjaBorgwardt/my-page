@@ -1127,7 +1127,11 @@
   .uth-metric.accent .num{color:var(--paper)}
   .uth-metric .label{
     font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:0.16em;
-    text-transform:uppercase;line-height:1.4;color:var(--ink-dim);
+    text-transform:uppercase;line-height:1.4;
+    /* --ink-dim reaches only 4.03:1 on this card's --paper-deep — under AA for
+       small text. Same fix as the UTE register: one step darker. Every other
+       --ink-dim label sits on --paper (5.07:1) or --paper-warm (4.60:1). */
+    color:var(--ink-soft);
   }
   .uth-metric.accent .label{color:var(--paper);opacity:0.85}
   /* eval table */
