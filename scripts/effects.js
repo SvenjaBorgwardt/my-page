@@ -973,10 +973,4 @@
 
   initCompassDemo();
   initUteDemo();
-
-  console.log(
-    '[effects.js] ready. motion: ' +
-    (prefersReduced ? 'reduced' : 'full') +
-    (lowPerf ? ' | perf: low' : '')
-  );
 })();
