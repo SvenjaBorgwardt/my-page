@@ -2601,6 +2601,11 @@
       if(teleport){ void c.offsetWidth; c.style.transition = ''; }
       c.classList.toggle('cf-active', a === 0);
       c.setAttribute('aria-current', a === 0 ? 'true' : 'false');
+      // Only the centred card's CTA is in the tab order — the faded neighbours'
+      // buttons stay unreachable (they hold tabindex="-1" in the HTML). Follows
+      // the centre card through every selectProject/layout pass.
+      var cfCta = c.querySelector('.cf-cta');
+      if(cfCta) cfCta.setAttribute('tabindex', a === 0 ? '0' : '-1');
       prevOffset[i] = o;
     });
   }
