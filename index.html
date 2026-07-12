@@ -61,7 +61,18 @@
   body{
     background:var(--paper);color:var(--ink);
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    font-size:20px;line-height:1.7;
+    /* Fluid base. Almost everything is sized in em off this, so the reading
+       column (main, 41em) and the type scale grow together with the window
+       instead of the column sitting at a fixed 820px while only the paper
+       margins move. Flat 20px up to ~1200px (phones, tablets and small laptops
+       stay exactly as before, pixel-identical), then up to 25px by ~1700px and
+       capped there so the line length stays readable. The slope (8px + 1vw,
+       gentler than 10px + 1vw) keeps the em-based carousel small enough on flat
+       laptop viewports that its deck fits the window — the deck is fitted to the
+       height geometrically (see fitCardWidth), never by pinning the font. The
+       masthead name and the creed keep their own vw clamps; the pronunciation
+       caption stays fixed px on purpose (see below). */
+    font-size:clamp(20px, 8px + 1vw, 25px);line-height:1.7;
     -webkit-font-smoothing:antialiased;
   }
   body::before{
@@ -95,9 +106,9 @@
 
   /* Pronunciation — the line below the name. Plain text, not a control: there is
      no pronunciation audio, so there is nothing to click. Sizes are fixed px and
-     not em: everything here inherits body's fixed 20px, so an em would track the
-     type scale, never the viewport. Only vw does that, and a caption should not
-     grow with the display name above it. */
+     not em: the body base is now a fluid clamp(), so an em here would grow this
+     caption with the viewport and the display name. A caption should stay put,
+     so px. */
   .pronounce{
     display:inline-flex;gap:10.67px;align-items:baseline;
     margin-top:6.67px;
