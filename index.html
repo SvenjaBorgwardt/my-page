@@ -61,14 +61,7 @@
   body{
     background:var(--paper);color:var(--ink);
     font-family:'Cormorant Garamond',serif;font-weight:400;
-    /* Fluid base. Almost everything is sized in em off this, so the reading
-       column (main, 41em) and the type scale together with the window instead of
-       the column sitting at a fixed 820px while only the paper margins move.
-       Flat 20px up to ~1000px (phones and tablets stay exactly as before), then
-       grows to 25px by ~1500px and caps there so the line length stays readable.
-       The masthead name and the creed keep their own vw clamps; the pronunciation
-       caption stays fixed px on purpose (see below). */
-    font-size:clamp(20px, 10px + 1vw, 25px);line-height:1.7;
+    font-size:20px;line-height:1.7;
     -webkit-font-smoothing:antialiased;
   }
   body::before{
@@ -102,9 +95,9 @@
 
   /* Pronunciation — the line below the name. Plain text, not a control: there is
      no pronunciation audio, so there is nothing to click. Sizes are fixed px and
-     not em: the body base is now a fluid clamp(), so an em here would grow this
-     caption with the viewport and the display name. A caption should stay put,
-     so px. */
+     not em: everything here inherits body's fixed 20px, so an em would track the
+     type scale, never the viewport. Only vw does that, and a caption should not
+     grow with the display name above it. */
   .pronounce{
     display:inline-flex;gap:10.67px;align-items:baseline;
     margin-top:6.67px;
