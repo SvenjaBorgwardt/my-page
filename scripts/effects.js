@@ -183,6 +183,27 @@
     });
   }
 
+  // ── Photo easter egg — one click, one line, and it stays ───
+  // Runs OUTSIDE the prefersReduced guard (unlike the tilt): the reveal is
+  // content, not decoration. The CSS drops the fade under reduced motion.
+  function initPhotoQuote() {
+    var btn = document.getElementById('photo-egg');
+    var quote = document.getElementById('photo-quote');
+    if (!btn || !quote) return;
+
+    btn.addEventListener('click', function () {
+      if (!quote.hidden) return;
+      quote.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      // Two frames so the un-hide is committed before the transition starts.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          quote.classList.add('shown');
+        });
+      });
+    });
+  }
+
   // ── Compass demo (Phase D) ──────────────────────────────────
   function initCompassDemo() {
     var demo = document.getElementById('compass-demo');
@@ -971,6 +992,7 @@
     initPhotoTilt();
   }
 
+  initPhotoQuote();
   initCompassDemo();
   initUteDemo();
 })();

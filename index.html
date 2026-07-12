@@ -170,6 +170,35 @@
     color:var(--ink-dim);text-align:center;letter-spacing:0.02em;
   }
 
+  /* The photo doubles as a silent button (easter egg): a click reveals the
+     .photo-quote below and it stays. The frame is sized in em, so the button
+     must inherit the font-size (a <button> resets it to 13px otherwise —
+     see the carousel gotchas). Deliberately NO cursor:pointer — the egg gives
+     no visual hint at all (Svenja's call); keyboard users still get the
+     aria-label, and the hover tilt is the only invitation to touch. */
+  button.photo-frame{
+    display:block;padding:0;margin:0;border-radius:0;
+    font-size:inherit;font-family:inherit;color:inherit;
+    appearance:none;-webkit-appearance:none;cursor:default;
+  }
+  button.photo-frame:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+  .photo-quote{
+    /* width:0 + min-width:100% — match the frame's width without letting the
+       long line widen the figure's grid column (auto tracks size to
+       max-content, which would include this caption). */
+    width:0;min-width:100%;
+    margin-top:0.65em;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.7em;line-height:1.5;color:var(--ink-soft);
+    text-align:center;letter-spacing:0.01em;
+    opacity:0;transform:translateY(5px);
+    transition:opacity .7s ease,transform .7s ease;
+  }
+  .photo-quote.shown{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .photo-quote{transition:none;transform:none}
+  }
+
   /* ========== HERO ========== */
   .intro{
     font-style:italic;font-size:1.1em;line-height:1.5;
@@ -1705,6 +1734,10 @@
   .cf-card:not(.cf-active){opacity:1!important}  /* counter the phone-dim !important */
   .cf-viewport::before,.cf-viewport::after{display:none}
   .et-arrow-btn,.cf-index{display:none}
+  /* No-JS: the photo easter egg can't fire, so the quote simply renders.
+     display:block overrides the hidden attribute's UA display:none; the
+     opacity/transform undo the pre-reveal state from .photo-quote. */
+  .photo-quote[hidden]{display:block;opacity:1;transform:none}
 </style></noscript>
 </head>
 <body>
@@ -1749,7 +1782,13 @@
     </div>
   </div>
   <figure class="photo-block">
-    <div class="photo-frame">
+    <!-- The photo is a quiet button: one click reveals the line below it
+         (.photo-quote) and it stays for the rest of the visit. An easter egg,
+         but a first-class control — keyboard focusable, aria-expanded, and
+         with JS off the quote simply renders (noscript rule in the head). -->
+    <button class="photo-frame" type="button" id="photo-egg"
+            aria-expanded="false" aria-controls="photo-quote"
+            aria-label="Portrait of Svenja Borgwardt — one more line about her">
       <!-- The frame is a fixed 154px wide (134px on phones), so 480px of source
            covers even a 3x screen. WebP at that size is 34KB against the JPEG's
            177KB; the .jpg stays as the fallback for the few browsers without
@@ -1757,23 +1796,23 @@
            pulls the portrait ahead of the six webfonts it used to queue behind. -->
       <picture>
         <source srcset="svenja.webp" type="image/webp">
-        <img src="svenja.jpg" alt="Svenja Borgwardt" width="480" height="640"
+        <img src="svenja.jpg" alt="" width="480" height="640"
              fetchpriority="high" decoding="async"
              style="width:100%;height:100%;object-fit:cover;display:block">
       </picture>
-    </div>
+    </button>
+    <figcaption class="photo-quote" id="photo-quote" hidden>&ldquo;I&nbsp;like real conversations, spontaneous plans, and saying yes to things that scare me a&nbsp;little.&rdquo;</figcaption>
   </figure>
   <div class="masthead-bio">
     <p class="masthead-subline reveal">I build AI systems for learning: tools that help without doing the thinking for you, from the interface down to the model’s weights.</p>
-    <p class="masthead-intro reveal">I like real conversations, spontaneous plans, and saying yes to things that scare me a little.</p>
-    <p class="masthead-intro reveal">I studied economics, linguistics, and literature and cultural studies. I've done education research, taught in several institutions and countries, run and organized EU-funded projects across Europe, and spent my early years thinking in risk and compliance at a bank.</p>
+    <p class="masthead-intro reveal">The route here ran through economics, linguistics, and literature and cultural studies, through education research, classrooms in several institutions and countries, EU-funded projects across Europe, and early years thinking in risk and compliance at a bank.</p>
   </div>
   <p class="masthead-location reveal">Currently based in Cologne, Germany</p>
 </header>
 
 <!-- CREED — the through-line, before the work -->
 <section class="creed reveal" aria-label="Guiding idea">
-  <p>Now that machines are starting to do the work, education is finally free to return to its oldest task: making us <em>human</em>.</p>
+  <p>Machines are starting to do the work. Education is finally free for its true task: making us <em>human</em>.</p>
 </section>
 
 <!-- CHAPTER TABS -->
@@ -1957,7 +1996,7 @@
 
         <div class="stack">
           <span class="k">Stack</span>Gemma 4 + LoRA &middot; runs on-device &middot; retrains from teacher corrections<br>
-          <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a> &middot; <a href="https://github.com/SvenjaBorgwardt/MATE-DEMO" target="_blank" rel="noopener">MATE pipeline</a>
+          <span class="k">Links</span><a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">Live demo</a> &middot; <a href="https://youtu.be/IeDM1mJ3J2M" target="_blank" rel="noopener">Video</a> &middot; <a href="https://huggingface.co/SveBorg/gemmpen-lora" target="_blank" rel="noopener">LoRA model</a> &middot; <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">Kaggle writeup</a> &middot; <a href="https://github.com/SvenjaBorgwardt/GemmPen" target="_blank" rel="noopener">Code</a>
         </div>
       </div>
 
