@@ -2882,28 +2882,35 @@
   function measureTallest(){
     return Math.max.apply(Math, cfCards.map(function(c){ return c.offsetHeight; }));
   }
+  /* How much of the stage the card fills as its base proportion. The stage's
+     outer ~10% each side is the paper dissolve (::before/::after), so 0.80 is the
+     fade-free ceiling — the centred card, the one being read, must never slip
+     under it. CF_FILL sits just inside that: the card fills the column so it reads
+     gedrungen instead of lang-dünn, while the neighbours still peek through at the
+     edges. Tunable — raise toward 0.80 for wider cards, lower for more coverflow. */
+  var CF_FILL = 0.79;
   function fitCardWidth(){
     cfCards.forEach(function(c){ c.style.width = ''; });   // reset to the CSS width (20em / phone %)
-    if(cfNarrow.matches || window.innerWidth <= 1000) return;
+    if(cfNarrow.matches) return;                           // the phone owns its own single-card layout
 
+    var stage = cfViewport.clientWidth || cfCards[0].offsetWidth;
+    var capPx = stage * 0.80;                              // fade-free ceiling
+    /* Base proportion: fill the column. Never under the fade, and never narrower
+       than the old 20em — so on a stage too tight to gain anything (very small
+       windows) the card just stays where it was. */
+    var base = Math.max(cfCards[0].offsetWidth, Math.round(stage * CF_FILL));
+    if(base !== cfCards[0].offsetWidth) cfCards.forEach(function(c){ c.style.width = base + 'px'; });
+
+    /* Height-fit backstop: if even the filled base leaves the deck taller than the
+       window (a flat viewport), widen further toward the fade ceiling — a wider
+       card wraps the teaser into fewer lines, so the deck drops. Never by shrinking
+       the font. Card height is a step function of width (it drops a line at a time),
+       so we don't stop at the first flat step; we stop once the budget is met or
+       the ceiling is hit. */
     var budget = deckBudget();
+    var w = cfCards[0].offsetWidth;
     var tall = measureTallest();
-    if(tall + 12 <= budget) return;                        // 20em already fits — leave it
-
-    /* The card can widen only into the stage's fade-free middle: the outer ~10%
-       each side is the paper dissolve (::before/::after), and the centred card —
-       the one being read — must never slip under it. So ~80% of the viewport is
-       the ceiling, and the deck settles at whatever that width (or the knee, or
-       the budget) yields — never by shrinking the font. */
-    var capPx = (cfViewport.clientWidth || cfCards[0].offsetWidth) * 0.80;
-    var w = cfCards[0].offsetWidth;                        // 20em in px at the current font
     var guard = 0;
-    /* Widen in small steps until the deck fits the window or the card reaches the
-       fade-free ceiling. Card height is a step function of width (it drops a line
-       at a time), so we do NOT stop at the first flat step — a single step often
-       lands between two line-drops; we only stop once the budget is met or the
-       ceiling is hit. When the budget is unreachable the card lands at the ceiling
-       and the deck sits at its geometric floor, still below the window height. */
     while(tall + 12 > budget && w < capPx && guard++ < 24){
       var nextW = Math.min(Math.round(w * 1.05), Math.round(capPx));
       if(nextW <= w) break;
