@@ -297,7 +297,9 @@
       activeKey = key;
 
       buttons.forEach(function (btn) {
-        btn.classList.toggle('active', btn.getAttribute('data-key') === key);
+        var on = btn.getAttribute('data-key') === key;
+        btn.classList.toggle('active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
 
       if (prefersReduced) {
