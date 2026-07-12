@@ -1734,18 +1734,18 @@
 
 <!-- CHAPTER TABS -->
 <nav class="chapter-tabs" role="tablist" aria-label="Site sections">
-  <button class="tab active" data-section="build" role="tab" id="tab-build" aria-selected="true" aria-controls="section-build">
+  <button class="tab active" data-section="build" role="tab" id="tab-build" aria-selected="true" aria-controls="section-build" tabindex="0">
     <span class="tab-name">What I Build</span>
   </button>
   <!-- TEMP: Think tab hidden until the first essay is ready. To restore:
        uncomment this button, set .chapter-tabs back to 3 columns,
        re-add 'think' to tabOrder + applyHash in the script below,
        and restore the "More on that in What I Think" link in the GemmPen story.
-  <button class="tab" data-section="think" role="tab" id="tab-think" aria-selected="false" aria-controls="section-think">
+  <button class="tab" data-section="think" role="tab" id="tab-think" aria-selected="false" aria-controls="section-think" tabindex="-1">
     <span class="tab-name">What I Think</span>
   </button>
   -->
-  <button class="tab" data-section="out" role="tab" id="tab-out" aria-selected="false" aria-controls="section-out">
+  <button class="tab" data-section="out" role="tab" id="tab-out" aria-selected="false" aria-controls="section-out" tabindex="-1">
     <span class="tab-name">Out There</span>
   </button>
 </nav>
@@ -2416,10 +2416,13 @@
     var tab = document.querySelector('.tab[data-section="' + name + '"]');
     var section = document.getElementById('section-' + name);
     if(!tab || !section) return;
-    tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    // Roving tabindex: only the active tab is in the tab order; arrow keys move
+    // between the rest (handler below). This is the ARIA tabs pattern.
+    tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
     sections.forEach(function(s){ s.classList.remove('active'); });
     tab.classList.add('active');
     tab.setAttribute('aria-selected','true');
+    tab.setAttribute('tabindex','0');
     section.classList.add('active');
     if(updateHash !== false) history.replaceState(null, '', '#' + name);
   }
