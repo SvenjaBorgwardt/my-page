@@ -19,6 +19,8 @@
 <meta name="twitter:image" content="https://borgwardt.me/og-image.jpg">
 <link rel="canonical" href="https://borgwardt.me/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F6F1E6">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
   /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
@@ -928,6 +930,9 @@
     background:none;border:none;padding:0.5em;cursor:pointer;
     flex-shrink:0;display:flex;align-items:center;justify-content:center;
     color:var(--ink-dim);
+    /* Sit above the rotated far cards: at 708–724px the tilted neighbours used
+       to spill over the arrows and swallow clicks (jumping 2–3 cards). */
+    position:relative;z-index:30;
     transition:opacity 0.3s,color 0.5s cubic-bezier(.2,1,.3,1);
   }
   .et-arrow-btn:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
@@ -1618,7 +1623,7 @@
     <span class="nav-strap">AI for learning</span>
   </div>
   <div class="nav-center">
-    <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener" aria-label="LinkedIn">
+    <a href="https://www.linkedin.com/in/svenja-borgwardt" target="_blank" rel="noopener" aria-label="LinkedIn">
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0z"/>
       </svg>
@@ -1701,7 +1706,7 @@
 <h2 class="sr-only">What I Build</h2>
 
 <section class="build-intro reveal">
-  <p class="masthead-intro">Everything here asks the same question: how do we build AI that finds what's strong in people and helps them grow? In practice that means multi-agent systems, fine-tuned small models, and pre-registered evals — all of it tested with my own students, in class, under time pressure.</p>
+  <p class="masthead-intro">Everything here asks the same question: how do we build AI that finds what's strong in people and helps them grow? In practice that means multi-agent systems, fine-tuned small models, and pre-registered evals, all of it tested with my own students, in class, under time pressure.</p>
 </section>
 
 <!-- EDITORIAL THEATRE — 3D coverflow -->
@@ -1819,7 +1824,7 @@
           <figcaption>The review screen: the scanned exam next to the transcript, every error category highlighted, and the feedback I can still edit before it goes out.</figcaption>
         </figure>
 
-        <p>I've been building toward this for a while. It started with MATE, a Python pipeline for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money. And in Europe, with GDPR and the EU AI Act, you can't just send student writing to a cloud model — even anonymised, the data still leaves the room. When Google DeepMind announced the Gemma 4 hackathon, I saw the moment: fine-tune a local model that does all of it on one device. It would run for free, keep the data in the building, and take the compliance problem off the table.</p>
+        <p>I've been building toward this for a while. It started with MATE, a Python pipeline for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money. And in Europe, with GDPR and the EU AI Act, you can't just send student writing to a cloud model. Even anonymised, the data still leaves the room. When Google DeepMind announced the Gemma 4 hackathon, I saw the moment: fine-tune a local model that does all of it on one device. It would run for free, keep the data in the building, and take the compliance problem off the table.</p>
 
         <p>The model underneath is a fine-tuned Gemma 4, adapted with LoRA. Any large model can grade, so that's not why I'm fine-tuning. I want to change what the model optimises for. A general-purpose model is trained to be helpful, so it gives you the most complete, most polished answer it can. For someone who's trying to learn, that backfires. Before fine-tuning, 89% of the base model's feedback was under 400 characters, and it sounded nearly the same whether a student scored 3 or 14 out of 15. After fine-tuning, the model talks to a struggling student differently than to one who's almost there. That's what I trained it to do.</p>
 
@@ -2101,7 +2106,7 @@
       <div class="et-expand-inner" data-expand="3" style="display:none">
         <p>UTE is a voice-first ordering system for bakery counters. I built the first version at the B&#xC4;KO Hackathon with three other women, and we won first place.</p>
 
-        <p>Germany has a long tradition in bakery <em>handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The conversation stops while she works the screen.</p>
+        <p>Germany has a long tradition in bakery <em lang="de">handwerk</em>, the craft of the trained master baker. It's one of the last disciplines where the supermarket chains can't really compete, because the local bakery is something people are proud of. Especially in smaller towns, everyone has their shop, the one where the person behind the counter knows them by name. What holds these shops together is conversation. The assistant knows your family, knows your allergies, knows the cake last week was for your daughter. Then the order has to go into the register, and the conversation breaks. The assistant looks down, hunts through the touchscreen, asks the customer to repeat themselves. The conversation stops while she works the screen.</p>
 
         <p>UTE handles the admin so the conversation doesn't have to stop. The system listens while the assistant talks, transcribes in real time, matches items against the bakery's catalogue, and builds the order in the background. When the assistant repeats the order back to the customer, which she'd do anyway, that serves as confirmation. Nothing gets clicked. Allergies filter the catalogue. Regulars get recognised and their usual orders prefilled. Cross-sell suggestions surface when they actually fit, instead of interrupting.</p>
 
@@ -2109,7 +2114,7 @@
 
         <p>The reason I could build this in a weekend is that I'd already spent months on the same structure in a different context. A voice pipeline that listens, transcribes, matches what it hears against a topic database, and writes a summary afterwards. The plumbing was already there; the bakery counter was just a new place to aim it.</p>
 
-        <p>UTE stands for <em>Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which is what we wanted. It should feel like there's a person at the counter, because there is.</p>
+        <p>UTE stands for <em lang="de">Unkomplizierte Theken-Eingabe</em>, uncomplicated counter input. It's also a common German name, which is what we wanted. It should feel like there's a person at the counter, because there is.</p>
 
         <div class="ute-demo reveal" id="ute-demo">
           <div class="ute-demo-chat" id="ute-chat"></div>
@@ -2122,7 +2127,7 @@
             <div class="pos-body">
               <div class="pos-grid" id="ute-grid"></div>
               <div class="pos-sidebar" id="ute-cart-wrap">
-                <div class="pos-cart-head">Bon</div>
+                <div class="pos-cart-head" lang="de">Bon</div>
                 <div class="pos-cart-items" id="ute-cart"></div>
                 <div class="pos-footer">
                   <div class="pos-total"><span>Total</span><span id="ute-total-val">&euro;0.00</span></div>
@@ -2216,25 +2221,11 @@
 <!-- TAB: WHAT I THINK                                            -->
 <!-- ============================================================ -->
 <div class="tab-content" id="section-think" role="tabpanel" aria-labelledby="tab-think">
-
-  <section class="chapter">
-    <header class="chapter-head">
-      <h2 class="chapter-title">AI in Education: <em>The Wrong Bet</em></h2>
-    </header>
-
-    <p>I spend most of my time on a problem that might sound simple but isn't: Large language models are trained to be helpful, and in the context of learning, this is not always what is best for the person. That's why I started fine-tuning models to realign what helpful means when someone is trying to learn.</p>
-
-    <p>When I first started using AI, it changed how I work, how I think, how I solve problems. I taught myself to code and within months I had built working software for things I'd been stuck on for years. But not everyone uses AI this way. Especially among younger adults, I keep seeing the same pattern: good output, no understanding. The AI gives a perfect answer and the person moves on, mistaking the quality of the result for their own learning.</p>
-
-    <p>Most of what's called AI in education right now is automation of the existing system. Faster grading. Chatbots that answer student questions. Lesson plan generators. All of it takes the current structure as given and just tries to run it more efficiently.</p>
-
-    <p>I think that's the wrong bet. The system we have was designed for scale, not for individuals. Thirty students, one teacher, standardised assessments, a grade at the end. That was never the goal. It was a constraint. The goal was always for each student to be understood individually: what they know, what they struggle with, what they need next. We just never had the tools for it.</p>
-
-    <p>It was also built to transfer knowledge and test whether it stuck. In a world where AI handles information retrieval, synthesis, and even reasoning better than most humans, that model stops making sense. What matters in that world is everything a machine can't replace: judgment, original thinking, the ability to ask a question no one has thought to ask. If we want to prepare students for that, we have to stop optimising for the skills that are about to become cheap and start building the ones that won't be.</p>
-
-    <p>Now we might have the tools for both: a model that runs on a student's device, adapts to how they learn, tracks their progress over time, and does all of this without their data leaving the room. Some of my work still lives inside the old system, because that's the reality I teach in. But the technology underneath points somewhere else.</p>
-  </section>
-
+  <!-- TEMP: the "What I Think" essay is intentionally kept OUT of the shipped
+       HTML until it is ready to publish, so it is not readable via view-source
+       or crawlable before then. The full draft lives locally at
+       docs/what-i-think-essay-draft.html (gitignored). To restore, follow the
+       steps in that file. -->
 </div>
 
 <!-- ============================================================ -->
@@ -2255,7 +2246,7 @@
     <li>
       <a href="https://debate-dojo.vercel.app/demo.html" target="_blank" rel="noopener">
         <span class="link-label">Mistral Meetup Cologne · June 2026</span>
-        Souver&auml;nit&auml;t im Kopf (Sovereignty in Your Head). How a fine-tuned Ministral 8B learns to dose help instead of handing out answers.
+        <span lang="de">Souver&auml;nit&auml;t im Kopf</span> (Sovereignty in Your Head). How a fine-tuned Ministral 8B learns to dose help instead of handing out answers.
       </a>
     </li>
     <li>
@@ -2306,7 +2297,7 @@
   <div class="section-title">Find Me</div>
   <ul class="link-list">
     <li>
-      <a href="https://www.linkedin.com/in/svenja-borgwardt-5581b03b4" target="_blank" rel="noopener">
+      <a href="https://www.linkedin.com/in/svenja-borgwardt" target="_blank" rel="noopener">
         <span class="link-label">LinkedIn</span>
         linkedin.com/in/svenja-borgwardt
       </a>
