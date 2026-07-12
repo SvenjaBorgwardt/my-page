@@ -470,8 +470,8 @@
               // After a beat, the keyword lights up red (animates ink → rust).
               setTimeout(function() {
                 textEl.innerHTML = fullHTML;
-                setTimeout(resolve, 500); // let the red register before the explanation
-              }, 300);
+                setTimeout(resolve, 350); // let the red register before the explanation
+              }, 200);
             } else {
               resolve();
             }
@@ -480,7 +480,7 @@
           i++;
           textEl.textContent = plain.substring(0, i);
           keepChatInView();          // the line grows as it types; follow it
-          setTimeout(tick, 38);
+          setTimeout(tick, 22);
         }
         tick();
       });
@@ -724,7 +724,7 @@
     // (~52 ms per character ≈ 230 wpm, with a small base for the eye to land).
     function readMs(text) {
       var len = (text || '').length;
-      return Math.max(2600, Math.min(len * 52 + 700, 6800));
+      return Math.max(1300, Math.min(len * 28 + 400, 3400));
     }
 
     async function applyAction(act) {
@@ -764,13 +764,13 @@
               if (t > 0) await sleep(500);
               await applyAction(line.then[t]);
             }
-            await sleep(1600); // let the register moment land
+            await sleep(950); // let the register moment land
             if (d < scene.dialog.length - 1) {
               focusChat();
               await sleep(450);
             }
           }
-          await sleep(Math.max(1500, line.text.length * 26));
+          await sleep(Math.max(750, line.text.length * 14));
         }
       }
 
@@ -805,7 +805,7 @@
 
       // Let reader absorb the final state with both sides visible
       focusBoth();
-      await sleep(1600);
+      await sleep(950);
 
       // Fade out messages (except last scene)
       if (idx < SCENES.length - 1) {
@@ -873,7 +873,7 @@
         }
         statusEl.textContent = 'listening';
         statusEl.classList.add('active');
-        await sleep(800);
+        await sleep(500);
 
         // run all scenes
         for (var i = 0; i < SCENES.length; i++) {
@@ -889,7 +889,7 @@
         statusEl.classList.remove('active');
 
         // hold final state, then reset
-        await sleep(4500);
+        await sleep(2600);
         resetToIdle();
       } catch (e) {
         if (!(e && e.__cancel)) throw e; // cancelled: the caller resets
