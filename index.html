@@ -1662,6 +1662,25 @@
      leaders, ornaments, the counter) stays exactly as it was — WCAG exempts
      purely decorative marks, and darkening those would wreck the look. */
 </style>
+<noscript><style>
+  /* No-JS fallback for the coverflow. Without the script it never initialises,
+     so every .cf-card keeps its CSS default (position:absolute, all seven
+     stacked at the stage centre, and on a phone dimmed to 0.18 by the neighbour
+     rule) and only one shows. Render them as a plain vertical list at full
+     opacity instead, and drop the controls that do nothing without JS: the
+     arrows, the project index and the stage edge-fades. */
+  #editorial-theatre{overflow:visible}
+  .et-wrapper{display:block}
+  .cf-viewport{height:auto;perspective:none}
+  #cf-track{position:static}
+  .cf-card{
+    position:static;transform:none;
+    width:100%;max-width:30em;margin:0 auto 1.4em;
+  }
+  .cf-card:not(.cf-active){opacity:1!important}  /* counter the phone-dim !important */
+  .cf-viewport::before,.cf-viewport::after{display:none}
+  .et-arrow-btn,.cf-index{display:none}
+</style></noscript>
 </head>
 <body>
 
