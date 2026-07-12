@@ -3170,7 +3170,7 @@
       target = progressToFrame(progress);
       if(!rafId) rafId = requestAnimationFrame(ease);
     }
-    if(!coarse) document.addEventListener('wheel', onWheel, {passive: false});
+    if(!coarse && !reduceMotion) document.addEventListener('wheel', onWheel, {passive: false});
 
     /* ── Touch support ── */
     var lastTouchY = null;
@@ -3191,8 +3191,8 @@
       if(!rafId) rafId = requestAnimationFrame(ease);
     }
     function onTouchEnd(){ lastTouchY = null; }
-    /* These are the scroll-jack. A coarse pointer never gets them. */
-    if(!coarse){
+    /* These are the scroll-jack. A coarse pointer or a reduced-motion user never gets them. */
+    if(!coarse && !reduceMotion){
       document.addEventListener('touchstart', onTouchStart, {passive: true});
       document.addEventListener('touchmove', onTouchMove, {passive: false});
       document.addEventListener('touchend', onTouchEnd);
@@ -3282,10 +3282,9 @@
       bowing = false; autoPlayed = false;   // reopening the story bows again
     };
 
-    /* Reduced motion: show standing pose, skip animation */
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      onWheel = function(){};
-    }
+    /* Reduced motion: the wheel/touch scroll-jack listeners above are never
+       attached (see the !reduceMotion guards), so the sensei simply shows its
+       standing pose and never animates. */
   })();
 })();
 </script>
