@@ -1412,6 +1412,12 @@
     flex:1;min-width:0;position:relative;
     perspective:1700px;height:22em;outline:none;
     touch-action:pan-y;
+    /* Pinned to a fixed 20px base, NOT the fluid body scale. The deck's height
+       is equalised to the tallest of the seven cards (see equalizeCards), so
+       under the fluid scale the longest teaser dragged the whole deck to ~830px
+       and overflowed shorter laptop viewports — the carousel read as gone. The
+       page keeps scaling around it; the deck keeps its tuned size. */
+    font-size:20px;
   }
   .cf-viewport:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:12px}
   /* Clean edge fade — the faint side cards dissolve into the paper at the
