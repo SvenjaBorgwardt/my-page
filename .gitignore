@@ -52,3 +52,12 @@ docs/
 img/story/CURATION.md
 img/story/compass-scenario.webp
 img/story/debate-dojo-hero.webp
+
+# Interne Sprint-/Planungsdokumente – NIE ins öffentliche Repo
+agent-briefings-*.md
+protocol.md
+
+# Audit-Artefakte aus Browser-/Screenshot-Läufen – lokal, nie committen
+audit-*.png
+audit-*.jpeg
+audit-*.jpg
