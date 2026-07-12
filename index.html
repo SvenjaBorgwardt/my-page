@@ -2670,14 +2670,18 @@
   });
 
   /* Re-place cards on resize (offsets are derived from the live card width).
-     Width only: a phone fires resize every time the address bar slides away
-     under a scroll, and re-measuring there means a forced layout of seven
-     cards in the middle of the gesture. Card heights follow the column width,
-     so a height-only resize has nothing to tell us. */
-  var resizeT, lastCfWidth = window.innerWidth;
+     A width change always matters. A height change matters ONLY in the fluid
+     regime (>1000px wide), where the deck is width-fitted to the window height
+     (see fitCardWidth): a flatter window wants wider, shorter cards. Below
+     1000px the font is floored at 20px and the deck never follows the height —
+     and a phone fires resize on every address-bar slide, so re-measuring seven
+     cards on a height-only change there would jank the gesture. */
+  var resizeT, lastCfWidth = window.innerWidth, lastCfHeight = window.innerHeight;
   window.addEventListener('resize', function(){
-    if(window.innerWidth === lastCfWidth) return;
-    lastCfWidth = window.innerWidth;
+    var w = window.innerWidth, h = window.innerHeight;
+    var heightMatters = w > 1000 && h !== lastCfHeight;
+    if(w === lastCfWidth && !heightMatters) return;
+    lastCfWidth = w; lastCfHeight = h;
     clearTimeout(resizeT);
     resizeT = setTimeout(function(){ equalizeCards(); layoutCarousel(); }, 120);
   });
@@ -2846,9 +2850,62 @@
     }
   }
 
+  /* ── Deck fit: keep the equalised deck inside the window height ──
+     With the fluid base font every card scales in em, so on a wide viewport the
+     seven cards — and the deck, equalised to the tallest (Ohm City) — grow to
+     ~25/20 of their 20px height. On a FLAT viewport (wide but short, e.g.
+     1280×720 or 1440×900) that taller deck no longer fits the window and used to
+     run out of #editorial-theatre's overflow:hidden — the carousel read as gone.
+     We fix that geometrically, never by pinning the font: a wider card wraps the
+     teaser into fewer lines, so the tallest card — and thus the deck — gets
+     shorter. Widen only as much as the window height demands, stop at the knee
+     where extra width buys no more height, and never touch it below 1000px (there
+     the page is pixel-identical to before: font floored at 20px, cards at 20em).
+     Called with the cards already at height:auto (from equalizeCards). */
+  function deckBudget(){
+    // The deck is "fully visible" when it is no taller than the window; the ~1em
+    // index line and a little air live in the 40px remainder. Anything a card
+    // can't shrink past (its geometric floor) settles below the window anyway.
+    return window.innerHeight - 40;
+  }
+  function measureTallest(){
+    return Math.max.apply(Math, cfCards.map(function(c){ return c.offsetHeight; }));
+  }
+  function fitCardWidth(){
+    cfCards.forEach(function(c){ c.style.width = ''; });   // reset to the CSS width (20em / phone %)
+    if(cfNarrow.matches || window.innerWidth <= 1000) return;
+
+    var budget = deckBudget();
+    var tall = measureTallest();
+    if(tall + 12 <= budget) return;                        // 20em already fits — leave it
+
+    /* The card can widen only into the stage's fade-free middle: the outer ~10%
+       each side is the paper dissolve (::before/::after), and the centred card —
+       the one being read — must never slip under it. So ~80% of the viewport is
+       the ceiling, and the deck settles at whatever that width (or the knee, or
+       the budget) yields — never by shrinking the font. */
+    var capPx = (cfViewport.clientWidth || cfCards[0].offsetWidth) * 0.80;
+    var w = cfCards[0].offsetWidth;                        // 20em in px at the current font
+    var guard = 0;
+    /* Widen in small steps until the deck fits the window or the card reaches the
+       fade-free ceiling. Card height is a step function of width (it drops a line
+       at a time), so we do NOT stop at the first flat step — a single step often
+       lands between two line-drops; we only stop once the budget is met or the
+       ceiling is hit. When the budget is unreachable the card lands at the ceiling
+       and the deck sits at its geometric floor, still below the window height. */
+    while(tall + 12 > budget && w < capPx && guard++ < 24){
+      var nextW = Math.min(Math.round(w * 1.05), Math.round(capPx));
+      if(nextW <= w) break;
+      cfCards.forEach(function(c){ c.style.width = nextW + 'px'; });
+      w = nextW;
+      tall = measureTallest();
+    }
+  }
+
   function equalizeCards(){
     // Measure unclamped and unstyled, with transitions off so nothing animates
     cfCards.forEach(function(c){ c.style.transition = 'none'; c.style.height = 'auto'; });
+    fitCardWidth();      // desktop/fluid: widen the cards until the deck fits the window height
     naturalH = cfCards.map(function(c){ return c.offsetHeight; });
     applyCardHeights(true);
     cfCards.forEach(function(c){ void c.offsetWidth; c.style.transition = ''; });
