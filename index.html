@@ -58,6 +58,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  a:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
 
   body{
     background:var(--paper);color:var(--ink);
@@ -1710,6 +1711,7 @@
     .topnav .nav-right a:active{color:var(--rust)}
     .topnav .nav-center a:active{border-color:var(--rust);color:var(--rust)}
     .link-list a:active{color:var(--rust)}
+    .build-proof-link:active{color:var(--rust)}
     footer .legal-links a:active,
     .link-proof a:active{color:var(--rust);border-color:var(--rust)}
     .ute-demo .pos-controls button:active{color:var(--rust)}
