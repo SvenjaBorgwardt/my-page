@@ -417,7 +417,7 @@
   }
   /* -- product grid -- */
   .ute-demo .pos-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
     gap:0;
     min-height:0;
   }
@@ -721,7 +721,8 @@
       flex:0 0 auto;min-height:0;overflow:visible;
     }
     .ute-demo .pos-grid{
-      grid-template-columns:repeat(2,1fr);
+      /* 3 columns like desktop — 9 products split into 2 columns would leave an orphan tile */
+      grid-template-columns:repeat(3,1fr);
       grid-template-rows:auto;
       flex:0 0 auto;
     }

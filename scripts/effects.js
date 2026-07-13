@@ -362,9 +362,6 @@
       {name:'Vegan quiche',   price:'3.90', img:'img/vegan-quiche.png',    vegan:true,  sesame:false},
       {name:'Ciabatta',       price:'2.80', img:'img/ciabatta.png',        vegan:true,  sesame:false},
       {name:'Cinnamon roll',  price:'2.80', img:'img/cinnamon-roll.png',   vegan:false, sesame:false},
-      {name:'Blueberry muffin',price:'2.40',img:'img/blueberry-muffin.png',vegan:true,  sesame:false},
-      {name:'Pain au chocolat',price:'2.20',img:'img/pain-au-chocolat.png',vegan:false, sesame:false},
-      {name:'Lemon tart',     price:'3.50', img:'img/lemon-tart.png',      vegan:false, sesame:false},
     ];
 
     // Each scene: dialog exchange → POS actions → annotation → fade
