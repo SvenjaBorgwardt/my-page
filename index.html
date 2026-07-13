@@ -660,6 +660,12 @@
   .ute-demo .pos-controls button:hover{color:var(--rust)}
   .ute-demo .pos-controls button:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
   .ute-demo .pos-controls .ctl-sep{color:var(--rule);font-size:8px;line-height:1}
+  /* -- honesty caption, same voice as .ech-note -- */
+  .ute-demo .ute-note{
+    grid-column:1/-1;margin:0.9em 0 0;
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);
+  }
   /* -- sesame allergy highlight in status -- */
   .ute-demo .pos-head-status .status-warn{color:var(--rust);font-weight:500}
   /* -- action highlight: brief glow when something changes -- */
@@ -2309,6 +2315,7 @@
               <button type="button" id="ute-stop" aria-label="Stop the demo">stop</button>
             </div>
           </div>
+          <div class="ute-note">A scripted walkthrough of one bakery morning</div>
         </div>
       </div>
 
