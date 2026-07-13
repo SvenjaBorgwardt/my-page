@@ -38,6 +38,19 @@
 <!-- The paper palette is light-only; opt out of Chrome's Android auto-dark so it
      never inverts the warm background into a muddy grey. -->
 <meta name="color-scheme" content="light">
+<!-- Preload exactly the woff2 subsets the first paint uses (masthead, nav,
+     carousel). Discovered via fonts.css alone they arrive after layout and the
+     carousel re-fits visibly once the real fonts land. crossorigin is required
+     even same-origin: font fetches are CORS-mode, without it the preload is
+     re-downloaded. 500 italic is deliberately absent (first used inside the
+     story panel). -->
+<link rel="preload" href="fonts/cormorant-garamond-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/cormorant-garamond-300-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/cormorant-garamond-400-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/cormorant-garamond-500-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jetbrains-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jetbrains-mono-400-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
   /* Clean editorial — Svenja Borgwardt. Single typeface: Cormorant Garamond everywhere. */
