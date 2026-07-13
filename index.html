@@ -3030,7 +3030,26 @@
      existing open path, then bring the story into view. 'instant', not
      'auto', under reduced motion — html has scroll-behavior:smooth and
      'auto' would fall back to that. */
+
+  /* The deep-link scroll can fire seconds after load (it waits for the fonts
+     and the panel transition below), and a reload still carries the last
+     project hash — so a reader already scrolling used to get yanked to the
+     story. The reader wins: the first wheel turn, touch or scroll key cancels
+     a pending deep-link scroll; a fresh navigation (applyHash) arms it again.
+     Deliberately NOT the 'scroll' event — our own smooth scrollIntoView fires
+     that too and would cancel itself. */
+  var deepScrollCancelled = false;
+  window.addEventListener('wheel', function(){ deepScrollCancelled = true; }, {passive:true});
+  window.addEventListener('touchstart', function(){ deepScrollCancelled = true; }, {passive:true});
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if(e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'PageUp' || e.key === 'PageDown' ||
+       e.key === 'Home' || e.key === 'End' || e.key === ' ') deepScrollCancelled = true;
+  });
+
   function scrollToStory(){
+    if(deepScrollCancelled) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     etExpand.scrollIntoView({behavior: reduce ? 'instant' : 'smooth', block:'start'});
   }
@@ -3061,6 +3080,7 @@
     if(!h) return;
     if(h === 'build' || h === 'out'){ activateTab(h, false); return; } /* TEMP: re-add 'think' when the Think tab returns */
     if(h in hashToProject){
+      deepScrollCancelled = false;   // an explicit navigation re-arms the deep-link scroll
       activateTab('build', false);
       selectProject(hashToProject[h], false);
       if(!storyOpen){ storyOpen = true; applyStoryState(); }
