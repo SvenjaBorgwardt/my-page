@@ -1022,9 +1022,11 @@
     background:none;border:none;padding:0.5em;cursor:pointer;
     flex-shrink:0;display:flex;align-items:center;justify-content:center;
     color:var(--ink-dim);
-    /* Sit above the rotated far cards: at 708–724px the tilted neighbours used
-       to spill over the arrows and swallow clicks (jumping 2–3 cards). */
-    position:relative;z-index:30;
+    /* Sit above the rotated far cards: at 708–724px the tilted neighbours spill
+       over the arrows and swallow clicks (jumping 2–3 cards). layoutCarousel
+       gives cards z-index 48–50, so the arrows must clear 50 (the earlier 30
+       sat *under* them and never actually fixed it). Fades stay above at 60. */
+    position:relative;z-index:55;
     transition:opacity 0.3s,color 0.5s cubic-bezier(.2,1,.3,1);
   }
   .et-arrow-btn:focus-visible{outline:2px solid var(--rust);outline-offset:3px;border-radius:2px}
