@@ -228,26 +228,35 @@
 
     var typed = false;
     var activeKey = null;
+    var responseRun = 0;
 
-    /* Typewriter */
-    function typewriter(el, text, speed, done) {
+    /* Typewriter. Types into a span the screen reader ignores, then hands
+       the aria-live region the finished text in one piece — per-character
+       inserts would be announced one by one. `isCurrent` lets a newer run
+       cancel this one (clicking another option mid-answer). */
+    function typewriter(el, text, speed, done, isCurrent) {
       var i = 0;
+      var sink = document.createElement('span');
+      sink.setAttribute('aria-hidden', 'true');
       var cursor = document.createElement('span');
       cursor.className = 'cursor';
       cursor.setAttribute('aria-hidden', 'true');
       el.textContent = '';
-      el.appendChild(cursor);
+      sink.appendChild(cursor);
+      el.appendChild(sink);
 
       function tick() {
+        if (isCurrent && !isCurrent()) return;
         if (i < text.length) {
-          el.insertBefore(document.createTextNode(text[i]), cursor);
+          sink.insertBefore(document.createTextNode(text[i]), cursor);
           i++;
           setTimeout(tick, speed);
         } else {
-          setTimeout(function () {
-            if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
-          }, 600);
           if (done) done();
+          setTimeout(function () {
+            if (isCurrent && !isCurrent()) return;
+            el.textContent = text;
+          }, 600);
         }
       }
       tick();
@@ -308,10 +317,15 @@
         return;
       }
 
+      responseRun++;
+      var run = responseRun;
       responseEl.classList.remove('visible');
       setTimeout(function () {
-        responseEl.textContent = responses[key];
+        if (run !== responseRun) return;
         responseEl.classList.add('visible');
+        typewriter(responseEl, responses[key], 14, null, function () {
+          return run === responseRun;
+        });
       }, responseEl.textContent ? 300 : 10);
     }
 

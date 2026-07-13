@@ -914,14 +914,14 @@
     font-size:1em;line-height:1.72;font-weight:400;max-width:64ch;
     min-height:1.5em;
   }
-  .compass-question .cursor{
+  .compass-question .cursor,.compass-response .cursor{
     display:inline-block;width:1px;height:1.1em;background:var(--ink);
     vertical-align:text-bottom;margin-left:1px;
     animation:blink .7s step-end infinite;
   }
   @keyframes blink{50%{opacity:0}}
   @media(prefers-reduced-motion:reduce){
-    .compass-question .cursor{animation:none;opacity:0}
+    .compass-question .cursor,.compass-response .cursor{animation:none;opacity:0}
   }
   .compass-options{
     display:flex;gap:1.8em;margin:1.8em 0 0;opacity:0;
