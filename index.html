@@ -888,16 +888,6 @@
     font-style:italic;font-size:0.8em;color:var(--ink-dim);
     max-width:56ch;margin:0 auto 1.2em;line-height:1.6;
   }
-  /* A second, smaller colophon line: how the page is built, plus a link to the
-     source for anyone reading it. Same italic --ink-dim voice as the line above,
-     a step down; sits close to it. The link wears the legal-link underline. */
-  footer .colophon-sub{font-size:0.68em;margin-top:-0.7em}
-  footer .colophon-sub a{
-    color:var(--ink-dim);text-decoration:none;font-style:italic;
-    border-bottom:1px solid var(--rule);padding-bottom:1px;
-    transition:color .3s,border-color .3s;
-  }
-  footer .colophon-sub a:hover{color:var(--rust);border-color:var(--rust)}
   footer .contact{
     display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.65em;color:var(--ink);
     letter-spacing:0.1em;text-decoration:none;border-bottom:2px solid var(--rust);padding-bottom:0.1em;
@@ -2520,7 +2510,6 @@
 <!-- FOOTER -->
 <footer class="reveal">
   <p class="colophon">I care about how people learn and grow, and about technology built to serve that. If you're drawn to the same things, write me.</p>
-  <p class="colophon colophon-sub">Hand-built: one HTML file, no framework, no build step. Set in Cormorant Garamond &amp; JetBrains Mono. <a href="https://github.com/SvenjaBorgwardt/my-page" target="_blank" rel="noopener">Source on GitHub</a>.</p>
   <a class="contact" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
   <nav class="legal-links" aria-label="Legal">
     <a href="impressum.html">Impressum</a><span class="sep">&middot;</span><a href="datenschutz.html">Datenschutz / Privacy</a>
