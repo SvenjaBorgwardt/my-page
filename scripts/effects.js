@@ -686,21 +686,6 @@
       flashGlow(totalVal.parentNode);
     }
 
-    function addAlert(text) {
-      var d = document.createElement('div');
-      d.className = 'pos-alert';
-      d.textContent = text;
-      // Insert alert before the footer inside the sidebar
-      var footer = cartWrap.querySelector('.pos-footer');
-      if (footer) {
-        cartWrap.insertBefore(d, footer);
-      } else {
-        cartWrap.appendChild(d);
-      }
-      void d.offsetHeight;
-      d.classList.add('show');
-    }
-
     function showCrossSell(product, reason) {
       var d = document.createElement('div');
       d.className = 'pos-crosssell';
@@ -872,7 +857,7 @@
       if (customerEl) {
         customerEl.innerHTML = '<span class="cust-placeholder" style="color:var(--ink-dim);font-style:italic">Customer</span>';
       }
-      cartWrap.querySelectorAll('.pos-alert,.pos-complete,.pos-crosssell').forEach(function(el) { el.remove(); });
+      cartWrap.querySelectorAll('.pos-complete,.pos-crosssell').forEach(function(el) { el.remove(); });
       cartEl.innerHTML = '';
       runningTotal = 0;
       totalVal.textContent = '€0.00';
