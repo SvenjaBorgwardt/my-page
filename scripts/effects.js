@@ -367,15 +367,15 @@
     }
 
     var PRODUCTS = [
-      {name:'Sourdough',      price:'3.80', img:'img/sourdough.png',       vegan:true,  sesame:false},
-      {name:'Rye bread',      price:'3.20', img:'img/rye-bread.png',       vegan:true,  sesame:false},
-      {name:'Sesame bagel',   price:'1.40', img:'img/sesame-bagel.png',    vegan:true,  sesame:true},
-      {name:'Pretzel',        price:'1.60', img:'img/pretzel.png',         vegan:false, sesame:true},
-      {name:'Croissant',      price:'1.90', img:'img/croissant.png',       vegan:false, sesame:false},
-      {name:'Apple turnover', price:'2.50', img:'img/apple-turnover.png',  vegan:true,  sesame:false},
-      {name:'Vegan quiche',   price:'3.90', img:'img/vegan-quiche.png',    vegan:true,  sesame:false},
-      {name:'Ciabatta',       price:'2.80', img:'img/ciabatta.png',        vegan:true,  sesame:false},
-      {name:'Cinnamon roll',  price:'2.80', img:'img/cinnamon-roll.png',   vegan:false, sesame:false},
+      {name:'Sourdough',      price:'3.80', img:'img/sourdough.webp',       vegan:true,  sesame:false},
+      {name:'Rye bread',      price:'3.20', img:'img/rye-bread.webp',       vegan:true,  sesame:false},
+      {name:'Sesame bagel',   price:'1.40', img:'img/sesame-bagel.webp',    vegan:true,  sesame:true},
+      {name:'Pretzel',        price:'1.60', img:'img/pretzel.webp',         vegan:false, sesame:true},
+      {name:'Croissant',      price:'1.90', img:'img/croissant.webp',       vegan:false, sesame:false},
+      {name:'Apple turnover', price:'2.50', img:'img/apple-turnover.webp',  vegan:true,  sesame:false},
+      {name:'Vegan quiche',   price:'3.90', img:'img/vegan-quiche.webp',    vegan:true,  sesame:false},
+      {name:'Ciabatta',       price:'2.80', img:'img/ciabatta.webp',        vegan:true,  sesame:false},
+      {name:'Cinnamon roll',  price:'2.80', img:'img/cinnamon-roll.webp',   vegan:false, sesame:false},
     ];
 
     // Each scene: dialog exchange → POS actions → annotation → fade
@@ -461,9 +461,11 @@
     // The mobile chat is a short scroll box, so a long line can push the sentence
     // being "spoken" out of sight. Keep the newest line in view. Mobile only —
     // on desktop the chat is 440px tall and this must not move anything.
-    var narrowChat = matchMedia('(max-width:600px)').matches;
+    // Read the query fresh each call, not once at init: a device rotated after
+    // init (portrait↔landscape across the 600px line) would otherwise keep a
+    // stale value and stop scrolling the newest line.
     function keepChatInView() {
-      if (!narrowChat) return;
+      if (!matchMedia('(max-width:600px)').matches) return;
       chatEl.scrollTop = chatEl.scrollHeight;
     }
 
@@ -592,7 +594,7 @@
         d.dataset.vegan = p.vegan ? '1' : '0';
         d.dataset.sesame = p.sesame ? '1' : '0';
         d.innerHTML =
-          '<img class="tile-icon" src="' + p.img + '" alt="' + p.name + '">' +
+          '<img class="tile-icon" decoding="async" src="' + p.img + '" alt="' + p.name + '">' +
           '<span class="tile-name">' + p.name + '</span>' +
           '<span class="tile-price">€' + p.price + '</span>';
         gridEl.appendChild(d);
