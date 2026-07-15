@@ -204,6 +204,203 @@
     });
   }
 
+  // ── Story figure lightbox — click a screenshot to read it full size ──
+  // Content, not decoration, so it runs regardless of reduced motion (the CSS
+  // drops the fade). Wraps every figure <img> in a button and opens a single
+  // reused overlay; <video> figures are left alone (they have their own
+  // fullscreen). Works with the lazy-mounted Dojo image: we wrap the element,
+  // mountLazyMedia still fills its src later.
+  function initFigureZoom() {
+    var figs = document.querySelectorAll('.et-figure img');
+    if (!figs.length) return;
+
+    var box = document.createElement('div');
+    box.className = 'lightbox';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Enlarged image');
+    box.hidden = true;
+
+    var big = document.createElement('img');
+    big.className = 'lightbox-img';
+    big.alt = '';
+
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'lightbox-close';
+    close.setAttribute('aria-label', 'Close');
+    close.textContent = '×';
+
+    box.appendChild(big);
+    box.appendChild(close);
+    document.body.appendChild(box);
+
+    var lastFocus = null;
+
+    // ── Zoom + pan — pinch on touch, drag to pan, tap toggles ──────
+    // The fit view already ~doubles the image on desktop; on a phone the
+    // landscape screenshot only fills the width, so this lets you pinch in to
+    // native pixels and drag around. Desktop has no pinch, so it stays at fit
+    // and a tap closes (the behaviour Svenja already approved).
+    var scale = 1, tx = 0, ty = 0;
+    var pointers = new Map();
+    var pinchStart = null;   // {dist, scale, mid, tx, ty}
+    var panStart = null;     // {x, y, tx, ty} — also the tap-down reference
+    var moved = false;
+
+    function maxZoom() {
+      // up to native pixels, but always worth a pinch (min 2.5×), never absurd.
+      return Math.min(6, Math.max(2.5, big.naturalWidth / (big.offsetWidth || 1)));
+    }
+    function applyTransform() {
+      big.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+      big.classList.toggle('zoomed', scale > 1.01);
+    }
+    function hardReset() {
+      scale = 1; tx = 0; ty = 0;
+      big.style.transition = ''; big.style.transform = '';
+      big.classList.remove('zoomed');
+    }
+    function animateToFit() {
+      if (!prefersReduced) big.style.transition = 'transform .28s cubic-bezier(.16,1,.3,1)';
+      scale = 1; tx = 0; ty = 0; applyTransform();
+    }
+    function clampPan() {
+      var maxX = Math.max(0, (big.offsetWidth * scale - box.clientWidth) / 2);
+      var maxY = Math.max(0, (big.offsetHeight * scale - box.clientHeight) / 2);
+      tx = Math.max(-maxX, Math.min(maxX, tx));
+      ty = Math.max(-maxY, Math.min(maxY, ty));
+    }
+    function boxCenter() {
+      var r = box.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+    function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+    function mid(a, b) { return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+
+    function open(sourceImg) {
+      hardReset();
+      // currentSrc resolves the actually-loaded file; src is the fallback.
+      big.src = sourceImg.currentSrc || sourceImg.src;
+      big.alt = sourceImg.alt || '';
+      lastFocus = document.activeElement;
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      // Two frames so [hidden] is gone before the opacity transition starts.
+      // Focus only once .open lands: while closed the box is visibility:hidden,
+      // where the close button cannot take focus.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          box.classList.add('open');
+          close.focus();
+        });
+      });
+    }
+
+    function hide() {
+      if (box.hidden) return;
+      box.classList.remove('open');
+      document.body.style.overflow = '';
+      hardReset();
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+      lastFocus = null;
+      // Re-hide after the fade, with a timeout net for the no-transition path.
+      // Guard on target so the image's own transform transition can't trip it.
+      var done = function (e) {
+        if (e && e.target !== box) return;
+        box.hidden = true;
+        big.removeAttribute('src');
+        box.removeEventListener('transitionend', done);
+      };
+      box.addEventListener('transitionend', done);
+      setTimeout(done, 350);
+    }
+
+    figs.forEach(function (el) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'et-figure-zoom';
+      el.parentNode.insertBefore(btn, el);
+      btn.appendChild(el);
+      btn.addEventListener('click', function () { open(el); });
+    });
+
+    close.addEventListener('click', hide);
+
+    // Gestures live on the box so a finger that strays onto the scrim still
+    // pinches/pans; the transform stays on the image. setPointerCapture is
+    // wrapped because a synthetic/edge pointer can make it throw.
+    box.addEventListener('pointerdown', function (e) {
+      if (close.contains(e.target)) return;   // let the × button handle itself
+      big.style.transition = '';              // gestures are instant
+      try { box.setPointerCapture(e.pointerId); } catch (err) {}
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      moved = false;
+      if (pointers.size === 2) {
+        var p = Array.from(pointers.values());
+        pinchStart = { dist: dist(p[0], p[1]), scale: scale, mid: mid(p[0], p[1]), tx: tx, ty: ty };
+        panStart = null;
+      } else {
+        panStart = { x: e.clientX, y: e.clientY, tx: tx, ty: ty };
+      }
+    });
+    box.addEventListener('pointermove', function (e) {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2 && pinchStart) {
+        var p = Array.from(pointers.values());
+        var ns = Math.max(1, Math.min(maxZoom(), pinchStart.scale * (dist(p[0], p[1]) / pinchStart.dist)));
+        var m = mid(p[0], p[1]);
+        var c = boxCenter();
+        // Keep the image point under the original pinch midpoint fixed.
+        var u = { x: (pinchStart.mid.x - (c.x + pinchStart.tx)) / pinchStart.scale,
+                  y: (pinchStart.mid.y - (c.y + pinchStart.ty)) / pinchStart.scale };
+        scale = ns;
+        tx = m.x - c.x - u.x * scale;
+        ty = m.y - c.y - u.y * scale;
+        clampPan(); applyTransform();
+        moved = true;
+      } else if (pointers.size === 1 && panStart) {
+        if (scale > 1.01) {
+          tx = panStart.tx + (e.clientX - panStart.x);
+          ty = panStart.ty + (e.clientY - panStart.y);
+          clampPan(); applyTransform();
+        }
+        if (Math.hypot(e.clientX - panStart.x, e.clientY - panStart.y) > 8) moved = true;
+      }
+    });
+    function endPointer(e) {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.delete(e.pointerId);
+      try { box.releasePointerCapture(e.pointerId); } catch (err) {}
+      if (pointers.size === 1) {
+        var p = Array.from(pointers.values())[0];
+        panStart = { x: p.x, y: p.y, tx: tx, ty: ty };
+        pinchStart = null;
+      } else if (pointers.size === 0) {
+        pinchStart = null; panStart = null;
+        if (scale <= 1.01) animateToFit();   // snap back if pinched below fit
+      }
+    }
+    box.addEventListener('pointerup', endPointer);
+    box.addEventListener('pointercancel', endPointer);
+
+    // A clean tap: while zoomed it steps back to fit, at fit it closes.
+    box.addEventListener('click', function (e) {
+      if (close.contains(e.target)) return;
+      if (moved) { moved = false; return; }   // a drag/pinch, not a tap
+      if (scale > 1.01) animateToFit();
+      else hide();
+    });
+    // Only the close button is focusable inside — trap Tab on it.
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab') { e.preventDefault(); close.focus(); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !box.hidden) hide();
+    });
+  }
+
   // ── Compass demo (Phase D) ──────────────────────────────────
   function initCompassDemo() {
     var demo = document.getElementById('compass-demo');
@@ -993,6 +1190,7 @@
   }
 
   initPhotoQuote();
+  initFigureZoom();
   initCompassDemo();
   initUteDemo();
 })();
