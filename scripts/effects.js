@@ -204,15 +204,16 @@
     });
   }
 
-  // ── Story figure lightbox — click a screenshot to read it full size ──
-  // Content, not decoration, so it runs regardless of reduced motion (the CSS
-  // drops the fade). Wraps every figure <img> in a button and opens a single
-  // reused overlay; <video> figures are left alone (they have their own
-  // fullscreen). Works with the lazy-mounted Dojo image: we wrap the element,
-  // mountLazyMedia still fills its src later.
+  // ── Story figure lightbox — click a screenshot to read it, or the Dojo
+  //    video to watch it, full size. Content, not decoration, so it runs
+  //    regardless of reduced motion (the CSS drops the fade). Images get
+  //    wrapped in a zoom button (pinch/pan on touch); the video gets a corner
+  //    "enlarge" button that borrows the real <video> into the overlay and
+  //    puts it back, so playback state and the single download are preserved.
   function initFigureZoom() {
     var figs = document.querySelectorAll('.et-figure img');
-    if (!figs.length) return;
+    var vids = document.querySelectorAll('.et-figure video');
+    if (!figs.length && !vids.length) return;
 
     var box = document.createElement('div');
     box.className = 'lightbox';
@@ -236,8 +237,11 @@
     document.body.appendChild(box);
 
     var lastFocus = null;
+    var mode = null;              // 'image' | 'video'
+    var lbVideo = null;           // the <video> currently borrowed into the box
+    var videoPlaceholder = null;  // holds its place (and height) in the story
 
-    // ── Zoom + pan — pinch on touch, drag to pan, tap toggles ──────
+    // ── Zoom + pan (images only) — pinch on touch, drag to pan, tap toggles ──
     // The fit view already ~doubles the image on desktop; on a phone the
     // landscape screenshot only fills the width, so this lets you pinch in to
     // native pixels and drag around. Desktop has no pinch, so it stays at fit
@@ -278,17 +282,11 @@
     function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
     function mid(a, b) { return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
 
-    function open(sourceImg) {
-      hardReset();
-      // currentSrc resolves the actually-loaded file; src is the fallback.
-      big.src = sourceImg.currentSrc || sourceImg.src;
-      big.alt = sourceImg.alt || '';
-      lastFocus = document.activeElement;
+    // Two frames so [hidden] is gone before the opacity transition starts;
+    // focus lands only once .open is on (a visibility:hidden box can't focus).
+    function reveal() {
       box.hidden = false;
       document.body.style.overflow = 'hidden';
-      // Two frames so [hidden] is gone before the opacity transition starts.
-      // Focus only once .open lands: while closed the box is visibility:hidden,
-      // where the close button cannot take focus.
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           box.classList.add('open');
@@ -297,41 +295,108 @@
       });
     }
 
+    function openImage(sourceImg) {
+      mode = 'image';
+      hardReset();
+      big.hidden = false;
+      // currentSrc resolves the actually-loaded file; src is the fallback.
+      big.src = sourceImg.currentSrc || sourceImg.src;
+      big.alt = sourceImg.alt || '';
+      box.setAttribute('aria-label', 'Enlarged image');
+      lastFocus = document.activeElement;
+      reveal();
+    }
+
+    function openVideo(vid) {
+      mode = 'video';
+      lbVideo = vid;
+      big.hidden = true;
+      // A same-height placeholder keeps the story panel from reflowing (and
+      // jumping on close) while the video is out of it.
+      videoPlaceholder = document.createElement('div');
+      videoPlaceholder.setAttribute('aria-hidden', 'true');
+      videoPlaceholder.style.height = vid.getBoundingClientRect().height + 'px';
+      vid.parentNode.insertBefore(videoPlaceholder, vid);
+      vid.classList.add('lightbox-video');
+      box.insertBefore(vid, close);
+      box.setAttribute('aria-label', 'Enlarged video');
+      lastFocus = document.activeElement;
+      reveal();
+    }
+
+    function restoreVideo() {
+      if (!lbVideo) return;
+      try { lbVideo.pause(); } catch (e) {}
+      lbVideo.classList.remove('lightbox-video');
+      if (videoPlaceholder && videoPlaceholder.parentNode) {
+        videoPlaceholder.parentNode.insertBefore(lbVideo, videoPlaceholder);
+        videoPlaceholder.parentNode.removeChild(videoPlaceholder);
+      }
+      lbVideo = null;
+      videoPlaceholder = null;
+    }
+
     function hide() {
       if (box.hidden) return;
+      var wasVideo = mode === 'video';
       box.classList.remove('open');
       document.body.style.overflow = '';
-      hardReset();
+      if (!wasVideo) hardReset();
       if (lastFocus && lastFocus.focus) lastFocus.focus();
       lastFocus = null;
       // Re-hide after the fade, with a timeout net for the no-transition path.
-      // Guard on target so the image's own transform transition can't trip it.
+      // Guard on target so a child transition (image transform) can't trip it,
+      // and on `finished` so the transitionend + timeout can't double-run.
+      var finished = false;
       var done = function (e) {
-        if (e && e.target !== box) return;
+        if (finished || (e && e.target !== box)) return;
+        finished = true;
         box.hidden = true;
-        big.removeAttribute('src');
+        if (wasVideo) restoreVideo();
+        else big.removeAttribute('src');
+        mode = null;
         box.removeEventListener('transitionend', done);
       };
       box.addEventListener('transitionend', done);
       setTimeout(done, 350);
     }
 
+    // Images: wrap each in a zoom button.
     figs.forEach(function (el) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'et-figure-zoom';
       el.parentNode.insertBefore(btn, el);
       btn.appendChild(el);
-      btn.addEventListener('click', function () { open(el); });
+      btn.addEventListener('click', function () { openImage(el); });
+    });
+
+    // Videos: a corner "enlarge" button (a <video controls> can't live inside a
+    // button — nested interactive — and tapping its controls must not close).
+    vids.forEach(function (vid) {
+      var fig = vid.closest('.et-figure');
+      if (!fig) return;
+      var eb = document.createElement('button');
+      eb.type = 'button';
+      eb.className = 'et-figure-enlarge';
+      eb.setAttribute('aria-label', 'Enlarge video');
+      eb.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" ' +
+        'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+        'stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/>' +
+        '<path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/>' +
+        '<path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+      fig.appendChild(eb);
+      eb.addEventListener('click', function () { openVideo(vid); });
     });
 
     close.addEventListener('click', hide);
 
-    // Gestures live on the box so a finger that strays onto the scrim still
-    // pinches/pans; the transform stays on the image. setPointerCapture is
-    // wrapped because a synthetic/edge pointer can make it throw.
+    // Gestures (images only) live on the box so a finger that strays onto the
+    // scrim still pinches/pans. setPointerCapture is wrapped because a
+    // synthetic/edge pointer can make it throw.
     box.addEventListener('pointerdown', function (e) {
-      if (close.contains(e.target)) return;   // let the × button handle itself
+      if (mode !== 'image') return;           // video: leave native controls alone
+      if (close.contains(e.target)) return;
       big.style.transition = '';              // gestures are instant
       try { box.setPointerCapture(e.pointerId); } catch (err) {}
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -385,16 +450,32 @@
     box.addEventListener('pointerup', endPointer);
     box.addEventListener('pointercancel', endPointer);
 
-    // A clean tap: while zoomed it steps back to fit, at fit it closes.
     box.addEventListener('click', function (e) {
       if (close.contains(e.target)) return;
+      if (mode === 'video') {
+        if (e.target === box) hide();   // only the scrim closes; controls don't
+        return;
+      }
+      // A clean tap: while zoomed it steps back to fit, at fit it closes.
       if (moved) { moved = false; return; }   // a drag/pinch, not a tap
       if (scale > 1.01) animateToFit();
       else hide();
     });
-    // Only the close button is focusable inside — trap Tab on it.
+
+    // Focus trap: image mode has only the close button; video mode cycles
+    // between the video and close so its controls stay keyboard-reachable.
     box.addEventListener('keydown', function (e) {
-      if (e.key === 'Tab') { e.preventDefault(); close.focus(); }
+      if (e.key !== 'Tab') return;
+      e.preventDefault();
+      if (mode === 'video' && lbVideo) {
+        var order = [lbVideo, close];
+        var i = order.indexOf(document.activeElement);
+        var n = e.shiftKey ? (i <= 0 ? order.length - 1 : i - 1)
+                           : (i >= order.length - 1 ? 0 : i + 1);
+        order[n].focus();
+      } else {
+        close.focus();
+      }
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !box.hidden) hide();

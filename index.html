@@ -1073,6 +1073,7 @@
      language. width/height attributes on the media guard against layout
      shift while the lazy images arrive. ── */
   .et-figure{
+    position:relative;
     margin:1.8em 0;padding:0.8em;
     background:var(--paper-warm);
     border:1px solid var(--rule);border-radius:12px;
@@ -1098,6 +1099,20 @@
     -webkit-appearance:none;appearance:none;
   }
   .et-figure-zoom:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+  /* Corner "enlarge" button for the video figure — a <video controls> can't be
+     wrapped in a button, so this sits over its top-right, clear of the controls. */
+  .et-figure-enlarge{
+    position:absolute;top:1.5em;right:1.5em;z-index:2;
+    display:flex;align-items:center;justify-content:center;
+    width:40px;height:40px;padding:0;
+    background:var(--paper);border:1px solid var(--rule);border-radius:999px;
+    color:var(--ink);cursor:pointer;
+    box-shadow:0 4px 16px rgba(20,16,24,0.18);
+    opacity:0.9;transition:opacity .2s,border-color .2s;
+  }
+  .et-figure-enlarge:hover{opacity:1;border-color:var(--rust)}
+  .et-figure-enlarge:focus-visible{opacity:1;outline:2px solid var(--rust);outline-offset:3px}
+  .et-figure-enlarge svg{width:18px;height:18px;display:block}
   /* Lightbox — one reused overlay: dark scrim, image fit to the viewport,
      close on click / Escape. Built once in effects.js. */
   .lightbox{
@@ -1118,6 +1133,12 @@
   }
   .lightbox-img.zoomed{cursor:grab}
   .lightbox-img.zoomed:active{cursor:grabbing}
+  /* The Dojo video, borrowed into the overlay while enlarged. */
+  .lightbox-video{
+    max-width:100%;max-height:100%;width:auto;height:auto;
+    border-radius:6px;box-shadow:0 24px 80px rgba(0,0,0,0.5);
+    background:#000;
+  }
   .lightbox-close{
     position:absolute;top:clamp(0.6rem,2vw,1.4rem);right:clamp(0.6rem,2vw,1.4rem);
     display:flex;align-items:center;justify-content:center;
