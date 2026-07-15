@@ -499,9 +499,9 @@
       standard:
         '“Higher rates cool demand by making borrowing more expensive. Less demand against the same supply slows price increases. That’s how rate hikes fight inflation.”',
       socratic:
-        '“What is inflation? What causes prices to rise? What role does demand play? How do interest rates affect consumer behaviour?”',
+        '“Good question. Let’s reason it out. When loans get more expensive, how does that change what people are willing to buy? And if many of them buy less at once, what happens to prices?”',
       vision:
-        '“You’re right that loans get more expensive — that’s exactly the plan. Think about it: if saving suddenly earns you 4% and a loan costs 6%, what do you do — buy the new car on credit now, or wait? And if lots of people do the same, what happens to demand? And to prices, when fewer people want to buy?”',
+        '“You’re right that loans get more expensive, and that’s exactly the plan. Think about it: if saving suddenly earns you 4% and a loan costs 6%, what do you do: buy the new car on credit now, or wait? And if lots of people do the same, what happens to demand? And to prices, when fewer people want to buy?”',
     };
 
     var typed = false;
