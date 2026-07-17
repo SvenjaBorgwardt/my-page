@@ -802,6 +802,20 @@
       content:"";position:absolute;left:0;right:0;
       top:50%;transform:translateY(-50%);height:44px;
     }
+
+    /* Same treatment for the four quiet controls the first pass missed: the
+       card's story CTA (33px) and demo hint (27px), the video's enlarge
+       corner (40px), and the centred email link in the footer (26px). The
+       visible boxes stay exactly as they are; only the hit area grows. */
+    .et-cta,.cf-card .et-demo-hint,.et-figure-enlarge,footer .contact,
+    .cf-index button{
+      position:relative;touch-action:manipulation;
+    }
+    .et-cta::after,.cf-card .et-demo-hint::after,.et-figure-enlarge::after,
+    footer .contact::after,.cf-index button::after{
+      content:"";position:absolute;left:50%;top:50%;
+      transform:translate(-50%,-50%);width:max(100%,44px);height:44px;
+    }
   }
 
   /* ========== FOOTER ========== */
@@ -1607,9 +1621,9 @@
     .cf-index{padding:0 1em;column-gap:1.3em}
     .cf-index-sep{display:none}
   }
-  /* Touch sizes only where fingers are likely: taps get their 40px. */
+  /* Touch sizes only where fingers are likely: taps get their 44px. */
   @media (max-width:600px){
-    .cf-index button{min-height:40px;padding:0 0.2em}
+    .cf-index button{min-height:44px;padding:0 0.2em}
   }
 
   /* Link list for Out There */
