@@ -215,35 +215,6 @@
     .photo-quote{transition:none;transform:none}
   }
 
-  /* ========== HERO ========== */
-  .intro{
-    font-style:italic;font-size:1.1em;line-height:1.5;
-    color:var(--ink-soft);margin-bottom:1.8em;letter-spacing:0.005em;
-  }
-
-  .thesis{
-    font-weight:300;font-size:1em;line-height:1.72;
-    margin-bottom:2em;max-width:64ch;
-  }
-  .thesis em{font-style:italic;color:var(--rust);font-weight:300}
-  /* no bold — all strong tags stay regular weight */
-  .thesis strong{font-weight:400}
-
-  .hr-soft{
-    display:block;margin:2.4em auto;width:6em;height:0.05em;background:var(--rule);border:0;
-    position:relative;
-  }
-  .hr-soft::before{
-    content:"·";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    background:var(--paper);padding:0 0.7em;color:var(--rust);font-size:1.1em;line-height:0;
-  }
-
-  .observation{
-    font-size:1.05em;line-height:1.65;color:var(--ink);margin-bottom:1.3em;max-width:64ch;font-weight:400;
-  }
-  .observation em{font-style:italic;color:var(--ink-soft)}
-  .observation strong{font-weight:400}
-
   /* ========== SECTION HEADERS ========== */
   .section-title{
     text-align:center;margin:3em 0 1.8em;
@@ -255,12 +226,10 @@
   }
 
   /* ========== CHAPTERS ========== */
+  /* TEMP: no live markup while the Think tab is hidden — the essay draft
+     uses .chapter/.chapter-head/.chapter-title. Keep until it returns. */
   .chapter{margin-bottom:3em;scroll-margin-top:3em}
   .chapter-head{text-align:center;margin-bottom:1.6em}
-  .chapter-num{
-    font-style:italic;font-weight:300;
-    font-size:1em;color:var(--rust);display:block;margin-bottom:0.2em;letter-spacing:0.02em;
-  }
   .chapter-title{
     font-weight:400;font-size:clamp(28px,3.5vw,40px);line-height:1.1;letter-spacing:0;
   }
@@ -276,19 +245,6 @@
     margin:2em 0;padding-left:1.4em;border-left:2px solid var(--rust);color:var(--ink);max-width:60ch;
   }
 
-  /* Coding-bug example — monospace for code legibility */
-  .example{
-    margin:1.8em 0;padding:1.2em 1.4em;background:var(--paper-warm);
-    font-family:'JetBrains Mono',monospace;font-size:0.65em;line-height:1.95;
-    max-width:31em;border-radius:2px;
-  }
-  .example .lbl{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.75em;color:var(--rust);
-    display:block;margin-bottom:0.6em;letter-spacing:0.02em;
-  }
-  .example .row{display:grid;grid-template-columns:6.5em 1fr;gap:0.7em;padding:0.1em 0}
-  .example .who{color:var(--ink-dim);letter-spacing:0.04em;font-size:0.6em;text-transform:uppercase}
-
   .stack{
     margin-top:1.4em;padding-top:0.7em;border-top:1px solid var(--rule);
     font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:var(--label-track);
@@ -297,19 +253,6 @@
   .stack .k{color:var(--rust);margin-right:0.4em}
   .stack a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rust);transition:color .2s}
   .stack a:hover{color:var(--rust)}
-
-  /* ========== PROJECT EXAMPLES (SVG MOCKUPS) ========== */
-  .project-example{margin:2.4em 0 0.4em;position:relative}
-  .project-example .frame{
-    border:1px solid var(--rule);background:var(--paper-warm);
-    padding:1em;box-shadow:3px 3px 0 rgba(0,0,0,0.04);
-  }
-  .project-example svg{display:block;width:100%;height:auto}
-  .project-example figcaption{
-    margin-top:0.7em;font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:0.75em;color:var(--ink-dim);text-align:center;line-height:1.5;letter-spacing:0.005em;
-  }
-  .project-example figcaption strong{color:var(--ink);font-weight:400;font-style:normal}
 
   /* ========== UTE ANIMATED DEMO ========== */
   .ute-demo{
@@ -1158,8 +1101,7 @@
   .et-expand-inner .compass-demo,
   .et-expand-inner .ute-demo,
   .et-expand-inner .ech-demo,
-  .et-expand-inner .et-figure,
-  .et-expand-inner .project-example{
+  .et-expand-inner .et-figure{
     opacity:0;transform:translateY(8px);
     transition:opacity 0.5s cubic-bezier(.16,1,.3,1),transform 0.5s cubic-bezier(.16,1,.3,1);
   }
@@ -1169,8 +1111,7 @@
   .et-expand.open .et-expand-inner .compass-demo,
   .et-expand.open .et-expand-inner .ute-demo,
   .et-expand.open .et-expand-inner .ech-demo,
-  .et-expand.open .et-expand-inner .et-figure,
-  .et-expand.open .et-expand-inner .project-example{
+  .et-expand.open .et-expand-inner .et-figure{
     opacity:1;transform:translateY(0);
   }
 
@@ -1215,8 +1156,7 @@
     .et-expand-inner .compass-demo,
     .et-expand-inner .ute-demo,
     .et-expand-inner .ech-demo,
-    .et-expand-inner .et-figure,
-    .et-expand-inner .project-example{transition:none;opacity:1;transform:none}
+    .et-expand-inner .et-figure{transition:none;opacity:1;transform:none}
   }
 
   /* Mobile */
@@ -1697,13 +1637,8 @@
     .name-block{min-width:0}
     .masthead h1{overflow-wrap:break-word}
     .pronounce{flex-wrap:wrap}
-    .hr-soft{margin:2.8em auto}
     .section-title{margin:3.6em 0 2em}
     .section-title::before,.section-title::after{width:1.5em;margin:0 0.5em}
-    .chapter{margin-bottom:3em}
-    .example{padding:0.9em 1em}
-    .example .row{grid-template-columns:1fr;gap:0.2em}
-    .example .who{margin-top:0.3em}
     .tab-name{font-size:1.35em}
   }
 
@@ -2677,7 +2612,7 @@
     });
     var activeInner = document.querySelector('.et-expand-inner[data-expand="' + idx + '"]');
     if(activeInner){
-      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .ech-demo, .et-figure, .project-example')
+      activeInner.querySelectorAll('p, blockquote, .stack, .compass-demo, .ute-demo, .ech-demo, .et-figure')
         .forEach(function(child, i){ child.style.transitionDelay = (Math.min(i, 10) * 80) + 'ms'; });
     }
 
