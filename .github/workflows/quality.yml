@@ -25,12 +25,16 @@ jobs:
 
       # axe against the served pages. Story panels are checked open in the
       # local Playwright pass; here the shipped DOM of every page must be clean.
+      # force-prefers-reduced-motion: the page then renders its own still
+      # variant — without it axe can sample the reveal fades mid-transition
+      # and report phantom contrast violations.
       - name: axe (headless Chrome)
         run: |
           npm install --no-save --no-audit --no-fund @axe-core/cli
           python3 -m http.server 8000 &
           sleep 1
           npx axe --chromedriver-path "$CHROMEWEBDRIVER/chromedriver" --exit \
+            --chrome-options "headless=new,no-sandbox,disable-dev-shm-usage,force-prefers-reduced-motion" \
             http://localhost:8000/ \
             http://localhost:8000/impressum.html \
             http://localhost:8000/datenschutz.html \
