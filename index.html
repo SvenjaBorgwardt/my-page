@@ -74,6 +74,24 @@
     --tag-track:0.18em;
     --label-track:0.14em;
   }
+
+  /* Breakpoint scale — values are load-bearing, change behaviour, and are
+     documented here only. px tiers are device tiers, shared with the JS
+     matchMedia checks: 600px phone layout (single-card carousel, stacked
+     demos, cfNarrow), 760px project-index nav tightens. em tiers follow the
+     browser's initial font size (1em = 16px inside media queries, independent
+     of the page's fluid base): 24em/384px smallest phones, 32em/512px the
+     narrow-phone tier (with its 33em min-width complement), 40em/640px
+     under-the-hood examples collapse, 41em/656px topnav matches the 41em
+     reading column. JS-only: above 1000px window height changes re-run the
+     deck fit (fitCardWidth). */
+
+  /* z-index ladder: 0 paper grain · 2 main content + figure-enlarge corner ·
+     10 split-flap overlay · 30 sticky topnav · 40 collapse FAB · 48–50
+     carousel cards (set in layoutCarousel) · 55 carousel arrows (above cards,
+     below fades; 60 in the ≤600px layout) · 60 edge fades
+     (pointer-events:none) · 120 lightbox. New layers slot in here — no
+     ad-hoc values. */
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
