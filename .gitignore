@@ -27,26 +27,15 @@ council-transcript-*.md
 *.zip
 sensei-scroll/scene_pingpong.mp4
 
-# Working notes, planning & drafts — kept local, not committed.
-# Everything in docs/ stays local except the two historic plans already in git history.
-docs/*
-!docs/editorial-theatre-plan.md
-!docs/upgrade-plan.md
+# Working notes, planning & drafts — kept local, not committed
+CLAUDE.md
+docs/
 drafts/
+.claude/
 
 # Retired pages, old previews & archived assets — kept local, never published
 archive/
 previews/
-
-# interne Notizen – nicht veröffentlichen
-CLAUDE.md
-docs/
-.claude/
-
-# interne Notizen – nicht veröffentlichen
-CLAUDE.md
-docs/
-.claude/
 
 # Kuratierungs-Notizen zu den Story-Abbildungen – nicht veröffentlichen
 img/story/CURATION.md
