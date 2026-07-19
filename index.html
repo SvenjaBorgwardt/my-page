@@ -2164,7 +2164,7 @@
         <p>Honestly acknowledging genuinely strong work is the hard half. In this coaching setup, graded by a judge that only accepts specific acknowledgment, it was a weak spot for every model I tested, including the best ones. Under the standard coaching prompt no model I tested exceeded Claude's 11% on Strong. Even with the dedicated be-more-critical prompt, the best any model reached was about 26%. This says something about models in a coaching role under my rubric. It does not say these models cannot give good feedback elsewhere.</p>
         <p>The fine-tuned 8B reaches 22% on Strong under the standard prompt, with no special instruction. That is roughly double Claude's 11% under the same prompt, and it makes the fine-tune the only model in this test that even begins to pull away from the field without a dedicated anti-sycophancy intervention. The sample is small: 48 items, with confidence intervals of plus or minus 10 to 18 percentage points, meaning the true values could sit noticeably higher or lower. I treat the gap between 22% and 11% as a signal worth following up. Settling it would take a larger sample.</p>
         <p class="uth-sub">The prompting trap</p>
-        <p>This is the part that changed how I think about prompts. In my tests, telling a model "be more critical" (the A1 prompt) does not teach it honest judgment. It swaps one failure for another. Under the standard prompt, models drown strong work in generic praise. Under the be-more-critical prompt, they start inventing flaws that are not there. I call that <em>false doubt</em>: the model manufactures a problem in work that was genuinely good.</p>
+        <p>This is the part that changed how I think about prompts. In my tests, telling a model "be more critical" (the A1 prompt) does not teach it honest judgment. It swaps one failure for another. Under the standard prompt, models drown strong work in generic praise. Under the be-more-critical prompt, they start doubting strong work instead of confirming it. I call that <em>false doubt</em>: the learner brings work that deserved a clear yes and gets doubt instead.</p>
         <div class="uth-table-wrap">
           <table class="uth-table">
             <thead><tr><th>Model</th><th>False doubt on Strong <span class="dim">(A0 &rarr; A1)</span></th></tr></thead>
@@ -2196,10 +2196,11 @@
             </tbody>
           </table>
         </div>
+        <p>In July 2026 I went back and audited these doubt replies by hand, every one from Claude and Gemma, against the rubric. The doubt is almost never an invented flaw. Claude invents none, 0% under both prompts; Gemma reaches 7% under the be-more-critical prompt. Most of the doubt is defensible further coaching, a fair question, a real nudge to sharpen, aimed at work that had earned a plain yes. So the numbers above count withheld confirmation rather than fabricated errors. The trap stands either way: the prompt does not teach honest acknowledgment, it moves the failure mode.</p>
         <p>I checked this with McNemar's test, a standard statistical test for paired before-and-after results. The be-more-critical prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031). It improves honest acknowledgment of strong work for none of the models I tested.</p>
         <div class="uth-callout"><p><span class="k">The takeaway:</span>In my eval, prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," did not yield to prompting in any model I tested. That is what motivated the fine-tune: if you cannot prompt your way to honest calibration, you have to train it.</p></div>
         <p class="uth-sub">What this looks like in practice</p>
-        <p>This is what worries me for my students. A learner brings a piece of genuinely good work, the model hands back a fault that is not real, and suddenly they doubt something that was right. In practice it looks like this. A student writes a strong, clean argument about learning to code, with no real flaws:</p>
+        <p>This is what worries me for my students. A learner brings a piece of genuinely good work, the model hands back doubt instead of a clear yes, and suddenly they question something that was right. In practice it looks like this. A student writes a strong, clean argument about learning to code, with no real flaws:</p>
         <div class="uth-ex">
           <div class="uth-ex-card">
             <div class="tag">Standard prompt &middot; A0</div>
@@ -2209,7 +2210,7 @@
           <div class="uth-ex-card">
             <div class="tag">Be-more-critical prompt &middot; A1</div>
             <p class="quote">"One spot wobbles: 'someone must still read the code' &hellip; why does that someone need to have learned coding themselves?"</p>
-            <div class="verdict"><span class="vk">False doubt.</span> The rubric says this argument has no real flaw. Told to be more critical, the coach criticizes anyway, and the learner starts doubting work that deserved a clear yes.</div>
+            <div class="verdict"><span class="vk">False doubt.</span> The rubric says this argument has no real flaw. The coach's question is even fair on its own; it just takes the place of the yes, and the learner starts doubting work that deserved one.</div>
           </div>
         </div>
         <p>Neither answer is what a good coach gives. The first is flattery. The second turns a fair question into false doubt. I know what the right answer sounds like, because I give one every day, and I wanted to see whether that answer can be trained. This is a shared, hard problem: under my coaching setup, the strongest models I tested struggle with it just as the small ones do.</p>
