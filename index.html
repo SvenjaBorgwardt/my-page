@@ -1264,31 +1264,43 @@
     font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:var(--tag-track);
     text-transform:uppercase;color:var(--ink-dim);
   }
-  .build-proof-stats{
-    display:grid;grid-template-columns:repeat(2,1fr);gap:0.7em;
-    max-width:25em;margin:0.9em auto 1em;
+  /* comparison-bar chart: base -> fine-tuned -> frontier. Vertical study figure:
+     bare columns grow from a baseline over a recessive 0/25/50/75/100 grid;
+     value on each cap. Rust marks the fine-tune; hierarchy is in the ink, not
+     in the numbers' colour (data colour never bleeds into text). */
+  .bp-chart{max-width:23em;margin:0.6em auto 0.9em;padding-top:1.65em}
+  .bp-plot{position:relative;height:7.4em}
+  .bp-gline{position:absolute;left:0;right:0;border-top:1px solid var(--rule)}
+  .bp-gline.bp-base{border-top-width:1.5px;border-top-color:var(--ink-dim);opacity:0.5}
+  .bp-bars{position:absolute;inset:0;display:flex;gap:1.4em}
+  .bp-col{flex:1 1 0;min-width:0;display:flex;align-items:flex-end;justify-content:center}
+  .bp-bar{
+    position:relative;width:1.35em;max-width:100%;
+    background:var(--ink-dim);border-radius:4px 4px 0 0;
   }
-  .bp-stat{
-    padding:0.95em 0.5em;border:1px solid var(--rule);border-radius:6px;background:var(--paper);
+  .bp-bar.hl{background:var(--rust)}
+  .bp-val{
+    position:absolute;left:50%;bottom:100%;transform:translateX(-50%);margin-bottom:0.34em;
+    background:var(--paper);padding:0 0.3em;
+    font-weight:300;font-size:1.1em;line-height:1;color:var(--ink-dim);white-space:nowrap;
   }
-  .bp-stat.accent{background:var(--rust);border-color:var(--rust)}
-  .bp-num{display:block;font-weight:300;font-size:1.85em;line-height:1;color:var(--ink)}
-  .bp-stat.accent .bp-num{color:var(--paper)}
-  .bp-label{
-    display:block;font-family:'JetBrains Mono',monospace;font-size:0.46em;
-    letter-spacing:0.1em;text-transform:uppercase;line-height:1.45;
-    color:var(--ink-dim);margin-top:0.55em;
+  .bp-bar.hl .bp-val{color:var(--ink)}
+  .bp-cats{display:flex;gap:1.4em;margin-top:0.55em}
+  .bp-rowlabel{
+    flex:1 1 0;min-width:0;min-height:2.6em;text-align:center;line-height:1.3;
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:var(--label-track);
+    text-transform:uppercase;color:var(--ink-soft);
   }
-  .bp-stat.accent .bp-label{color:var(--paper);opacity:0.9}
+  .build-proof-metric{
+    font-family:'JetBrains Mono',monospace;font-size:0.5em;letter-spacing:var(--label-track);
+    text-transform:uppercase;color:var(--ink-dim);margin:0 0 1.1em;
+  }
   .build-proof-link{
     font-family:'JetBrains Mono',monospace;font-size:0.55em;letter-spacing:var(--label-track);
     text-transform:uppercase;color:var(--ink);text-decoration:none;
     border-bottom:1px solid var(--rust);padding-bottom:2px;transition:color .3s;
   }
   .build-proof-link:hover{color:var(--rust)}
-  @media (max-width:32em){
-    .build-proof-stats{grid-template-columns:1fr;max-width:14em}
-  }
   /* metric cards */
   .uth-metrics{
     display:grid;grid-template-columns:1fr 1fr;gap:0.8em;
@@ -1854,10 +1866,26 @@
      carousel; links into the full Debate Dojo eval. -->
 <aside class="build-proof reveal" aria-label="Flagship result: the Debate Dojo eval">
   <span class="build-proof-kicker">Can a small model learn to hold the line?</span>
-  <div class="build-proof-stats">
-    <div class="bp-stat accent"><span class="bp-num">88.9%</span><span class="bp-label">Pressure resistance<br>fine-tuned 8B &middot; base ~50%</span></div>
-    <div class="bp-stat"><span class="bp-num">22%</span><span class="bp-label">Honest when the work is good<br>no model tested gets this right</span></div>
+  <div class="bp-chart">
+    <div class="bp-plot">
+      <span class="bp-gline" style="bottom:100%"></span>
+      <span class="bp-gline" style="bottom:75%"></span>
+      <span class="bp-gline" style="bottom:50%"></span>
+      <span class="bp-gline" style="bottom:25%"></span>
+      <span class="bp-gline bp-base" style="bottom:0"></span>
+      <div class="bp-bars">
+        <div class="bp-col"><div class="bp-bar" style="height:47.2%"><span class="bp-val">47.2%</span></div></div>
+        <div class="bp-col"><div class="bp-bar hl" style="height:88.9%"><span class="bp-val">88.9%</span></div></div>
+        <div class="bp-col"><div class="bp-bar" style="height:93.1%"><span class="bp-val">93.1%</span></div></div>
+      </div>
+    </div>
+    <div class="bp-cats">
+      <span class="bp-rowlabel">Base 8B</span>
+      <span class="bp-rowlabel">Fine-tuned 8B</span>
+      <span class="bp-rowlabel">Claude Sonnet 4.6</span>
+    </div>
   </div>
+  <p class="build-proof-metric">Holds under pressure while staying helpful &middot; min(Hold, Help) &middot; pre-registered, n=24</p>
   <a class="build-proof-link" href="#dojo">from the Debate Dojo eval &rarr;</a>
 </aside>
 
