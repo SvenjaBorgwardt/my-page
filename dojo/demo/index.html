@@ -1,0 +1,2910 @@
+<!doctype html>
+<!--
+================================================================
+  DOJO/OS v1 — DEMO PAGE (Warm demo, built from dojo-landing.html)
+  Rebuilt 06.07.2026 with Svenja: warm welcome in her voice +
+  "Enter the Dojo" leads into a guided walkthrough.
+  Zero /api calls — fully static, no backend.
+
+  MOVED 2026-07-20: this page now lives on borgwardt.me/dojo/demo/
+  (my-page repo), with its own copy of the assets it needs under
+  ./assets/. Canonical home is HERE; the old Vercel demo.html will
+  become a redirect to this page (planned after 22.07.2026 — see
+  CLAUDE.md, "Dojo demo" section). The Debate Dojo app itself
+  (dojo-landing, belts, api) stays on debate-dojo.vercel.app.
+  Added on move: tour steps push real history entries, so the
+  browser Back button steps back through the tour instead of
+  leaving the page.
+================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F4EEE0">
+<title>Debate Dojo: a demo by Ms. Borgwardt</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2'%20y='4'%20width='28'%20height='4'%20fill='%23C62C16'/%3E%3Crect%20x='5'%20y='10'%20width='22'%20height='2'%20fill='%23C62C16'/%3E%3Crect%20x='8'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3Crect%20x='21'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3C/svg%3E">
+<meta name="description" content="A demo of the Debate Dojo. I built it for my students: every student gets their own sensei that helps them get ready for a real debate, one step at a time.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Debate Dojo: a demo by Ms. Borgwardt">
+<meta property="og:description" content="I built it for my students: every student gets their own sensei that helps them get ready for a real debate, one step at a time.">
+<meta property="og:url" content="https://borgwardt.me/dojo/demo/">
+<link rel="canonical" href="https://borgwardt.me/dojo/demo/">
+<meta property="og:image" content="https://borgwardt.me/dojo/demo/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Debate Dojo: a demo by Ms. Borgwardt">
+<meta name="twitter:description" content="I built it for my students: every student gets their own sensei that helps them get ready for a real debate.">
+<meta name="twitter:image" content="https://borgwardt.me/dojo/demo/assets/og-image.png">
+
+<!-- Fonts self-hosted (assets/fonts/). Zero external requests. -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="preload" href="assets/fonts/anton-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/instrument-serif-italic-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+/* --- TOKENS ---------------------------------------------------- */
+:root {
+  --ink: #0E0E0C;
+  --ink-soft: #1B1B18;
+  --paper: #F4EEE0;
+  --paper-tint: #ECE4D2;
+  --cinnabar: #C62C16;
+  --cinnabar-deep: #9E2213;
+  --acid: #D4F85A;
+  --chrome-hi: #FFFFFF;
+  --chrome-l: #E8E8EC;
+  --chrome-m: #5F6573;
+  --chrome-s: #3B414E;
+  --chrome-d: #0F1218;
+  --gold: #D4A93A;
+
+  --belt-1: #EFEAD8;
+  --belt-2: #C62C16;
+  --belt-3: #2D1B5E;
+  --belt-4: #FF6B2C;
+  --belt-5: #0E0E0C;
+
+  --font-display: "Anton", Impact, sans-serif;
+  --font-edit: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", "SF Mono", monospace;
+  --font-jp: "Noto Serif JP", serif;
+
+  --max: 1440px;
+  --gutter: clamp(1.25em, 3vw, 3em);
+  --nav-h: 4em;
+
+  --ease-expo: cubic-bezier(.16, 1, .3, 1);
+  --dur-fast: 180ms;
+  --dur-med: 320ms;
+}
+
+/* --- RESET ----------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: clamp(1.05rem, 0.4vw + 0.88rem, 1.25rem); }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+body {
+  font-family: var(--font-edit);
+  font-size: 1.1em; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  color: var(--ink); background: var(--paper);
+  min-height: 100vh; overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+button { background: none; border: none; cursor: pointer; font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--cinnabar); outline-offset: 3px;
+}
+::selection { background: var(--cinnabar); color: var(--paper); }
+
+/* --- GRAIN OVERLAY --------------------------------------------- */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: .5;
+  mix-blend-mode: multiply;
+}
+
+/* --- UTILITIES ------------------------------------------------- */
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+.skip-link {
+  position: absolute; left: -9999px; top: 0.5em; z-index: 400;
+  padding: 0.8em 1.2em; background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .14em; text-transform: uppercase;
+  border-radius: 4px;
+}
+.skip-link:focus-visible { left: 0.5em; }
+
+/* --- SCROLL REVEAL --------------------------------------------- */
+.js .reveal {
+  opacity: 0; transform: translateY(1em);
+  transition: opacity .8s var(--ease-expo), transform .8s var(--ease-expo);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* --- NAV ------------------------------------------------------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(12px) saturate(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(1.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.nav__inner {
+  max-width: var(--max); margin: 0 auto;
+  height: 100%; padding: 0 var(--gutter);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav__hood {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink); opacity: .7;
+  padding: 0.4em 0.9em; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  transition: opacity var(--dur-fast), background var(--dur-fast);
+  white-space: nowrap;
+}
+.nav__hood:hover { opacity: 1; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.nav__hood svg { width: 1em; height: 1em; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 0.6em; font-family: var(--font-display); font-size: 1.35em; letter-spacing: .02em; white-space: nowrap; }
+.logo__torii { width: 1.6em; height: 1.6em; flex-shrink: 0; }
+.logo__divider { width: 1px; height: 1em; background: var(--ink); opacity: .3; }
+.logo__ver { font-family: var(--font-mono); font-size: 0.7em; letter-spacing: .2em; opacity: .6; }
+
+/* --- HERO ------------------------------------------------------ */
+.hero {
+  position: relative; padding: calc(var(--nav-h) + 2.5em) 0 3em;
+  min-height: 88vh; display: flex; align-items: center;
+  overflow: hidden;
+}
+.hero__side-label {
+  position: absolute; left: -2px; top: 50%;
+  transform: rotate(-90deg) translateX(50%);
+  transform-origin: left top;
+  font-family: var(--font-mono); font-size: 0.75em; letter-spacing: .4em;
+  text-transform: uppercase; opacity: .65; white-space: nowrap;
+}
+.hero__layout {
+  display: grid; grid-template-columns: 1.5fr 0.8fr; gap: clamp(1.5em, 4vw, 3em);
+  align-items: center;
+}
+.hero__kicker {
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--cinnabar);
+  display: inline-flex; align-items: center; gap: 0.6em; margin-bottom: 0.8em;
+}
+.hero__kicker::before { content: ""; width: 1.6em; height: 2px; background: var(--cinnabar); }
+.hero__meta {
+  display: flex; gap: 1em 1.8em; align-items: baseline; flex-wrap: wrap;
+  border-top: 1px solid var(--ink); padding-top: 0.8em;
+  margin-top: 1.6em; margin-bottom: 1.4em;
+}
+.hero__meta-item { display: flex; gap: 0.55em; align-items: baseline; }
+.hero__meta-item strong {
+  font-family: var(--font-mono); font-weight: 400; font-size: 0.72em;
+  letter-spacing: .16em; text-transform: uppercase;
+}
+.hero__meta-item span {
+  font-family: var(--font-edit); font-style: italic; font-size: 0.85em; opacity: .75;
+}
+.hero__title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(3.6rem, 9.5vw, 9rem);
+  line-height: .82; letter-spacing: -.025em; text-transform: uppercase;
+  color: var(--ink); position: relative; z-index: 3;
+}
+.hero__title .dot { color: var(--cinnabar); }
+.hero__title em {
+  font-family: var(--font-edit); font-style: italic; font-weight: 400;
+  font-size: .4em; letter-spacing: 0; text-transform: none;
+  display: inline-block; transform: translateY(-.35em); margin: 0 .1em 0 .12em;
+  color: var(--cinnabar);
+}
+.hero__sub {
+  margin-top: 1.1em;
+  font-family: var(--font-edit); font-size: clamp(1.1em, 1.5vw, 1.3em);
+  line-height: 1.5; color: var(--ink);
+  max-width: 46ch;
+  position: relative; z-index: 3;
+}
+.hero__sub p { margin-bottom: 0.5em; }
+.hero__sub p:last-child { margin-bottom: 0; }
+.hero__sub em { font-style: italic; color: var(--cinnabar-deep); }
+.hero__sub b { font-weight: 400; font-style: normal; }
+.hero__ctas {
+  margin-top: 1em; display: flex; gap: 0.75em; flex-wrap: wrap;
+  position: relative; z-index: 3;
+}
+.hero__hint {
+  display: block; margin-top: 0.5em;
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .1em;
+  color: var(--chrome-m); position: relative; z-index: 3;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6em;
+  padding: 1em 1.6em 0.95em;
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .2em; text-transform: uppercase;
+  border-radius: 2px; position: relative;
+  transition: transform var(--dur-fast) var(--ease-expo), box-shadow var(--dur-med) var(--ease-expo);
+}
+.btn--primary {
+  background: var(--cinnabar); color: var(--paper);
+  box-shadow: 0 4px 0 var(--cinnabar-deep), 0 12px 24px -6px rgba(158,34,19,.45);
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--cinnabar-deep), 0 16px 32px -6px rgba(158,34,19,.55);
+}
+.btn--primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--cinnabar-deep);
+}
+.btn--ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+.btn--ghost:active { transform: translateY(1px); }
+
+/* Sensei ring (shared) */
+.sensei-ring {
+  display: block; border-radius: 50%;
+  background: linear-gradient(135deg, var(--cinnabar), var(--gold));
+  padding: 0.3em;
+}
+.sensei-ring img {
+  width: 100%; height: 100%;
+  aspect-ratio: 1; object-fit: cover; border-radius: 50%;
+}
+
+/* Hero sensei — BIG, this is what carries the page */
+.hero__sensei { text-align: center; position: relative; z-index: 3; }
+.hero__sensei .sensei-ring {
+  width: clamp(12em, 24vw, 18em); margin: 0 auto;
+  transition: transform .4s var(--ease-expo), box-shadow .4s var(--ease-expo);
+  cursor: pointer;
+  box-shadow: 0 1.2em 3em -0.8em rgba(198,44,22,.35);
+}
+.hero__sensei .sensei-ring:hover {
+  transform: scale(1.03);
+  box-shadow: 0 1.5em 3.5em -0.7em rgba(198,44,22,.45);
+}
+.sensei-caption {
+  margin-top: 0.7em;
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--cinnabar);
+}
+
+/* --- LETTER (Svenja's story) ------------------------------------ */
+.letter {
+  padding: 3.5em 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.letter__inner { max-width: 62ch; margin: 0 auto; }
+.letter__kicker {
+  font-family: var(--font-mono); font-size: 0.85em; font-weight: 400; letter-spacing: .22em;
+  text-transform: uppercase; margin-bottom: 1.6em;
+  display: inline-flex; align-items: center; gap: 0.6em;
+}
+.letter__kicker::before { content: ""; width: 1.8em; height: 2px; background: var(--cinnabar); }
+.letter__body { max-width: 62ch; }
+.letter__body p {
+  font-family: var(--font-edit); font-size: clamp(1.05em, 1.5vw, 1.25em);
+  line-height: 1.65; margin-bottom: 1em;
+}
+.letter__body p:last-of-type { margin-bottom: 0; }
+.letter__body p:first-of-type::first-letter {
+  font-family: var(--font-edit); font-style: italic;
+  font-size: 3.6em; line-height: .78;
+  color: var(--cinnabar);
+  float: left; padding: 0.06em 0.12em 0 0;
+}
+.letter__body em { font-style: italic; color: var(--cinnabar-deep); }
+.letter__sig {
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .2em;
+  text-transform: uppercase; opacity: .6; margin-top: 1.4em; display: block;
+}
+
+/* --- STEPS ----------------------------------------------------- */
+.steps {
+  padding: 3.5em 0 3em;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.steps__kicker {
+  font-family: var(--font-mono); font-size: 0.85em; font-weight: 400; letter-spacing: .22em;
+  text-transform: uppercase; margin-bottom: 1.5em;
+  display: inline-flex; align-items: center; gap: 0.6em;
+}
+.steps__kicker::before { content: ""; width: 1.8em; height: 2px; background: var(--cinnabar); }
+.steps__grid {
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 1em;
+  align-items: stretch;
+}
+.step {
+  padding: 1.6em 1.4em 1.8em; border-radius: 0.5em;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background: color-mix(in srgb, var(--paper) 60%, var(--chrome-hi));
+  text-align: center;
+  position: relative; overflow: hidden;
+  box-shadow:
+    0 2px 0 rgba(14,14,12,.08),
+    0 1.5em 3em -1.6em rgba(14,14,12,.4);
+  transition: transform var(--dur-med) var(--ease-expo), box-shadow var(--dur-med) var(--ease-expo);
+}
+@media (hover: hover) {
+  .step:hover {
+    transform: translateY(-0.5em) rotate3d(1, 0.2, 0, 4deg);
+    box-shadow:
+      0 3px 0 rgba(14,14,12,.14),
+      0 3em 5em -1.4em rgba(14,14,12,.6);
+  }
+  .step:hover .step__kanji { opacity: .22; transform: scale(1); }
+  .js .step:hover .step__img { transform: scale(1.03); }
+  .js .step:hover .step__go { opacity: 1; transform: none; }
+}
+.step:active { transform: translateY(-0.15em) scale(.99); }
+.step__kanji {
+  position: absolute; top: 0.05em; right: 0.18em;
+  font-family: var(--font-jp); font-size: 4.2em; line-height: 1;
+  color: var(--cinnabar); opacity: .1;
+  transform: scale(1.12);
+  pointer-events: none; user-select: none;
+  transition: opacity var(--dur-med) var(--ease-expo), transform var(--dur-med) var(--ease-expo);
+}
+.step__scene {
+  height: 9em; margin-bottom: 1.2em;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.step__img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  box-shadow: 0 0.5em 1.2em -0.6em rgba(14,14,12,.35);
+  transition: transform var(--dur-med) var(--ease-expo);
+}
+.step__num {
+  font-family: var(--font-display); font-size: 2.8em; line-height: .85;
+  color: transparent; -webkit-text-stroke: 1.5px var(--ink);
+}
+.step__title {
+  font-family: var(--font-display); font-size: 1.5em;
+  text-transform: uppercase; letter-spacing: .02em;
+  margin: 0.5em 0 0.3em;
+}
+.step__desc {
+  font-family: var(--font-edit); font-style: italic; font-size: 1.05em;
+  line-height: 1.5; color: var(--chrome-s);
+}
+/* Tiles as doors: the whole card is one button, JS only. Without JS the
+   cards stay plain and no dead button appears. */
+.step__door, .step__go { display: none; }
+.js .step__door {
+  display: block; position: absolute; inset: 0; z-index: 2;
+  border-radius: inherit; cursor: pointer;
+}
+/* .step clips its content, so the ring moves inside the card edge. */
+.js .step__door:focus-visible { outline: 2px solid var(--cinnabar); outline-offset: -4px; }
+.js .step__go {
+  display: block; margin-top: 0.9em;
+  font-family: var(--font-mono); font-size: 0.8em; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--cinnabar);
+  opacity: 0; transform: translateY(0.3em);
+  transition: opacity var(--dur-med) var(--ease-expo), transform var(--dur-med) var(--ease-expo);
+}
+.js .step:focus-within .step__go { opacity: 1; transform: none; }
+.js .step:focus-within .step__img { transform: scale(1.03); }
+.js .step:focus-within .step__kanji { opacity: .22; transform: scale(1); }
+.step__arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cinnabar); padding: 0 0.1em;
+}
+.step__arrow svg { width: 1.7em; height: 1.7em; }
+.steps__coda {
+  margin-top: 1.8em; text-align: center;
+  font-family: var(--font-mono); font-size: 0.8em; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--chrome-s);
+}
+@media (max-width: 640px) {
+  .step__arrow svg { transform: rotate(90deg); }
+  .step__scene { height: auto; min-height: 6.5em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step, .step:hover, .step:active { transform: none; }
+  .step__kanji, .step__img, .js .step__go { transition: none; transform: none; }
+  .js .step:hover .step__img, .js .step:focus-within .step__img { transform: none; }
+}
+
+/* --- SENSEI SECTION -------------------------------------------- */
+.sensei-sec {
+  padding: 3.5em 0;
+  background: var(--ink-soft); color: var(--paper);
+  position: relative; overflow: hidden;
+}
+.sensei-sec::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(198,44,22,.18), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(212,248,90,.06), transparent 60%);
+  pointer-events: none;
+}
+.sensei-sec .wrap { position: relative; z-index: 2; }
+.sensei__layout {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(1.5em, 4vw, 3.5em);
+  align-items: start;
+}
+.sensei__img-col { flex-shrink: 0; }
+.sensei__img-col .sensei-ring { width: 9em; }
+.sensei__quote {
+  font-family: var(--font-edit); font-style: italic;
+  font-size: clamp(1.1em, 2vw, 1.45em); line-height: 1.5;
+  margin-bottom: 1.2em;
+}
+.sensei__quote .hl { color: var(--acid); font-style: italic; }
+
+/* Chat window (the sensei example, styled like the real Belt 1 chat) */
+.chat-window {
+  background: var(--paper); border-radius: 0.6em; overflow: hidden;
+  margin-bottom: 1em; max-width: 34em;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  box-shadow: 0 1.4em 2.8em -1em rgba(14,14,12,.55);
+}
+.chat-window__bar {
+  display: flex; align-items: center; gap: 0.6em;
+  padding: 0.65em 1em;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-size: 0.78em;
+  letter-spacing: .16em; text-transform: uppercase;
+}
+.chat-window__dot {
+  width: 0.6em; height: 0.6em; border-radius: 50%;
+  background: var(--cinnabar); flex-shrink: 0;
+}
+.chat-window__body { padding: 1.1em 1.1em 0.9em; }
+.chat-msg {
+  padding: 0.8em 1em; border-radius: 10px; margin-bottom: 0.7em;
+  font-family: var(--font-edit); font-size: 1em; line-height: 1.5;
+  max-width: 88%;
+}
+.chat-msg--student {
+  background: var(--ink); color: var(--paper);
+  margin-left: auto; border-bottom-right-radius: 2px;
+}
+.chat-msg--sensei {
+  background: var(--paper-tint); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-bottom-left-radius: 2px;
+}
+.chat-msg__sender {
+  font-family: var(--font-mono); font-size: 0.72em; letter-spacing: .14em;
+  text-transform: uppercase; margin-bottom: 0.3em; display: block;
+}
+.chat-msg--student .chat-msg__sender { color: var(--chrome-l); opacity: .8; }
+.chat-msg--sensei .chat-msg__sender { color: var(--cinnabar); }
+.chat-msg--sensei .hl { background: var(--acid); color: var(--ink); padding: 0 0.2em; }
+.chat-typing {
+  display: none;
+  padding: 0.7em 1em; border-radius: 10px; border-bottom-left-radius: 2px;
+  background: var(--paper-tint); border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  margin-bottom: 0.7em; max-width: 88%; width: fit-content;
+  font-family: var(--font-mono); font-size: 0.78em; letter-spacing: .1em;
+  color: var(--chrome-s);
+}
+.chat-typing--student {
+  margin-left: auto;
+  border-bottom-left-radius: 10px; border-bottom-right-radius: 2px;
+  background: var(--ink); border-color: var(--ink);
+  color: var(--chrome-l);
+}
+.chat-typing.visible { display: block; animation: msg-pop .32s var(--ease-expo) both; }
+.typing-dots span { animation: typingDot 1.4s infinite; display: inline-block; }
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes typingDot {
+  0%, 60%, 100% { opacity: .3; }
+  30% { opacity: 1; }
+}
+/* Playback: with JS the bubbles pop in one after the other */
+.js .chat-window[data-animate] .chat-msg { opacity: 0; }
+.js .chat-window[data-animate] .chat-msg.msg-in {
+  animation: msg-pop .42s cubic-bezier(.26, 1.2, .48, 1) both;
+}
+@keyframes msg-pop {
+  0% { opacity: 0; transform: translateY(0.7em) scale(.88); }
+  65% { opacity: 1; transform: translateY(-0.12em) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+/* Sensei answer streams word by word, like the real model */
+.js .chat-window[data-animate] .chat-msg .w { opacity: 0; transition: opacity .3s ease; }
+.js .chat-window[data-animate] .chat-msg .w.on { opacity: 1; }
+.js .chat-window[data-animate] .chat-msg.is-streaming .hl { background: transparent; transition: background-color .35s ease; }
+.js .chat-window[data-animate] .chat-msg.is-streaming .hl.bg-on { background: var(--acid); }
+/* Your turn: the visitor plays the student. Scripted replies, zero /api calls. */
+.chat-play {
+  padding: 0.9em 1.1em 1em;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 24%, transparent);
+}
+.chat-play__label {
+  font-family: var(--font-mono); font-size: 0.72em; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--cinnabar);
+  display: inline-flex; align-items: center; gap: 0.6em; margin-bottom: 0.75em;
+}
+.chat-play__label::before { content: ""; width: 1.5em; height: 2px; background: var(--cinnabar); }
+.chat-play__chips { display: flex; flex-wrap: wrap; gap: 0.5em; }
+.chip {
+  font-family: var(--font-edit); font-size: 0.95em; line-height: 1.35;
+  text-align: left; color: var(--ink);
+  padding: 0.5em 0.9em;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  border-radius: 10px; border-bottom-right-radius: 2px;
+  background: transparent;
+  transition:
+    background var(--dur-fast) var(--ease-expo),
+    color var(--dur-fast) var(--ease-expo),
+    border-color var(--dur-fast) var(--ease-expo),
+    transform var(--dur-fast) var(--ease-expo),
+    opacity var(--dur-fast) var(--ease-expo);
+}
+@media (hover: hover) {
+  .chip:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translateY(-1px); }
+}
+.chip:active { transform: translateY(1px); }
+.chat-play.is-locked .chip { opacity: .4; pointer-events: none; }
+.chip--used { opacity: .6; }
+.chip--used::before { content: "\2713\00a0 "; color: var(--cinnabar); }
+@media (hover: hover) { .chip--used:hover::before { color: var(--acid); } }
+.chat-play__note {
+  margin: 0.85em 0 0; font-family: var(--font-mono); font-size: 0.72em;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--chrome-s);
+}
+.js .chat-play.is-on { animation: play-in .5s var(--ease-expo) both; }
+.js .chat-play.is-on .chip { animation: play-in .45s var(--ease-expo) both; }
+.js .chat-play.is-on .chip:nth-child(2) { animation-delay: 70ms; }
+.js .chat-play.is-on .chip:nth-child(3) { animation-delay: 140ms; }
+.js .chat-play.is-on .chip:nth-child(4) { animation-delay: 210ms; }
+@keyframes play-in {
+  from { opacity: 0; transform: translateY(0.6em); }
+  to { opacity: 1; transform: none; }
+}
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.sensei__powered {
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .18em;
+  text-transform: uppercase; opacity: .65;
+}
+
+/* --- BELTS ----------------------------------------------------- */
+.belts {
+  padding: 3.5em 0 3em;
+  position: relative;
+}
+.belts__header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 0.6em; flex-wrap: wrap; gap: 0.75em;
+}
+.belts__title {
+  font-family: var(--font-display); font-size: clamp(2.2em, 6vw, 3.5em);
+  line-height: .85; letter-spacing: -.02em; text-transform: uppercase;
+}
+.belts__meta {
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .18em;
+  text-transform: uppercase; opacity: .65;
+}
+.belts__lede {
+  font-family: var(--font-edit); font-size: clamp(1.05em, 1.8vw, 1.3em);
+  line-height: 1.55; color: var(--ink); max-width: 60ch; margin-bottom: 1.5em;
+}
+.belts__strip {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1em;
+}
+.belt {
+  background: var(--paper); color: var(--ink);
+  border-radius: 6px; padding: 1.2em 1.1em 1.3em; text-align: center;
+  position: relative; display: flex; flex-direction: column;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 2px 0 rgba(14,14,12,.18),
+    0 2em 3.5em -1.4em rgba(14,14,12,.55);
+  transition: transform var(--dur-med) var(--ease-expo), box-shadow var(--dur-med) var(--ease-expo);
+}
+@media (hover: hover) {
+  .belt:hover {
+    transform: translateY(-0.5em) rotate3d(1, 0.2, 0, 4deg);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.9) inset,
+      0 3px 0 rgba(14,14,12,.22),
+      0 3em 5em -1.4em rgba(14,14,12,.75);
+  }
+  .belt:hover .belt__kanji { opacity: 1; }
+}
+.belt:active { transform: translateY(-0.15em) scale(.99); }
+.belt__top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 0.5em;
+}
+.belt__num {
+  font-family: var(--font-display); font-size: 2.4em; line-height: .85;
+  color: transparent; -webkit-text-stroke: 1.5px var(--ink);
+}
+.belt__kanji {
+  font-family: var(--font-jp); font-size: 1.7em; line-height: 1;
+  color: var(--cinnabar); opacity: .8;
+  transition: opacity var(--dur-med) var(--ease-expo);
+}
+.belt__band {
+  width: 100%; aspect-ratio: 2.6 / 1; border-radius: 4px;
+  position: relative; margin: 0.4em 0 0.9em;
+  background: linear-gradient(
+    180deg,
+    var(--belt-col, #EFEAD8) 0%, var(--belt-col, #EFEAD8) 38%,
+    color-mix(in srgb, var(--belt-col, #EFEAD8) 50%, var(--ink)) 40%,
+    color-mix(in srgb, var(--belt-col, #EFEAD8) 50%, var(--ink)) 60%,
+    var(--belt-col, #EFEAD8) 62%, var(--belt-col, #EFEAD8) 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.5) inset,
+    0 -1px 0 rgba(0,0,0,.3) inset,
+    0 0.6em 1em -0.4em rgba(14,14,12,.35);
+}
+.belt__band::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 38%; aspect-ratio: 1.8 / 1; transform: translate(-50%, -50%);
+  border-radius: 3px;
+  background: linear-gradient(160deg,
+    #fff 0%, #e8e8ec 18%, #b8bcc6 35%, #8e94a0 48%, #565b68 62%, #2a2e38 78%, #d8dae0 92%, #fff 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 -2px 0 rgba(0,0,0,.5) inset,
+    0 0.35em 0.6em -0.15em rgba(14,14,12,.45),
+    0 2px 4px rgba(14,14,12,.3);
+  border: 1px solid rgba(14,14,12,.3);
+}
+.belt__band::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 14%; height: 2px; background: rgba(14,14,12,.45);
+  transform: translate(-50%, -50%); z-index: 2; border-radius: 1px;
+}
+.belt__name {
+  font-family: var(--font-display); font-size: 1.3em;
+  text-transform: uppercase; letter-spacing: .04em; margin-bottom: 0.35em;
+}
+.belt__desc {
+  font-family: var(--font-edit); font-style: italic; font-size: 1em;
+  line-height: 1.5; color: var(--chrome-s); text-align: left;
+}
+.belt--final {
+  background: var(--ink); color: var(--paper);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.1) inset,
+    0 2px 0 rgba(0,0,0,.6),
+    0 2em 3.5em -1.4em rgba(0,0,0,.85);
+}
+.belt--final .belt__num { -webkit-text-stroke-color: var(--gold); }
+.belt--final .belt__kanji { color: var(--gold); }
+.belt--final .belt__name { color: var(--gold); }
+.belt--final .belt__desc { color: color-mix(in srgb, var(--paper) 78%, transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .belt, .belt:hover, .belt:active { transform: none; }
+}
+
+/* --- FOOTER ---------------------------------------------------- */
+.foot {
+  padding: 2.5em 0 3em;
+  text-align: center;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.foot__line {
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .14em;
+  text-transform: uppercase; opacity: .65; line-height: 1.8;
+}
+.foot__line a { border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); transition: border-color var(--dur-fast), opacity var(--dur-fast); }
+.foot__line a:hover { border-bottom-color: var(--cinnabar); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .js .reveal { opacity: 1; transform: none; transition: none; }
+  .hero__sensei .sensei-ring:hover { transform: none; }
+  .js .chat-window[data-animate] .chat-msg { opacity: 1; transform: none; transition: none; animation: none; }
+  .js .chat-window[data-animate] .chat-msg .w { opacity: 1; transition: none; }
+  .js .chat-play.is-on, .js .chat-play.is-on .chip { animation: none; }
+  .chat-typing.visible { animation: none; }
+  .typing-dots span { animation: none; }
+}
+
+/* --- RESPONSIVE ------------------------------------------------ */
+@media (max-width: 1100px) {
+  .belts__strip { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .hero__layout { grid-template-columns: 1fr; text-align: center; }
+  .hero__kicker { justify-content: center; }
+  .hero__sensei { order: -1; margin-bottom: 1em; }
+  .hero__sub { margin-left: auto; margin-right: auto; }
+  .hero__ctas { justify-content: center; }
+  .hero__hint { text-align: center; }
+  .hero__side-label { display: none; }
+  .hero { min-height: auto; padding-bottom: 2.5em; }
+  .hero__title { font-size: clamp(3.2rem, 13vw, 7rem); }
+  .hero__meta { justify-content: center; gap: 1.2em 2em; }
+  .hero__sensei .sensei-ring { width: clamp(10em, 40vw, 14em); }
+  .sensei__layout { grid-template-columns: 1fr; text-align: center; }
+  .sensei__img-col .sensei-ring { margin: 0 auto 1.2em; }
+  .steps__grid { grid-template-columns: 1fr; gap: 1em; }
+}
+@media (max-width: 640px) {
+  .belts__strip {
+    display: flex; overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75em; padding-bottom: 0.75em;
+  }
+  .belt { flex: 0 0 13em; scroll-snap-align: start; }
+}
+@media (max-width: 480px) {
+  .hero__title { font-size: clamp(2.9rem, 15.5vw, 5rem); }
+  .hero__meta { gap: 0.9em 1.4em; }
+  .hero__meta-item { flex-direction: column; gap: 0.15em; align-items: center; }
+  .logo__ver { display: none; }
+  .logo { font-size: 1.05em; }
+  .logo__divider { display: none; }
+  .nav__hood { font-size: 0.72em; padding: 0.4em 0.7em; }
+  .sensei-sec { padding: 2.5em 0; }
+  .belts { padding: 2.5em 0 2em; }
+  .steps { padding: 2.5em 0 2em; }
+  .letter { padding: 2.5em 0; }
+}
+
+/* --- GUIDED TOUR (opens on "Enter the Dojo") ------------------ */
+/* No-JS fallback: normal section, all steps stacked, no bar/nav.
+   With JS: hidden until Enter opens it as a full-screen stepper.
+   (CLAUDE.md CSS rule: switch on .active/.js classes, never #id { display }) */
+.tour { padding: 3.5em 0; border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); }
+.tour__intro { text-align: center; margin-bottom: 0.4em; }
+.tour__introttl { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.7em, 5vw, 2.8em); text-transform: uppercase; letter-spacing: -.01em; }
+.tour__bar { display: none; }
+.tour__nav { display: none; }
+
+.js .tour { display: none; }
+.js .tour__intro { display: none; }
+.js .tour.tour--open {
+  display: flex; flex-direction: column;
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--paper); overflow-y: auto; padding: 0;
+  scrollbar-gutter: stable;
+}
+.js .tour--open .tour__bar {
+  display: flex; align-items: center; gap: 0.75em;
+  position: sticky; top: 0; z-index: 2;
+  padding: 0.8em clamp(1.25em, 4vw, 3em);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.tour__progress { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .16em; text-transform: uppercase; color: var(--cinnabar); flex-shrink: 0; }
+.tour__meter { flex: 1; max-width: 20em; height: 3px; background: color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 2px; overflow: hidden; }
+.tour__meter i { display: block; height: 100%; width: 33.34%; background: var(--cinnabar); transition: width .4s var(--ease-expo); }
+.tour__close { margin-left: auto; font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .14em; text-transform: uppercase; opacity: .7; padding: 0.5em 0.75em; border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 4px; }
+.tour__close:hover { opacity: 1; }
+.js .tour--open .tour__stage { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.tour__steps { max-width: 48em; margin: 0 auto; padding: 2em clamp(1.25em, 4vw, 3em); width: 100%; }
+.js .tour__step { display: none; }
+.js .tour--open .tour__step.is-active { display: block; animation: tour-in .5s var(--ease-expo); }
+@keyframes tour-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.tour__step + .tour__step { margin-top: 2em; }
+.js .tour__step + .tour__step { margin-top: 0; }
+.tour__label { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .2em; text-transform: uppercase; color: var(--cinnabar); display: inline-flex; align-items: center; gap: 0.6em; margin-bottom: 0.8em; }
+.tour__label::before { content: ""; width: 1.5em; height: 2px; background: var(--cinnabar); }
+.tour__h { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8em, 5.5vw, 3em); line-height: .98; text-transform: uppercase; margin-bottom: 0.7em; }
+.tour__p { font-family: var(--font-edit); font-size: clamp(1.05em, 1.7vw, 1.3em); line-height: 1.55; max-width: 60ch; margin-bottom: 0.7em; }
+/* Sensei welcome at the top of tour step 1 */
+.tour__sensei-hello { display: flex; align-items: flex-start; gap: 1.2em; margin-bottom: 1.3em; }
+.tour__sensei-hello .sensei-ring { width: 7em; flex-shrink: 0; }
+.tour__sensei-words {
+  font-family: var(--font-edit); font-style: italic;
+  font-size: clamp(1.05em, 1.7vw, 1.25em); line-height: 1.5;
+  max-width: 52ch;
+}
+.tour__sensei-words p { margin: 0 0 0.65em; }
+.tour__sensei-words p:last-child { margin-bottom: 0; }
+@media (max-width: 560px) {
+  .tour__sensei-hello { flex-direction: column; align-items: center; text-align: center; }
+  .tour__sensei-hello .sensei-ring { width: 6em; }
+}
+.tour__card { border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 0.6em; padding: 1.2em 1.4em; margin: 0.7em 0 0.3em; background: color-mix(in srgb, var(--paper) 55%, var(--chrome-hi)); }
+.tour__cri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75em; }
+.tour__cri div { text-align: center; }
+.tour__cri b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.15em; text-transform: uppercase; color: var(--cinnabar); margin-bottom: 0.2em; }
+.tour__cri span { font-family: var(--font-edit); font-style: italic; font-size: 1em; color: var(--chrome-s); }
+.tour__next-hint { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .14em; text-transform: uppercase; opacity: .6; margin-top: 0.8em; }
+.js .tour--open .tour__step.is-active .tour__nav { display: flex; gap: 0.75em; margin-top: 1.2em; flex-wrap: wrap; }
+@media (max-width: 560px) { .tour__cri { grid-template-columns: 1fr; gap: 8px; } }
+
+/* --- THEORY EXPLAINER (tour step 1) ----------------------------- */
+/* No-JS default = the decomposed, fully labelled state (readable as a
+   plain section). JS folds it into one sentence block first, and the
+   "Break it down" button glides it apart (FLIP, transform only). */
+.tour__step { position: relative; }
+.tour__kanji {
+  position: absolute; top: -0.12em; right: -0.05em; z-index: -1;
+  font-family: var(--font-jp); font-size: 7em; line-height: 1;
+  color: var(--cinnabar); opacity: .07;
+  pointer-events: none; user-select: none;
+}
+.tour__img--scene { width: auto; max-width: 100%; max-height: 18vh; }
+.lesson-k {
+  font-family: var(--font-mono); font-size: 0.78em; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--cinnabar);
+  display: inline-flex; align-items: center; gap: 0.6em;
+  margin: 1.2em 0 0.4em;
+}
+.lesson-k::before { content: ""; width: 1.5em; height: 2px; background: var(--cinnabar); }
+.cri-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.72em;
+  font-style: normal; letter-spacing: .14em; text-transform: uppercase;
+  padding: 0.22em 0.6em; border-radius: 3px;
+}
+.cri-tag--claim { background: var(--cinnabar); color: var(--paper); }
+.cri-tag--reason { background: var(--ink); color: var(--paper); }
+.cri-tag--impact { background: var(--gold); color: var(--ink); }
+.cri-ref {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9em;
+  background: var(--ink-soft); color: var(--paper);
+  border-radius: 0.6em; padding: 0.9em 1.1em; margin: 0.7em 0 0.3em;
+}
+.cri-ref .cri-tag--reason { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 35%, transparent); }
+.cri-ref__def { display: block; margin-top: 0.45em; font-family: var(--font-edit); font-size: 0.98em; line-height: 1.45; }
+.cri-ref__def em { font-style: italic; color: var(--chrome-l); }
+@media (min-width: 720px) {
+  .js .tour--open .cri-ref { position: sticky; top: 3.1em; z-index: 1; }
+}
+@media (max-width: 560px) { .cri-ref { grid-template-columns: 1fr; gap: 0.7em; } }
+
+.bd__rows {
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 0.6em; padding: 1.1em 1.3em; margin: 0.4em 0 0.3em;
+  background: color-mix(in srgb, var(--paper) 55%, var(--chrome-hi));
+  font-family: var(--font-edit); font-size: clamp(1.1em, 1.8vw, 1.35em); line-height: 1.55;
+}
+.bd__rows:focus { outline: none; }
+.bd__row { padding-left: 0.9em; border-left: 3px solid transparent; }
+.bd__row + .bd__row { margin-top: 0.9em; }
+.bd__row--claim { border-left-color: var(--cinnabar); }
+.bd__row--reason { border-left-color: var(--ink); }
+.bd__row--impact { border-left-color: var(--gold); }
+.bd__meta { display: flex; align-items: baseline; gap: 0.6em; margin-top: 0.3em; }
+.bd__meta .cri-tag { flex-shrink: 0; }
+.bd__why { font-size: 0.8em; line-height: 1.5; font-style: italic; color: var(--chrome-s); }
+.bd__act { display: none; margin-top: 0.9em; }
+/* JS start state: one quiet sentence block, one clear action */
+.js .bd:not(.is-broken) .bd__row { display: inline; border: 0; padding: 0; margin: 0; }
+.js .bd:not(.is-broken) .bd__sentence { display: inline; }
+.js .bd:not(.is-broken) .bd__meta { display: none; }
+.js .bd:not(.is-broken) .bd__act { display: block; }
+.bd.is-gliding .bd__row { transition: transform .55s var(--ease-expo); will-change: transform; }
+.js .bd.is-broken .bd__meta { opacity: 0; transform: translateY(0.4em); transition: opacity .4s var(--ease-expo), transform .4s var(--ease-expo); }
+.js .bd.is-broken .bd__row--reason .bd__meta { transition-delay: 120ms; }
+.js .bd.is-broken .bd__row--impact .bd__meta { transition-delay: 240ms; }
+.js .bd.is-broken.is-explained .bd__meta { opacity: 1; transform: none; }
+
+.gap__arg {
+  font-family: var(--font-edit); font-size: clamp(1.1em, 1.8vw, 1.35em); line-height: 1.55;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 0.6em; padding: 1.1em 1.3em; margin: 0.4em 0 0.7em;
+  background: color-mix(in srgb, var(--paper) 55%, var(--chrome-hi));
+}
+.gap__q { font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 0.6em; }
+.gap__chips { display: none; }
+.js .gap__chips { display: flex; flex-wrap: wrap; gap: 0.5em; }
+.gap__chips .chip { min-height: 44px; min-width: 44px; font-size: 1em; padding: 0.5em 1.1em; }
+.gap.is-solved .chip { opacity: .45; pointer-events: none; }
+.gap.is-solved .chip--right { opacity: 1; background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.chip--right::before { content: "\2713\00a0 "; }
+/* A tried chip just steps back. The checkmark belongs to the right answer
+   only (in the sensei widget "used" means sent, here it would read as
+   "correct"). */
+.gap .chip--used::before { content: ""; }
+.gap__ans {
+  display: none; margin-top: 0.9em; padding: 0.9em 1.1em; border-radius: 0.5em;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  background: color-mix(in srgb, var(--paper) 55%, var(--chrome-hi));
+}
+.gap__ans p { font-family: var(--font-edit); font-size: 1.05em; line-height: 1.55; }
+.gap__ans .cri-tag { margin-right: 0.35em; }
+.gap__ans--impact {
+  border-color: color-mix(in srgb, var(--gold) 65%, transparent);
+  background: color-mix(in srgb, var(--gold) 16%, var(--paper));
+}
+.gap__ans.is-on { display: block; }
+html:not(.js) .gap__ans--impact { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .gap__ans--impact.is-on { animation: hanko-in .35s var(--ease-expo); }
+}
+@keyframes hanko-in { from { opacity: 0; transform: scale(1.05) rotate(1.2deg); } to { opacity: 1; transform: none; } }
+
+.craft-note {
+  margin-top: 1.4em; max-width: 70ch;
+  font-family: var(--font-mono); font-size: 0.78em; line-height: 1.6;
+  letter-spacing: .02em; color: var(--chrome-s);
+}
+@media (prefers-contrast: more) {
+  .craft-note { color: var(--ink); }
+  .tour__next-hint, .steps__coda, .chat-play__note { opacity: 1; color: var(--ink); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bd.is-gliding .bd__row { transition: none; }
+  .js .bd.is-broken .bd__meta { transition: none; transform: none; }
+  .gap__ans--impact.is-on { animation: none; }
+}
+
+.tour__video {
+  display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 0.6em; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  margin: 0.7em 0 0.3em; background: var(--ink);
+}
+
+/* --- RING SIMULATION (tour step 3) ------------------------------ */
+/* The phone shows three things in a real round: topic, whose turn,
+   time. The simulation shows exactly these three, nothing more. */
+.ring { margin: 0.4em 0 0.3em; }
+.ring__honesty {
+  font-family: var(--font-mono); font-size: 0.72em; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--chrome-s); margin-bottom: 0.9em;
+}
+.ring-note {
+  font-family: var(--font-mono); font-size: 0.78em; line-height: 1.55;
+  letter-spacing: .02em; color: var(--chrome-s); max-width: 62ch;
+}
+.ring-w { font-style: normal; font-weight: 600; }
+.ring-w--c { color: var(--cinnabar); }
+.ring-w--r { color: var(--ink); }
+.ring-w--i { color: color-mix(in srgb, var(--gold) 55%, var(--ink)); }
+
+/* Cards: topic and closing, both with the hanko stamp gesture */
+.ring-card {
+  display: inline-block; text-align: center;
+  font-family: var(--font-display); font-size: 1.35em; text-transform: uppercase;
+  letter-spacing: .02em; line-height: 1.15;
+  background: color-mix(in srgb, var(--paper) 45%, var(--chrome-hi));
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 0.4em; padding: 0.6em 1em;
+  box-shadow: 0 2px 0 rgba(14,14,12,.1), 0 1em 2em -1.2em rgba(14,14,12,.5);
+}
+.ring-card--end { font-size: 1.2em; max-width: 26em; }
+.ring-quote {
+  font-family: var(--font-edit); font-style: italic; font-size: 0.95em;
+  line-height: 1.5; text-transform: none; letter-spacing: 0;
+  margin-top: 0.5em; color: var(--chrome-s);
+}
+.ring-duel {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3em;
+  font-family: var(--font-display); font-size: 1.25em; text-transform: uppercase;
+  margin-top: 0.7em;
+}
+.ring-duel__vs {
+  font-size: 0.7em; color: var(--cinnabar);
+  border: 1.5px solid var(--cinnabar); border-radius: 50%;
+  width: 2.1em; height: 2.1em; display: inline-flex; align-items: center; justify-content: center;
+  align-self: center;
+}
+
+/* The phone: pure CSS device, ink screen, paper text */
+.ring-phone {
+  position: relative;
+  width: clamp(9.5em, 20vw, 11em);
+  border-radius: 1.2em; padding: 1em 0.45em 0.85em;
+  background: var(--ink); border: 1px solid color-mix(in srgb, var(--ink) 55%, var(--paper));
+  box-shadow: 0 2px 0 rgba(14,14,12,.25), 0 1.6em 2.6em -1.4em rgba(14,14,12,.7);
+}
+.ring-phone::before {
+  content: ""; position: absolute; top: 0.45em; left: 50%; transform: translateX(-50%);
+  width: 2.2em; height: 3px; border-radius: 2px;
+  background: color-mix(in srgb, var(--paper) 25%, var(--ink));
+}
+.ring-phone::after {
+  content: ""; position: absolute; bottom: 0.34em; left: 50%; transform: translateX(-50%);
+  width: 2.6em; height: 3px; border-radius: 2px;
+  background: color-mix(in srgb, var(--paper) 30%, var(--ink));
+}
+.ring-phone__screen {
+  border-radius: 0.75em; background: var(--ink-soft); color: var(--paper);
+  min-height: 17em; padding: 0.8em 0.8em 0.9em;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative;
+}
+.ring-phone__top {
+  font-family: var(--font-mono); font-size: 0.72em; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--chrome-l);
+  min-height: 2.6em; display: flex; align-items: center;
+}
+.ring-phone__turn {
+  font-family: var(--font-display); font-size: clamp(1em, 2vw, 1.3em);
+  text-transform: uppercase; line-height: 1.1; letter-spacing: .02em;
+  margin: 0.4em 0 0.5em; min-height: 2.2em;
+  display: flex; align-items: center; justify-content: center;
+}
+.ring-phone__next {
+  font-family: var(--font-mono); font-size: 0.72em; line-height: 1.5;
+  color: var(--chrome-l); margin-top: auto; min-height: 3.1em;
+  display: flex; align-items: center; justify-content: center;
+}
+.ring-phone__tempo {
+  font-family: var(--font-mono); font-size: 0.72em; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--chrome-m); margin-top: 0.35em;
+}
+/* Countdown: conic ring, cinnabar on ink, number never jitters */
+.ring-cd { position: relative; width: 5.2em; height: 5.2em; margin: 0.2em auto 0; }
+.ring-cd__ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(var(--cinnabar) calc(var(--p, 1) * 1turn), color-mix(in srgb, var(--paper) 18%, var(--ink-soft)) 0);
+  -webkit-mask: radial-gradient(closest-side, transparent 68%, #000 69%);
+  mask-image: radial-gradient(closest-side, transparent 68%, #000 69%);
+}
+.ring-cd__num {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 1.05em; font-variant-numeric: tabular-nums;
+  color: var(--paper);
+}
+.ring-cd__bar { display: none; position: absolute; left: 8%; right: 8%; bottom: -0.55em; height: 4px; background: color-mix(in srgb, var(--paper) 18%, var(--ink-soft)); }
+.ring-cd__bar i { display: block; height: 100%; background: var(--cinnabar); }
+@media (forced-colors: active) {
+  .ring-cd__ring { display: none; }
+  .ring-cd__bar { display: block; background: GrayText; }
+  .ring-cd__bar i { background: Highlight; }
+}
+
+/* Static storyboard (no JS / reduced motion / data saver) */
+.ring-still { margin: 0 0 1.4em; }
+.ring-still__scene {
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 0.6em; padding: 1.2em 1em;
+  background: color-mix(in srgb, var(--paper) 78%, var(--paper-tint));
+  text-align: center; margin-bottom: 0.5em;
+  position: relative; overflow: hidden;
+}
+.ring-still__scene::before {
+  content: "\95D8"; position: absolute; right: 0.05em; bottom: -0.2em;
+  font-family: var(--font-jp); font-size: 5em; line-height: 1;
+  color: var(--cinnabar); opacity: .06; pointer-events: none;
+}
+.ring-still .ring-phone { margin: 0 auto; }
+
+/* The live stage (built by JS) */
+.ring-stage { position: relative; }
+.ring-stage__scene {
+  position: relative; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 0.6em;
+  background: color-mix(in srgb, var(--paper) 78%, var(--paper-tint));
+  padding: 1.4em 1em 1.2em;
+  min-height: 21em;
+  perspective: 1200px;
+}
+.ring-stage__scene::before {
+  content: "\95D8"; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-jp); font-size: 11em; line-height: 1;
+  color: var(--cinnabar); opacity: .05; pointer-events: none;
+}
+.ring-stage__glow {
+  position: absolute; left: 50%; top: 18%; width: 50%; height: 64%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--cinnabar) 22%, transparent), transparent 65%);
+  opacity: 0; pointer-events: none;
+  transition: transform .6s var(--ease-expo), opacity .3s var(--ease-expo);
+}
+.ring-stage.is-running .ring-stage__glow { will-change: transform; }
+.ring-stage--a .ring-stage__glow { opacity: 1; transform: translateX(-100%); }
+.ring-stage--b .ring-stage__glow { opacity: 1; transform: translateX(0%); }
+.ring-stage__row {
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  gap: 0.8em; max-width: 44em; margin: 0 auto;
+}
+.ring-stage__row .ring-phone { flex-shrink: 0; }
+.ring--live .ring-story { display: none; }
+.ring-stage__row .ring-phone--a { transform: rotateY(7deg); }
+.ring-stage__row .ring-phone--b { transform: rotateY(-7deg); }
+.ring-stage--b .ring-phone--b { transform: rotateY(-7deg) rotate(-1.2deg) scale(1.02); }
+.ring-phone { transition: transform .3s var(--ease-expo), opacity .3s var(--ease-expo); }
+.ring-phone__screen { transition: background .3s var(--ease-expo); }
+.ring-stage .ring-phone { opacity: .72; }
+.ring-stage .ring-phone.is-live { opacity: 1; }
+.ring-phone.is-live .ring-phone__screen {
+  background: color-mix(in srgb, var(--cinnabar) 10%, var(--ink-soft));
+  box-shadow: inset 0 0 0 1.5px var(--cinnabar);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ring-phone.is-live { animation: ring-breathe 3s ease-in-out infinite; }
+}
+@keyframes ring-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .93; }
+}
+.ring-stage__mid {
+  flex: 1; text-align: center; align-self: stretch;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.6em; min-width: 0;
+}
+.ring-stage__mid .ring-card[hidden], .ring-stage__mid .ring-duel[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .ring-card.is-stamped { animation: hanko-in .35s var(--ease-expo); }
+}
+.ring-dots { display: flex; gap: 0.45em; justify-content: center; margin: 0.8em 0 0.5em; }
+.ring-dots i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+  transition: background var(--dur-fast) var(--ease-expo), transform var(--dur-fast) var(--ease-expo);
+}
+.ring-dots i.is-on { background: var(--cinnabar); transform: scale(1.25); }
+.ring-stage .ring-note { min-height: 3.6em; margin: 0.2em auto 0; text-align: center; }
+.ring-ctrl { display: flex; align-items: center; justify-content: center; gap: 1em; margin-top: 0.7em; min-height: 3.2em; }
+/* .btn sets display and would defeat the hidden attribute */
+.ring-ctrl [hidden] { display: none !important; }
+.ring-skip {
+  font-family: var(--font-mono); font-size: 0.8em; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--chrome-s);
+  padding: 0.6em 0.8em; border-radius: 4px;
+  min-height: 44px; min-width: 44px;
+}
+.ring-skip:hover { color: var(--ink); }
+
+@media (max-width: 719px) {
+  /* Never stack the phones: the handover moment needs both at once */
+  .ring-phone { width: clamp(8em, 42vw, 10.5em); }
+  .ring-phone__screen { min-height: 13.5em; }
+  .ring-stage__scene { padding: 1em 0.5em 0.9em; min-height: 17em; }
+  .ring-stage__mid { display: none; }
+  .ring-stage--mid-open .ring-stage__mid {
+    display: flex; position: absolute; inset: 0; z-index: 1;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    padding: 1em;
+  }
+  .ring-cd { width: 4.4em; height: 4.4em; }
+}
+@media (max-height: 1000px) {
+  .js .tour--open .ring-phone__screen { min-height: 13.5em; }
+  .js .tour--open .ring-stage__scene { min-height: 17.5em; }
+}
+.tour__img {
+  display: block; width: 100%; height: auto;
+  max-height: 35vh; object-fit: cover;
+  border-radius: 0.6em; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  margin: 0.7em 0 0.3em;
+}
+/* Laptop heights: tighten the open tour so step 1 and 3 fit above the fold
+   (one visible next action per screen). No-JS stacked fallback unaffected. */
+@media (max-height: 1000px) {
+  .js .tour--open .tour__steps { padding-top: 1em; padding-bottom: 1em; }
+  .js .tour--open .tour__h { font-size: clamp(1.6em, 4vw, 2.2em); margin-bottom: 0.4em; }
+  .js .tour--open .tour__p { margin-bottom: 0.5em; }
+  .js .tour--open .tour__img, .js .tour--open .tour__video { max-height: 30vh; object-fit: cover; margin: 0.5em 0 0.3em; }
+  .js .tour--open .tour__card { padding: 0.8em 1.2em; }
+  .js .tour--open .tour__next-hint { margin-top: 0.5em; }
+  .js .tour--open .tour__step.is-active .tour__nav { margin-top: 0.8em; }
+}
+.chat-caret {
+  display: inline-block; width: 2px; height: 1em;
+  background: currentColor; margin-left: 2px; vertical-align: -0.15em;
+  animation: caret-blink .8s steps(1) infinite;
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* --- GATE VIDEO (door opens once on "Enter the Dojo") ---------- */
+.gate-video {
+  position: fixed; inset: 0; z-index: 300;
+  background: var(--ink);
+  cursor: pointer;
+  opacity: 0; transition: opacity .45s var(--ease-expo);
+}
+.gate-video.is-on { opacity: 1; }
+.gate-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Portrait: show the full frame so burned-in subtitles stay readable */
+@media (orientation: portrait) { .gate-video video { object-fit: contain; } }
+.gate-video__skip {
+  position: absolute; right: 1.25em; bottom: 1.25em;
+  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--chrome-l);
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--chrome-l) 35%, transparent);
+  border-radius: 4px; padding: 0.6em 1.1em; cursor: pointer;
+}
+.gate-video__skip:hover { color: var(--chrome-hi); border-color: color-mix(in srgb, var(--chrome-l) 60%, transparent); }
+
+/* --- DESKTOP: slight boost on wide screens --------------------- */
+@media (min-width: 901px) {
+  .step__title { font-size: 1.7em; }
+  .sensei__quote { font-size: clamp(1.15em, 2.3vw, 1.5em); }
+  .belt__name { font-size: 1.25em; }
+}
+
+/* --- BELT GUIDES (click a belt tile to open its guide) --------- */
+.js .belt[data-beltdoc] { cursor: pointer; }
+.belt__more {
+  display: none; margin-top: 0.9em;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--cinnabar-deep);
+}
+.js .belt__more { display: block; }
+.belt--final .belt__more { color: var(--gold); }
+.belt[data-beltdoc]:focus-visible { outline: 3px solid var(--cinnabar); outline-offset: 3px; }
+
+/* Without JS the guides render as a normal stacked section under the
+   belt strip. With JS they hide until a tile opens them as a dialog. */
+.beltdocs { background: var(--paper); }
+.js .beltdocs { display: none; }
+.js .beltdocs.beltdocs--open {
+  display: block; position: fixed; inset: 0; z-index: 120; /* above the fixed nav (100) */
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.beltdocs__bar {
+  display: none; position: sticky; top: 0; z-index: 2;
+  align-items: center; justify-content: space-between; gap: 1em;
+  background: var(--ink); color: var(--paper);
+  padding: 0.8em var(--gutter);
+}
+.js .beltdocs--open .beltdocs__bar { display: flex; }
+.beltdocs__bartitle {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+}
+.beltdocs__close {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+  background: transparent; color: var(--paper); border: 1.5px solid var(--paper);
+  padding: 0.45em 0.9em; cursor: pointer;
+}
+.beltdocs__close:hover { background: var(--cinnabar); border-color: var(--cinnabar); }
+.beltdocs__inner { max-width: 66em; margin: 0 auto; padding: 2em var(--gutter) 3.5em; }
+.beltdocs__introttl {
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: -.01em;
+  font-size: clamp(1.8em, 4vw, 2.6em); line-height: .95; margin-bottom: 0.6em;
+}
+.js .beltdocs__introttl { display: none; }
+
+.beltdoc {
+  border: 2px solid var(--ink); background: #FAF5EA; margin-bottom: 1.75em;
+  display: grid; grid-template-columns: 12.5em 1fr; overflow: hidden;
+}
+.js .beltdocs--open .beltdoc { display: none; margin-bottom: 0; }
+.js .beltdocs--open .beltdoc.is-active { display: grid; }
+.beltdoc__side {
+  background: var(--paper-tint); border-right: 2px solid var(--ink); padding: 1.4em 1.25em;
+  display: flex; flex-direction: column; gap: 0.5em; position: relative;
+}
+.beltdoc__band { height: 14px; margin: -1.4em -1.25em 0.6em; border-bottom: 2px solid var(--ink); }
+.beltdoc__num { font-family: var(--font-mono); font-size: 13px; letter-spacing: .14em; color: var(--ink-soft); }
+.beltdoc__kanji { font-family: var(--font-jp); font-size: 3.1em; line-height: 1; color: var(--ink); }
+.beltdoc__name { font-family: var(--font-display); text-transform: uppercase; font-size: 1.9em; line-height: .95; }
+.beltdoc__badge {
+  align-self: flex-start; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; padding: 0.25em 0.6em; border: 1.5px solid var(--ink); margin-top: 0.5em;
+}
+.beltdoc__badge--live { background: var(--cinnabar); border-color: var(--cinnabar); color: #fff; }
+.beltdoc__badge--design { background: transparent; color: var(--ink-soft); }
+.beltdoc__main { padding: 1.4em 1.6em 1.5em; }
+.beltdoc__move { font-size: 1.1em; font-style: italic; margin-bottom: 0.9em; }
+.beltdoc__move strong {
+  font-style: normal; color: var(--cinnabar); font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: .12em; text-transform: uppercase; margin-right: 0.7em;
+}
+.beltdoc__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em 1.7em; }
+.beltdoc__col h3 {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--ink-soft); border-bottom: 1.5px solid var(--ink); padding-bottom: 0.35em;
+  margin-top: 1.33em; margin-bottom: 0.6em; /* 1.33em = the old h4 default, kept so the swap is pixel-identical */
+}
+.beltdoc__col p, .beltdoc__col li { font-size: 0.9em; line-height: 1.55; color: var(--ink-soft); }
+.beltdoc__col ul { list-style: none; padding: 0; }
+.beltdoc__col li { padding-left: 1.1em; position: relative; margin-bottom: 0.5em; }
+.beltdoc__col li::before { content: "\203A"; position: absolute; left: 0; color: var(--cinnabar); font-weight: 700; }
+.beltdoc__col li b { color: var(--ink); font-weight: 600; }
+.beltdoc__img {
+  aspect-ratio: 16/8; overflow: hidden; border: 2px solid var(--ink);
+  margin-bottom: 0.7em; background: var(--paper-tint);
+}
+.beltdoc__img img { width: 100%; height: 100%; object-fit: cover; object-position: center 12%; display: block; filter: saturate(.92); }
+.beltdoc__img--scene img { object-position: center; }
+.beltdoc__fallacies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55em; margin: 0.2em 0 0.7em; }
+.beltdoc__fallacies figure { border: 2px solid var(--ink); background: var(--paper-tint); }
+.beltdoc__fallacies img { width: 100%; aspect-ratio: 1/1.05; object-fit: cover; display: block; }
+.beltdoc__fallacies figcaption {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+  text-align: center; padding: 0.3em 0.25em; border-top: 2px solid var(--ink); color: var(--ink-soft);
+}
+.beltdoc__quote {
+  margin-top: 0.6em; padding: 0.6em 0.85em; background: var(--paper-tint);
+  border-left: 3px solid var(--gold); font-size: 0.88em; font-style: italic; color: var(--ink-soft);
+}
+@media (max-width: 900px) {
+  .beltdoc { grid-template-columns: 1fr; }
+  .beltdoc__side { border-right: none; border-bottom: 2px solid var(--ink); }
+  .beltdoc__cols { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <div class="logo">
+      <svg class="logo__torii" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2" y="4" width="28" height="4" fill="currentColor"/>
+        <rect x="5" y="10" width="22" height="2" fill="currentColor"/>
+        <rect x="8" y="12" width="3" height="18" fill="currentColor"/>
+        <rect x="21" y="12" width="3" height="18" fill="currentColor"/>
+      </svg>
+      <span>DEBATE DOJO</span>
+      <span class="logo__divider" aria-hidden="true"></span>
+      <span class="logo__ver">English with Ms. Borgwardt</span>
+    </div>
+    <a class="nav__hood" href="https://debate-dojo.vercel.app/under-the-hood.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      <span>Under the Hood</span>
+    </a>
+  </div>
+</nav>
+
+<main>
+<!-- HERO -->
+<header class="hero" id="main">
+  <div class="wrap" style="position:relative;width:100%">
+    <div class="hero__side-label">BORGWARDT &middot; DEBATE DOJO &middot; A DEMO</div>
+
+    <div class="hero__layout">
+      <div>
+        <div class="hero__kicker">Welcome to the Dojo, young warrior</div>
+
+        <h1 class="hero__title">
+          Learn to<br>
+          <em>&amp; the art of</em><br>
+          Argue<span class="dot">.</span>
+        </h1>
+
+        <div class="hero__sub">
+          <p><b>This is a demo of my Debate Dojo. I use it in my classroom.</b></p>
+        </div>
+
+        <div class="hero__meta">
+          <div class="hero__meta-item"><strong>Told by</strong><span>Ms. Borgwardt</span></div>
+          <div class="hero__meta-item"><strong>Format</strong><span>Five belts, one tournament</span></div>
+          <div class="hero__meta-item"><strong>Status</strong><span>Live in my classroom</span></div>
+        </div>
+
+        <div class="hero__ctas">
+          <a class="btn btn--primary" href="#tour" id="enter-main">Enter the Dojo &rarr;</a>
+          <a class="btn btn--ghost" href="#steps">How it works &darr;</a>
+        </div>
+        <span class="hero__hint">Come in. The sensei is already waiting for you.</span>
+      </div>
+
+      <div class="hero__sensei">
+        <a href="#tour" class="sensei-ring" id="enter-sensei" title="Enter the Dojo">
+          <img src="assets/belt2/sensei-waiting.webp" alt="The sensei, waiting for you in the Dojo" width="460" height="460">
+        </a>
+        <div class="sensei-caption">&#9654; Enter the Dojo</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- LETTER: Svenja's story (verbatim, moved out of the hero) -->
+<section class="letter" id="story">
+  <div class="wrap">
+    <div class="letter__inner">
+    <h2 class="letter__kicker">Why I built this</h2>
+    <div class="letter__body">
+      <p>I'm Svenja and I teach English and Economics at a vocational school, and I built this for my students. I want to teach them how to debate in English, and I wanted every single student to get individual support while they learn. So I built this Dojo.</p>
+      <p>I wanted to give each of my students their own sensei that helps them go through each learning step and prepares them for real debates they have with their classmates. After each kata they immediately practise what they have learned and go into the dojo with real classmates. The sensei is always there to help but <em>he will never just give you the answer</em>. He is there to help when you are stuck, but he is handcuffed to not give the answer.</p>
+      <p>To make this possible for 30 students at the same time I built myself a dashboard where I can see live where every student struggles and where they thrive, so I can concentrate on the students that struggle and help out where they are stuck. My students love this so much that most of the time I just sit back and watch some really heated debates about if pineapple on pizza is a good choice, if AI agents should be included in political decisions and if ads should be allowed to play with your emotions.</p>
+      <p>Each belt teaches something new. In the beginning, how an argument is structured, then the fallacies, and in the end they will face the final boss: a tournament among several classes, with a winner who will be remembered forever.</p>
+    </div>
+    <span class="letter__sig">// Ms. Borgwardt</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- STEPS -->
+<section class="steps" id="steps">
+  <div class="wrap">
+    <h2 class="steps__kicker">How a round works</h2>
+    <div class="steps__grid">
+
+      <div class="step reveal">
+        <span class="step__kanji" aria-hidden="true">&#23398;</span>
+        <div class="step__scene" aria-hidden="true">
+          <img class="step__img" src="assets/step-learn.webp" alt="" width="720" height="405" loading="lazy">
+        </div>
+        <div class="step__num">01</div>
+        <h3 class="step__title">Learn the move</h3>
+        <p class="step__desc">A short kata on screen. They read it, then answer one quick question.</p>
+        <p class="step__go" aria-hidden="true">Try the lesson &rarr;</p>
+        <button type="button" class="step__door" data-door="0" aria-label="Open step 1: learn the move"></button>
+      </div>
+
+      <div class="step__arrow reveal" aria-hidden="true">
+        <svg viewBox="0 0 32 16" fill="none"><path d="M2 8h26M22 2.5 29 8l-7 5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="step reveal">
+        <span class="step__kanji" aria-hidden="true">&#32244;</span>
+        <div class="step__scene" aria-hidden="true">
+          <img class="step__img" src="assets/step-train.webp" alt="" width="720" height="406" loading="lazy">
+        </div>
+        <div class="step__num">02</div>
+        <h3 class="step__title">Train with the sensei</h3>
+        <p class="step__desc">They write their argument and the sensei helps them sharpen it, but he will never finish it for them.</p>
+        <p class="step__go" aria-hidden="true">Meet the sensei &rarr;</p>
+        <button type="button" class="step__door" data-door="1" aria-label="Open step 2: train with the sensei"></button>
+      </div>
+
+      <div class="step__arrow reveal" aria-hidden="true">
+        <svg viewBox="0 0 32 16" fill="none"><path d="M2 8h26M22 2.5 29 8l-7 5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="step reveal">
+        <span class="step__kanji" aria-hidden="true">&#38360;</span>
+        <div class="step__scene" aria-hidden="true">
+          <img class="step__img" src="assets/step-ring.webp" alt="" width="720" height="405" loading="lazy">
+        </div>
+        <div class="step__num">03</div>
+        <h3 class="step__title">Enter the ring</h3>
+        <p class="step__desc">Stand up and debate a real classmate. Face to face, in English.</p>
+        <p class="step__go" aria-hidden="true">Watch a round &rarr;</p>
+        <button type="button" class="step__door" data-door="2" aria-label="Open step 3: enter the ring"></button>
+      </div>
+
+    </div>
+    <p class="steps__coda reveal">Every belt runs the same three steps. It just gets harder.</p>
+  </div>
+</section>
+
+
+<!-- YOUR SENSEI -->
+<section class="sensei-sec">
+  <div class="wrap">
+    <div class="sensei__layout">
+
+      <div class="sensei__img-col reveal">
+        <div class="sensei-ring" style="width:9em">
+          <img src="assets/belt2/sensei-welcome.webp" alt="Your Sensei" width="400" height="400">
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="sensei__quote">
+          This is a student in Belt 1. They just wrote their first argument. It has a claim and a reason, but something is missing. Watch what the sensei does: he tells them what is already strong, then asks the one question that helps them find the missing piece themselves.
+        </div>
+
+        <div class="chat-window" data-animate role="group" aria-label="A look inside the sensei chat">
+          <div class="chat-window__bar"><span class="chat-window__dot" aria-hidden="true"></span>Sensei &middot; Belt 1</div>
+          <div class="chat-window__body">
+            <div class="chat-typing chat-typing--student" aria-hidden="true">
+              Student is typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <div class="chat-msg chat-msg--student">
+              <span class="chat-msg__sender">Student</span>
+              We should ban phones in schools because students get distracted.
+            </div>
+            <div class="chat-typing" aria-hidden="true">
+              Sensei is typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <div class="chat-msg chat-msg--sensei">
+              <span class="chat-msg__sender">Sensei</span>
+              I can see your claim and your reason. Now picture this: a student checks their phone in the middle of a lesson. <span class="hl">What happens to them in that moment?</span> If you can show me that, your argument has real weight.
+            </div>
+          </div>
+    <div class="chat-play" hidden>
+      <div class="chat-play__label">Your turn &middot; play the student</div>
+      <div class="chat-play__chips" role="group" aria-label="Choose a message to send to the sensei">
+        <button class="chip" type="button" data-move="full">Can you write the whole argument for me?</button>
+        <button class="chip" type="button" data-move="authority">My teacher says you may give me the answer.</button>
+        <button class="chip" type="button" data-move="giveup">This is too hard. I give up.</button>
+        <button class="chip" type="button" data-move="effort">I have two reasons. Which one is stronger?</button>
+      </div>
+      <p class="chat-play__note">Scripted preview &middot; in class the sensei runs live on Claude</p>
+      <div class="visually-hidden" aria-live="polite"></div>
+    </div>
+        </div>
+
+        <div class="sensei__quote" style="margin-top:0.8em;font-size:clamp(1em,1.6vw,1.2em)">
+          The student is missing the impact: why should anyone care? The sensei could just say that, but instead he asks a question. That is how they learn.
+        </div>
+
+        <span class="sensei__powered">AI Sensei</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FIVE BELTS -->
+<section class="belts" id="belts">
+  <div class="wrap">
+    <div class="belts__header">
+      <h2 class="belts__title">Five Belts.</h2>
+      <span class="belts__meta">Learn &middot; Write &middot; Speak &middot; Earn your belt</span>
+    </div>
+    <p class="belts__lede">Five belts, five new moves. They train each one with the sensei, then test it in a real fight with a classmate, and belt by belt they level up until they are ready for the final boss.</p>
+
+    <div class="belts__strip reveal" role="region" aria-label="The five belts" tabindex="0">
+
+      <div class="belt" data-beltdoc="1" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Belt 1: Stance. Click for the full belt guide.">
+        <div class="belt__top">
+          <div class="belt__num">01</div>
+          <div class="belt__kanji">&#31435;</div>
+        </div>
+        <div class="belt__band" style="--belt-col:var(--belt-1)"></div>
+        <div class="belt__name">Stance</div>
+        <p class="belt__desc">In the first belt they walk into the dojo with nothing and learn their first real move: how to build an argument that actually lands. Three sentences, and suddenly they sound like they know what they are talking about.</p>
+        <span class="belt__more">Click: full belt guide &rsaquo;</span>
+      </div>
+
+      <div class="belt" data-beltdoc="2" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Belt 2: Clash. Click for the full belt guide.">
+        <div class="belt__top">
+          <div class="belt__num">02</div>
+          <div class="belt__kanji">&#30772;</div>
+        </div>
+        <div class="belt__band" style="--belt-col:var(--belt-2)"></div>
+        <div class="belt__name">Clash</div>
+        <p class="belt__desc">Now they learn to block. When someone throws a trick argument at them they learn how to spot it, call it out, and hit back with a real counter.</p>
+        <span class="belt__more">Click: full belt guide &rsaquo;</span>
+      </div>
+
+      <div class="belt" data-beltdoc="3" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Belt 3: Case. Click for the full belt guide.">
+        <div class="belt__top">
+          <div class="belt__num">03</div>
+          <div class="belt__kanji">&#27083;</div>
+        </div>
+        <div class="belt__band" style="--belt-col:var(--belt-3)"></div>
+        <div class="belt__name">Case</div>
+        <p class="belt__desc">This is where they learn the combo: one argument is not enough anymore, so they chain three together into a full speech and learn how to take the whole room with them.</p>
+        <span class="belt__more">Click: full belt guide &rsaquo;</span>
+      </div>
+
+      <div class="belt" data-beltdoc="4" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Belt 4: Adapt. Click for the full belt guide.">
+        <div class="belt__top">
+          <div class="belt__num">04</div>
+          <div class="belt__kanji">&#36969;</div>
+        </div>
+        <div class="belt__band" style="--belt-col:var(--belt-4)"></div>
+        <div class="belt__name">Adapt</div>
+        <p class="belt__desc">The difficulty spike. Someone interrupts them mid-speech and the ground shifts, and they have to react, stay cool, and keep fighting without losing their thread.</p>
+        <span class="belt__more">Click: full belt guide &rsaquo;</span>
+      </div>
+
+      <div class="belt belt--final" data-beltdoc="5" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Belt 5: Tournament. Click for the full belt guide.">
+        <div class="belt__top">
+          <div class="belt__num">05</div>
+          <div class="belt__kanji">&#38360;</div>
+        </div>
+        <div class="belt__band" style="--belt-col:var(--belt-5)"></div>
+        <div class="belt__name">Tournament</div>
+        <p class="belt__desc">The final boss. They don't know the topic until 15 minutes before, the whole dojo watches, and at the end there is one winner who will be remembered forever.</p>
+        <span class="belt__more">Click: full belt guide &rsaquo;</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- BELT GUIDES (open on belt tile click; readable stacked without JS) -->
+<section class="beltdocs" id="beltdocs" aria-label="Belt guides">
+  <div class="beltdocs__bar">
+    <span class="beltdocs__bartitle" id="beltdocs-bartitle">Belt guide</span>
+    <button class="beltdocs__close" type="button">Close &times;</button>
+  </div>
+  <div class="beltdocs__inner">
+    <h2 class="beltdocs__introttl">Inside each belt</h2>
+
+    <!-- BELT 1 -->
+    <article class="beltdoc" data-doc="1" aria-label="Belt 1: Stance, the full guide">
+      <div class="beltdoc__side">
+        <div class="beltdoc__band" style="background:var(--belt-1)"></div>
+        <span class="beltdoc__num">BELT 01</span>
+        <span class="beltdoc__kanji" aria-hidden="true">&#31435;</span>
+        <span class="beltdoc__name">Stance</span>
+        <span class="beltdoc__badge beltdoc__badge--live">Live in class</span>
+      </div>
+      <div class="beltdoc__main">
+        <p class="beltdoc__move"><strong>The move</strong>Build one argument that actually lands &mdash; in three sentences.</p>
+        <div class="beltdoc__cols">
+          <div class="beltdoc__col">
+            <h3>What is learned</h3>
+            <ul>
+              <li><b>Claim</b> &mdash; take a clear side: say what should happen.</li>
+              <li><b>Reason</b> &mdash; give the why behind your claim.</li>
+              <li><b>Impact</b> &mdash; say why it matters, who wins what.</li>
+            </ul>
+            <p>Each concept comes with a worked example, a plain-language "how do I find it" rule, and two exercises before the next one starts.</p>
+          </div>
+          <div class="beltdoc__col">
+            <h3>The fight</h3>
+            <div class="beltdoc__img"><img src="assets/belt2/sensei-fight.webp" alt="The sensei in fighting stance" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+            <ul>
+              <li>Motion on screen, e.g. <i>"Schools should replace exams with project work."</i></li>
+              <li>Students pair up, pick sides: <b>for</b> or <b>against</b>.</li>
+              <li>Laptops closed &mdash; one live round, 2:00 on the timer.</li>
+              <li>After: 5 minutes to rewrite the argument, stronger.</li>
+            </ul>
+            <div class="beltdoc__quote">First time most of them ever defend a position out loud &mdash; with a structure to hold on to.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- BELT 2 -->
+    <article class="beltdoc" data-doc="2" aria-label="Belt 2: Clash, the full guide">
+      <div class="beltdoc__side">
+        <div class="beltdoc__band" style="background:var(--belt-2)"></div>
+        <span class="beltdoc__num">BELT 02</span>
+        <span class="beltdoc__kanji" aria-hidden="true">&#30772;</span>
+        <span class="beltdoc__name">Clash</span>
+        <span class="beltdoc__badge beltdoc__badge--live">Live in class</span>
+      </div>
+      <div class="beltdoc__main">
+        <p class="beltdoc__move"><strong>The move</strong>Spot a trick argument, call it by name, and hit back with a real counter.</p>
+        <div class="beltdoc__cols">
+          <div class="beltdoc__col">
+            <h3>What is learned</h3>
+            <div class="beltdoc__fallacies">
+              <figure><img src="assets/belt2/straw-man.webp" alt="Straw Man illustration" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Straw Man</figcaption></figure>
+              <figure><img src="assets/belt2/ad-hominem.webp" alt="Ad Hominem illustration" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Ad Hominem</figcaption></figure>
+              <figure><img src="assets/belt2/appeal-popularity.webp" alt="Appeal to Popularity illustration" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Popularity</figcaption></figure>
+            </div>
+            <ul>
+              <li><b>Straw Man</b> &mdash; changes your point into something extreme, then attacks that.</li>
+              <li><b>Ad Hominem</b> &mdash; attacks who you are instead of what you said.</li>
+              <li><b>Appeal to Popularity</b> &mdash; says it must be right because many people agree.</li>
+            </ul>
+            <p>Then the counter-move: name the trick, restore your real point, answer the argument that was actually made.</p>
+          </div>
+          <div class="beltdoc__col">
+            <h3>The fight</h3>
+            <ul>
+              <li><b>Three rounds</b> of 2:00 each, roles switch every round.</li>
+              <li>Role cards: one student secretly plays a fallacy, the other must catch it live.</li>
+              <li>The model sentence: <i>"That is a Straw Man. I never said that. My real point is&hellip;"</i></li>
+              <li>After: rewrite the rebuttal, fallacy named.</li>
+            </ul>
+            <div class="beltdoc__quote">The reference bar with all three fallacies stays visible &mdash; nobody has to fight from memory alone.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- BELT 3 -->
+    <article class="beltdoc" data-doc="3" aria-label="Belt 3: Case, the full guide">
+      <div class="beltdoc__side">
+        <div class="beltdoc__band" style="background:var(--belt-3)"></div>
+        <span class="beltdoc__num">BELT 03</span>
+        <span class="beltdoc__kanji" aria-hidden="true">&#27083;</span>
+        <span class="beltdoc__name">Case</span>
+        <span class="beltdoc__badge beltdoc__badge--design">In design</span>
+      </div>
+      <div class="beltdoc__main">
+        <p class="beltdoc__move"><strong>The move</strong>The combo: chain three arguments into one full speech.</p>
+        <div class="beltdoc__cols">
+          <div class="beltdoc__col">
+            <h3>What is learned</h3>
+            <ul>
+              <li>One argument is not enough anymore: build <b>three</b> Claim&ndash;Reason&ndash;Impact arguments on one motion.</li>
+              <li>Order them: strongest where it counts, signposts between them.</li>
+              <li>Open and close so the whole room follows &mdash; and remembers.</li>
+            </ul>
+          </div>
+          <div class="beltdoc__col">
+            <h3>The fight</h3>
+            <div class="beltdoc__img"><img src="assets/belt2/belt3-combo.webp" alt="The sensei lays out three scrolls, one for each argument" style="object-position:center 45%" loading="lazy" onerror="this.onerror=null;this.src='assets/belt2/sensei-thinking.webp'"></div>
+            <ul>
+              <li>Same rhythm: train the case with the sensei, then deliver it live, device closed.</li>
+              <li>The partner answers with their own case &mdash; first full speech against full speech.</li>
+            </ul>
+            <div class="beltdoc__quote">Everything from Belts 1 and 2 stays in play: solid arguments, and the blocks against trick replies.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- BELT 4 -->
+    <article class="beltdoc" data-doc="4" aria-label="Belt 4: Adapt, the full guide">
+      <div class="beltdoc__side">
+        <div class="beltdoc__band" style="background:var(--belt-4)"></div>
+        <span class="beltdoc__num">BELT 04</span>
+        <span class="beltdoc__kanji" aria-hidden="true">&#36969;</span>
+        <span class="beltdoc__name">Adapt</span>
+        <span class="beltdoc__badge beltdoc__badge--design">In design</span>
+      </div>
+      <div class="beltdoc__main">
+        <p class="beltdoc__move"><strong>The move</strong>The difficulty spike: keep your thread when the ground shifts.</p>
+        <div class="beltdoc__cols">
+          <div class="beltdoc__col">
+            <h3>What is learned</h3>
+            <ul>
+              <li>Handle the interruption: someone cuts in mid-speech with a question or challenge.</li>
+              <li>React, stay cool, answer &mdash; and find the way back to your own line of argument.</li>
+              <li>Decide live: take the point, deflect it, or turn it around.</li>
+            </ul>
+          </div>
+          <div class="beltdoc__col">
+            <h3>The fight</h3>
+            <div class="beltdoc__img"><img src="assets/belt2/belt4-interrupt.webp" alt="A speaker is interrupted mid-speech" loading="lazy" onerror="this.onerror=null;this.src='assets/belt2/sensei-examiner.webp'"></div>
+            <ul>
+              <li>The partner's job is to interrupt &mdash; at the worst possible moment.</li>
+              <li>The speaker's job: keep fighting without losing the thread.</li>
+            </ul>
+            <div class="beltdoc__quote">This is the belt where debating starts to feel like the real thing: live, unpredictable, and survivable.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- BELT 5 -->
+    <article class="beltdoc" data-doc="5" aria-label="Belt 5: Tournament, the full guide">
+      <div class="beltdoc__side">
+        <div class="beltdoc__band" style="background:var(--belt-5)"></div>
+        <span class="beltdoc__num">BELT 05</span>
+        <span class="beltdoc__kanji" aria-hidden="true">&#38360;</span>
+        <span class="beltdoc__name">Tournament</span>
+        <span class="beltdoc__badge beltdoc__badge--design">In design</span>
+      </div>
+      <div class="beltdoc__main">
+        <p class="beltdoc__move"><strong>The move</strong>The final boss: everything at once, under real pressure.</p>
+        <div class="beltdoc__cols">
+          <div class="beltdoc__col">
+            <h3>What is learned</h3>
+            <ul>
+              <li>Fast preparation: the topic is revealed only <b>15 minutes</b> before the round.</li>
+              <li>Build a case, expect the tricks, plan for interruptions &mdash; all four moves together.</li>
+            </ul>
+          </div>
+          <div class="beltdoc__col">
+            <h3>The fight</h3>
+            <div class="beltdoc__img beltdoc__img--scene"><img src="assets/belt2/belt5-tournament.webp" alt="The dojo on tournament day" loading="lazy" onerror="this.onerror=null;this.src='assets/belt2/dojo-empty.webp'"></div>
+            <ul>
+              <li>Bracket format: the whole dojo watches every round.</li>
+              <li>At the end there is one winner &mdash; who will be remembered forever.</li>
+            </ul>
+            <div class="beltdoc__quote">The tournament is the unplugged test of the whole curriculum: no sensei in the ring, only what the student can do now.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- GUIDED TOUR (opens on "Enter the Dojo"; readable stacked without JS) -->
+<section class="tour" id="tour" aria-label="A guided walkthrough of one round">
+  <div class="tour__intro wrap">
+    <h2 class="tour__introttl">A guided walkthrough</h2>
+    <p class="tour__p" style="margin:8px auto 0;text-align:center">Click through one round, the way a student lives it.</p>
+  </div>
+
+  <div class="tour__bar">
+    <span class="tour__progress">Step 1 of 3</span>
+    <span class="tour__meter" aria-hidden="true"><i></i></span>
+    <button class="tour__close" type="button">Close &times;</button>
+  </div>
+
+  <div class="tour__stage">
+    <div class="tour__steps">
+
+      <!-- STEP 1: the theory explainer (worked example first, fresh self-check second) -->
+      <article class="tour__step is-active">
+        <span class="tour__kanji" aria-hidden="true">&#23398;</span>
+        <div class="tour__sensei-hello">
+          <span class="sensei-ring"><img src="assets/belt2/sensei-waiting.webp" alt="The sensei, waiting for you in the Dojo" width="460" height="460" loading="lazy"></span>
+          <div class="tour__sensei-words">
+            <p>Welcome to the Dojo, young warrior. I am glad you found your way here. Come in, take a breath, and sit with me for a moment. Everything you need for today is already in this room.</p>
+            <p>Let me tell you what this place is. In this Dojo I will teach you how to debate. Debating means you say what you think, you give good reasons for it, and you stay calm and fair while you speak. Maybe that sounds big right now. But it is a skill, and like every skill, you can learn it, one small step at a time. And you will use it everywhere: in school, at work, with your friends and your family, for the rest of your life. A person who can explain their ideas gets heard.</p>
+            <p>Here is our path, so you always know where you are. First, I will show you how a strong argument is built, piece by piece, so you can see what each part does. Then we practice together, slowly, until it feels natural. And when you are ready, you will step into the ring and debate with a real classmate, while I stand at your side.</p>
+            <p>Are you ready? Then let us begin.</p>
+          </div>
+        </div>
+        <div class="tour__label">Step 1 of 3 &middot; Learn the move</div>
+        <h3 class="tour__h">First, a short lesson.</h3>
+        <p class="tour__p">Every round starts with a small lesson on screen. Belt 1 is about taking a clear stance.</p>
+        <img class="tour__img tour__img--scene" src="assets/reading-demo.webp" alt="A student sits on a bench in the dojo garden and reads her notes." width="960" height="809" loading="lazy">
+
+        <div class="cri-ref">
+          <div class="cri-ref__item">
+            <b class="cri-tag cri-tag--claim">Claim</b>
+            <span class="cri-ref__def">what you believe. <em>Ask yourself: what should happen? Say it in one clear sentence.</em></span>
+          </div>
+          <div class="cri-ref__item">
+            <b class="cri-tag cri-tag--reason">Reason</b>
+            <span class="cri-ref__def">why you believe it. <em>Ask yourself: why is this true?</em></span>
+          </div>
+          <div class="cri-ref__item">
+            <b class="cri-tag cri-tag--impact">Impact</b>
+            <span class="cri-ref__def">why it matters. <em>Ask yourself: what changes if we do this? Picture it.</em></span>
+          </div>
+        </div>
+
+        <div class="bd" data-breakdown>
+          <p class="lesson-k">See the move</p>
+          <p class="tour__p">Here is a full argument, the way a student would say it. It sounds like one thought. It is built from three parts.</p>
+          <div class="bd__rows" tabindex="-1">
+            <div class="bd__row bd__row--claim">
+              <p class="bd__sentence">School should start at nine.</p>
+              <div class="bd__meta">
+                <b class="cri-tag cri-tag--claim">Claim</b>
+                <p class="bd__why">This part takes a side. You can agree or disagree with it. That is what makes it a claim.</p>
+              </div>
+            </div>
+            <div class="bd__row bd__row--reason">
+              <p class="bd__sentence">Teenagers fall asleep late because their body clock shifts.</p>
+              <div class="bd__meta">
+                <b class="cri-tag cri-tag--reason">Reason</b>
+                <p class="bd__why">This part tells us why the claim is true. A claim without a reason is just an opinion.</p>
+              </div>
+            </div>
+            <div class="bd__row bd__row--impact">
+              <p class="bd__sentence">A class that is half asleep learns half as much.</p>
+              <div class="bd__meta">
+                <b class="cri-tag cri-tag--impact">Impact</b>
+                <p class="bd__why">This part shows what is at stake. It is the part that makes people care.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bd__act">
+            <button class="btn btn--primary bd__btn" type="button">Break it down</button>
+          </div>
+        </div>
+
+        <div class="gap" data-gap>
+          <p class="lesson-k">Spot the gap</p>
+          <blockquote class="gap__arg">Our canteen needs more vegetarian days, because growing meat burns huge amounts of energy.</blockquote>
+          <p class="gap__q">One part is missing. Which one?</p>
+          <div class="gap__chips" role="group" aria-label="Pick the missing part">
+            <button class="chip" type="button" data-gap-pick="claim">Claim</button>
+            <button class="chip" type="button" data-gap-pick="reason">Reason</button>
+            <button class="chip" type="button" data-gap-pick="impact">Impact</button>
+          </div>
+          <div class="gap__ans gap__ans--claim">
+            <p>Almost. Look at the start again: &ldquo;Our canteen needs more vegetarian days&rdquo; takes a clear side. The claim is there. One of the other two parts is the quiet one.</p>
+          </div>
+          <div class="gap__ans gap__ans--reason">
+            <p>Almost. The word &ldquo;because&rdquo; is doing its work: the energy point is the reason. Look for the part that shows why all of this matters.</p>
+          </div>
+          <div class="gap__ans gap__ans--impact">
+            <p><b class="cri-tag cri-tag--impact">Impact</b> Yes. The argument takes a side and gives a reason, and then it stops. It never shows what is at stake. Picture the school after one year of veggie days, and suddenly it matters.</p>
+          </div>
+          <div class="visually-hidden" aria-live="polite"></div>
+        </div>
+
+        <p class="craft-note">Built the way the belts are built: the worked example comes first, the check uses a fresh example, and you recall it within a minute. Teachers know this as explicit instruction, worked examples and retrieval practice.</p>
+
+        <p class="tour__next-hint">Next: training with the sensei.</p>
+        <div class="tour__nav">
+          <button class="btn btn--primary" type="button" data-next>Next &rarr;</button>
+        </div>
+      </article>
+
+      <!-- STEP 2 -->
+      <article class="tour__step">
+        <span class="tour__kanji" aria-hidden="true">&#32244;</span>
+        <div class="tour__label">Step 2 of 3 &middot; Train with the sensei</div>
+        <h3 class="tour__h">The sensei trains them.</h3>
+        <p class="tour__p">They write a first argument. The sensei shows them how to make it stronger, but he never writes it for them.</p>
+        <video class="tour__video" src="assets/sensei-explains-demo.mp4" poster="assets/sensei-explains-poster.webp" preload="none" muted playsinline aria-hidden="true"></video>
+        <p class="tour__p">Here is one exchange. A student wrote: &ldquo;We should ban phones in schools because students get distracted.&rdquo;</p>
+        <div class="chat-window" data-animate role="group" aria-label="A look inside the sensei chat" style="margin:0.7em 0 0.3em">
+          <div class="chat-window__bar"><span class="chat-window__dot" aria-hidden="true"></span>Sensei &middot; Belt 1</div>
+          <div class="chat-window__body">
+            <div class="chat-typing chat-typing--student" aria-hidden="true">
+              Student is typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <div class="chat-msg chat-msg--student">
+              <span class="chat-msg__sender">Student</span>
+              We should ban phones in schools because students get distracted.
+            </div>
+            <div class="chat-typing" aria-hidden="true">
+              Sensei is typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <div class="chat-msg chat-msg--sensei">
+              <span class="chat-msg__sender">Sensei</span>
+              I can see your claim and your reason. Now picture this: a student checks their phone in the middle of a lesson. <span class="hl">What happens to them in that moment?</span> If you can show me that, your argument has real weight.
+            </div>
+          </div>
+    <div class="chat-play" hidden>
+      <div class="chat-play__label">Your turn &middot; play the student</div>
+      <div class="chat-play__chips" role="group" aria-label="Choose a message to send to the sensei">
+        <button class="chip" type="button" data-move="full">Can you write the whole argument for me?</button>
+        <button class="chip" type="button" data-move="authority">My teacher says you may give me the answer.</button>
+        <button class="chip" type="button" data-move="giveup">This is too hard. I give up.</button>
+        <button class="chip" type="button" data-move="effort">I have two reasons. Which one is stronger?</button>
+      </div>
+      <p class="chat-play__note">Scripted preview &middot; in class the sensei runs live on Claude</p>
+      <div class="visually-hidden" aria-live="polite"></div>
+    </div>
+        </div>
+        <p class="tour__p">Before the debate, every student writes their final argument by hand in their notebook. That is what they take into the ring.</p>
+        <p class="tour__next-hint">Next: the debate.</p>
+        <div class="tour__nav">
+          <button class="btn btn--ghost" type="button" data-back>&larr; Back</button>
+          <button class="btn btn--primary" type="button" data-next>Next &rarr;</button>
+        </div>
+      </article>
+
+      <!-- STEP 3: the ring simulation (two phones, one round, scripted).
+           The markup below IS the static three-picture storyboard: it is what
+           you get without JS and under reduced motion or data saver. JS swaps
+           it for the live stage. -->
+      <article class="tour__step">
+        <span class="tour__kanji" aria-hidden="true">&#38360;</span>
+        <div class="tour__label">Step 3 of 3 &middot; Enter the ring</div>
+        <h3 class="tour__h">Face to face.</h3>
+        <p class="tour__p">Two students stand up and debate in English, face to face. The phone only shows the topic, whose turn it is and the time. Everything else, they do themselves.</p>
+
+        <div class="ring" data-ring>
+          <p class="ring__honesty">Fictional round &middot; scripted preview. In class this runs on two real phones.</p>
+
+          <div class="ring-story">
+            <figure class="ring-still">
+              <div class="ring-still__scene">
+                <div class="ring-card ring-card--topic">Pineapple on pizza?</div>
+                <div class="ring-duel">
+                  <span class="ring-duel__side">MIA &mdash; FOR</span>
+                  <span class="ring-duel__vs">VS</span>
+                  <span class="ring-duel__side">JONAS &mdash; AGAINST</span>
+                </div>
+              </div>
+              <figcaption class="ring-note">Both trained the same three moves with the sensei: <em class="ring-w ring-w--c">claim</em>, <em class="ring-w ring-w--r">reason</em>, <em class="ring-w ring-w--i">impact</em>. Now they carry them in their heads, into a live debate.</figcaption>
+            </figure>
+            <figure class="ring-still">
+              <div class="ring-still__scene">
+                <div class="ring-phone is-live">
+                  <div class="ring-phone__screen">
+                    <div class="ring-phone__top">ROUND 1 &middot; Pineapple on pizza?</div>
+                    <div class="ring-phone__turn">YOUR TURN, MIA</div>
+                    <div class="ring-cd" style="--p:.62">
+                      <span class="ring-cd__ring" aria-hidden="true"></span>
+                      <span class="ring-cd__num">0:37</span>
+                      <span class="ring-cd__bar" aria-hidden="true"><i style="width:62%"></i></span>
+                    </div>
+                    <div class="ring-phone__tempo">demo tempo</div>
+                    <div class="ring-phone__next">Next: Jonas answers.</div>
+                  </div>
+                </div>
+              </div>
+              <figcaption class="ring-note">The screen answers the two questions every student has: what happens now, and what happens next. That is the whole job of the phone in this round.</figcaption>
+            </figure>
+            <figure class="ring-still">
+              <div class="ring-still__scene">
+                <div class="ring-card ring-card--end">
+                  <b>Time. Shake hands.</b>
+                  <p class="ring-quote">The phone just tells them whose turn it is. The debating itself, my students do face to face.</p>
+                </div>
+              </div>
+              <figcaption class="ring-note">The only sound in this whole round is two students, debating in English.</figcaption>
+            </figure>
+          </div>
+
+          <div class="ring-mount"></div>
+          <div class="visually-hidden" aria-live="polite" data-ring-live></div>
+        </div>
+
+        <p class="tour__next-hint">That is one round. The Dojo has five belts.</p>
+        <div class="tour__nav">
+          <button class="btn btn--ghost" type="button" data-back>&larr; Back</button>
+          <button class="btn btn--primary" type="button" data-next>Earn the belt &rarr;</button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+</main>
+
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__line">
+      Designed &amp; built by S. Borgwardt &middot; <a href="https://debate-dojo.vercel.app/under-the-hood.html">Under the Hood &rarr;</a>
+    </div>
+    <div class="foot__line">
+      <a href="/impressum.html">Impressum</a> &middot; <a href="/datenschutz.html">Privacy / Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* Zero /api calls. Progressive enhancement: <html> already has class "js". */
+
+/* --- SCROLL REVEAL -------------------------------------------- */
+(function() {
+  var reveals = document.querySelectorAll('.reveal');
+  if (!reveals.length || !('IntersectionObserver' in window)) {
+    reveals.forEach(function(el){ el.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: .15 });
+  reveals.forEach(function(el, i) {
+    el.style.transitionDelay = (i % 5) * 60 + 'ms';
+    io.observe(el);
+  });
+})();
+
+/* --- CHAT PLAYBACK --------------------------------------------- */
+(function() {
+  var wins = document.querySelectorAll('.chat-window[data-animate]');
+  if (!wins.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function showAll(win) {
+    var msgs = win.querySelectorAll('.chat-msg');
+    for (var k = 0; k < msgs.length; k++) msgs[k].classList.add('msg-in');
+  }
+  /* Types the bubble text letter by letter, like a student writing it live */
+  function typeInto(msg, done) {
+    var node = null;
+    for (var n = msg.childNodes.length - 1; n >= 0; n--) {
+      var c = msg.childNodes[n];
+      if (c.nodeType === 3 && c.textContent.trim()) { node = c; break; }
+    }
+    msg.classList.add('msg-in');
+    if (!node) { done(); return; }
+    var full = node.textContent.trim();
+    node.textContent = '';
+    var caret = document.createElement('span');
+    caret.className = 'chat-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    msg.appendChild(caret);
+    var pos = 0;
+    function step() {
+      pos++;
+      node.textContent = full.slice(0, pos);
+      if (pos >= full.length) { caret.remove(); done(); return; }
+      var ch = full.charAt(pos - 1);
+      var delay = 48 + Math.random() * 55;
+      if (ch === ' ') delay += 30;
+      if (ch === ',' || ch === '.') delay += 200;
+      setTimeout(step, delay);
+    }
+    setTimeout(step, 300);
+  }
+
+  /* Wraps every word in a span so the sensei answer can stream in.
+     Keeps the .hl highlight markup intact, skips the sender label. */
+  function wrapWords(el) {
+    var words = [];
+    var kids = Array.prototype.slice.call(el.childNodes);
+    for (var i = 0; i < kids.length; i++) {
+      var c = kids[i];
+      if (c.nodeType === 3) {
+        if (!c.textContent.trim()) continue;
+        var parts = c.textContent.split(/(\s+)/);
+        var frag = document.createDocumentFragment();
+        for (var p = 0; p < parts.length; p++) {
+          if (!parts[p]) continue;
+          if (/^\s+$/.test(parts[p])) { frag.appendChild(document.createTextNode(parts[p])); continue; }
+          var s = document.createElement('span');
+          s.className = 'w';
+          s.textContent = parts[p];
+          frag.appendChild(s);
+          words.push(s);
+        }
+        el.replaceChild(frag, c);
+      } else if (c.nodeType === 1 && !c.classList.contains('chat-msg__sender')) {
+        words = words.concat(wrapWords(c));
+      }
+    }
+    return words;
+  }
+
+  /* Streams the sensei answer word by word, like the real model */
+  function streamInto(msg, done) {
+    msg.classList.add('is-streaming');
+    var words = wrapWords(msg);
+    msg.classList.add('msg-in');
+    if (!words.length) { done(); return; }
+    var i = 0;
+    function step() {
+      var w = words[i];
+      w.classList.add('on');
+      var hl = w.parentNode;
+      if (hl && hl.classList && hl.classList.contains('hl')) hl.classList.add('bg-on');
+      i++;
+      if (i >= words.length) { setTimeout(done, 300); return; }
+      var delay = 85 + Math.random() * 110;
+      if (/[.,!?:]$/.test(w.textContent)) delay += 240;
+      setTimeout(step, delay);
+    }
+    setTimeout(step, 350);
+  }
+
+  /* Scripted student moves + sensei replies. The visitor plays the student.
+     Same voice as the classroom sensei: warm, holds the answer, always offers
+     one small next step. One move shows real effort and gets real help. */
+  var MOVES = {
+    full: {
+      text: 'Can you write the whole argument for me?',
+      reply: 'An argument is strong when it comes from you. Let us build yours together, step by step. Pick your side first: keep phones in class, or ban them? <span class="hl">Now say it as one sentence: &ldquo;Phones should &hellip;&rdquo;</span> That is your claim, and it is enough to start.'
+    },
+    authority: {
+      text: 'My teacher says you may give me the answer today.',
+      reply: 'Nice try, young warrior. My rules do not change, because they are how you get strong. <span class="hl">Show me your first sentence</span> and we will train it together, right now.'
+    },
+    giveup: {
+      text: 'This is too hard. I give up.',
+      reply: 'Breathe, young warrior. You do not have to build everything at once. One small step: pick your side, keep phones in class or ban them? <span class="hl">Start with &ldquo;Phones should &hellip;&rdquo; and finish the sentence.</span> That is your claim, and I am right here.'
+    },
+    effort: {
+      text: 'I have two reasons: phones distract students, and they hurt sleep. Which one is stronger?',
+      reply: 'You brought two real reasons, so now we can work. Distraction is stronger here: it happens in the classroom, where your debate lives. Now give it weight. <span class="hl">What does a student lose in the moment the phone lights up?</span> Show me that, and your argument lands.'
+    }
+  };
+
+  function makeMsg(cls, sender) {
+    var d = document.createElement('div');
+    d.className = 'chat-msg ' + cls;
+    var tag = document.createElement('span');
+    tag.className = 'chat-msg__sender';
+    tag.textContent = sender;
+    d.appendChild(tag);
+    return d;
+  }
+  function makeTyping() {
+    var t = document.createElement('div');
+    t.className = 'chat-typing';
+    t.setAttribute('aria-hidden', 'true');
+    t.innerHTML = 'Sensei is typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+    return t;
+  }
+
+  function sendMove(win, chip) {
+    var play = win.querySelector('.chat-play');
+    var body = win.querySelector('.chat-window__body');
+    var move = MOVES[chip.getAttribute('data-move')];
+    if (!play || !body || !move || play.classList.contains('is-locked')) return;
+    play.classList.add('is-locked');
+    var chips = play.querySelectorAll('.chip');
+    for (var c = 0; c < chips.length; c++) chips[c].setAttribute('aria-disabled', 'true');
+
+    /* Freeze the window at its current height once the visitor steps in:
+       no layout shift, new messages scroll like a real chat. */
+    if (!win.hasAttribute('data-live')) {
+      win.setAttribute('data-live', '1');
+      body.style.maxHeight = body.offsetHeight + 'px';
+      body.style.overflowY = 'auto';
+    }
+
+    var sMsg = makeMsg('chat-msg--student', 'You');
+    sMsg.appendChild(document.createTextNode(move.text));
+    body.appendChild(sMsg);
+    var pin = setInterval(function() { body.scrollTop = body.scrollHeight; }, 90);
+
+    function finish(replyEl) {
+      clearInterval(pin);
+      body.scrollTop = body.scrollHeight;
+      play.classList.remove('is-locked');
+      for (var c = 0; c < chips.length; c++) chips[c].removeAttribute('aria-disabled');
+      chip.classList.add('chip--used');
+      var liveRegion = play.querySelector('[aria-live]');
+      if (liveRegion) liveRegion.textContent = 'Sensei: ' + replyEl.textContent.replace(/^\s*Sensei\s*/, '');
+    }
+    function senseiMsg() {
+      var m = makeMsg('chat-msg--sensei', 'Sensei');
+      m.insertAdjacentHTML('beforeend', move.reply);
+      return m;
+    }
+
+    if (reduce) {
+      sMsg.classList.add('msg-in');
+      var m = senseiMsg();
+      body.appendChild(m);
+      m.classList.add('msg-in');
+      finish(m);
+      return;
+    }
+    typeInto(sMsg, function() {
+      var t = makeTyping();
+      body.appendChild(t);
+      t.classList.add('visible');
+      setTimeout(function() {
+        t.remove();
+        var m = senseiMsg();
+        body.appendChild(m);
+        streamInto(m, function() { finish(m); });
+      }, 1400 + Math.random() * 700);
+    });
+  }
+
+  function revealPlay(win) {
+    win.__animating = false;
+    var play = win.querySelector('.chat-play');
+    if (!play || !play.hidden) return;
+    play.hidden = false;
+    play.classList.add('is-on');
+    /* Drop the entrance class after it finishes: an animation with fill-mode
+       "both" would otherwise override the dimmed is-locked state. */
+    setTimeout(function() { play.classList.remove('is-on'); }, reduce ? 0 : 950);
+    /* Guard against a second listener when a replay reveals the panel again. */
+    if (play.__wired) return;
+    play.__wired = true;
+    play.addEventListener('click', function(e) {
+      var chip = e.target.closest ? e.target.closest('.chip') : null;
+      if (chip) sendMove(win, chip);
+    });
+  }
+
+  function play(win) {
+    if (win.getAttribute('data-played')) return;
+    win.setAttribute('data-played', '1');
+    win.__animating = true;
+    var msgs = win.querySelectorAll('.chat-msg');
+    var studentTyping = win.querySelector('.chat-typing--student');
+    var senseiTyping = win.querySelector('.chat-typing:not(.chat-typing--student)');
+    if (reduce || msgs.length < 2) { showAll(win); revealPlay(win); return; }
+
+    /* 1. student is typing -> 2. student bubble types itself ->
+       3. sensei is typing (thinking) -> 4. sensei answer streams in */
+    setTimeout(function() {
+      if (studentTyping) studentTyping.classList.add('visible');
+      setTimeout(function() {
+        if (studentTyping) studentTyping.classList.remove('visible');
+        typeInto(msgs[0], function() {
+          setTimeout(function() {
+            if (senseiTyping) senseiTyping.classList.add('visible');
+            setTimeout(function() {
+              if (senseiTyping) senseiTyping.classList.remove('visible');
+              streamInto(msgs[1], function() { revealPlay(win); });
+            }, 2200);
+          }, 600);
+        });
+      }, 1400);
+    }, 400);
+  }
+
+  /* A tile door can reopen the tour on a window that already played its
+     scene. Replay it from the pristine markup, so the door never opens on
+     a finished, silent chat. Never touch a window mid-animation, and never
+     wipe a visitor's own moves (data-live = the height-frozen live chat). */
+  function armReplay(win) {
+    var body = win.querySelector('.chat-window__body');
+    if (!body) return;
+    var pristine = body.innerHTML;
+    win.addEventListener('dojo:replay', function() {
+      if (!win.getAttribute('data-played') || win.__animating) return;
+      if (win.hasAttribute('data-live')) return;
+      body.innerHTML = pristine;
+      var panel = win.querySelector('.chat-play');
+      if (panel) { panel.hidden = true; panel.classList.remove('is-on'); }
+      win.removeAttribute('data-played');
+      play(win);
+    });
+  }
+  for (var r = 0; r < wins.length; r++) armReplay(wins[r]);
+
+  if (!('IntersectionObserver' in window)) {
+    for (var i = 0; i < wins.length; i++) { showAll(wins[i]); revealPlay(wins[i]); }
+    return;
+  }
+  var chatIo = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { play(e.target); chatIo.unobserve(e.target); }
+    });
+  }, { threshold: .4 });
+  for (var w = 0; w < wins.length; w++) chatIo.observe(wins[w]);
+})();
+
+/* --- THEORY EXPLAINER (tour step 1) ----------------------------- */
+(function() {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var bd = document.querySelector('[data-breakdown]');
+  if (bd) {
+    var btn = bd.querySelector('.bd__btn');
+    var rows = bd.querySelectorAll('.bd__row');
+    var rowsBox = bd.querySelector('.bd__rows');
+    if (btn) btn.addEventListener('click', function() {
+      if (bd.classList.contains('is-broken')) return;
+      if (reduce) {
+        bd.classList.add('is-broken');
+        bd.classList.add('is-explained');
+        if (rowsBox) rowsBox.focus();
+        return;
+      }
+      /* FLIP: measure the folded lines, switch to the labelled layout,
+         then glide each sentence from its old spot to its new row. */
+      var before = [];
+      var k;
+      for (k = 0; k < rows.length; k++) before.push(rows[k].getBoundingClientRect());
+      bd.classList.add('is-broken');
+      if (rowsBox) rowsBox.focus();
+      for (k = 0; k < rows.length; k++) {
+        var after = rows[k].getBoundingClientRect();
+        rows[k].style.transform = 'translate(' + (before[k].left - after.left) + 'px,' + (before[k].top - after.top) + 'px)';
+        rows[k].style.transitionDelay = (k * 120) + 'ms';
+      }
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          bd.classList.add('is-gliding');
+          for (var j = 0; j < rows.length; j++) rows[j].style.transform = '';
+        });
+      });
+      setTimeout(function() {
+        bd.classList.remove('is-gliding');
+        for (var j = 0; j < rows.length; j++) rows[j].style.transitionDelay = '';
+        bd.classList.add('is-explained');
+      }, 1000);
+    });
+  }
+
+  /* Self-check: three chips, feedback always names the concrete part. */
+  var gap = document.querySelector('[data-gap]');
+  if (gap) {
+    var chips = gap.querySelectorAll('.chip');
+    var live = gap.querySelector('[aria-live]');
+    var solved = false;
+    gap.addEventListener('click', function(e) {
+      var chip = e.target.closest ? e.target.closest('.chip') : null;
+      if (!chip || solved) return;
+      var pick = chip.getAttribute('data-gap-pick');
+      var answers = gap.querySelectorAll('.gap__ans');
+      for (var k = 0; k < answers.length; k++) answers[k].classList.remove('is-on');
+      var ans = gap.querySelector('.gap__ans--' + pick);
+      if (ans) ans.classList.add('is-on');
+      if (pick === 'impact') {
+        solved = true;
+        gap.classList.add('is-solved');
+        chip.classList.add('chip--right');
+        for (var c = 0; c < chips.length; c++) chips[c].setAttribute('aria-disabled', 'true');
+      } else {
+        chip.classList.add('chip--used');
+      }
+      if (live && ans) live.textContent = ans.textContent;
+    });
+  }
+})();
+
+/* --- RING SIMULATION (tour step 3) ------------------------------ */
+/* One start click, then the sequence runs itself: topic, whose turn,
+   time. Exactly what the real ring screen shows, nothing more.
+   Skipped entirely on reduced motion or data saver: the static
+   storyboard in the markup stays as it is. */
+(function() {
+  var ring = document.querySelector('[data-ring]');
+  if (!ring) return;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if (reduceMotion || saveData) return;
+  var mount = ring.querySelector('.ring-mount');
+  var live = ring.querySelector('[data-ring-live]');
+  if (!mount) return;
+
+  var TOPICS = ['Pineapple on pizza?', 'Should AI agents help make political decisions?', 'Should ads be allowed to play with your emotions?'];
+  var NOTE0 = 'Both trained the same three moves with the sensei: <em class="ring-w ring-w--c">claim</em>, <em class="ring-w ring-w--r">reason</em>, <em class="ring-w ring-w--i">impact</em>. Now they carry them in their heads, into a live debate.';
+  var NOTE1 = 'The screen answers the two questions every student has: what happens now, and what happens next. That is the whole job of the phone in this round.';
+  var NOTE3 = 'While Jonas speaks, the app stays quiet. It keeps the time so the teacher can keep her eyes on the debate.';
+  var NOTE4 = 'The only sound in this whole round is two students, debating in English.';
+
+  function phoneHTML(id) {
+    return '<div class="ring-phone ring-phone--' + id + '">' +
+      '<div class="ring-phone__screen">' +
+        '<div class="ring-phone__top" data-top-' + id + '></div>' +
+        '<div class="ring-phone__turn" data-turn-' + id + '></div>' +
+        '<div class="ring-cd" data-cd-' + id + ' hidden>' +
+          '<span class="ring-cd__ring" aria-hidden="true"></span>' +
+          '<span class="ring-cd__num" data-num-' + id + '>0:60</span>' +
+          '<span class="ring-cd__bar" aria-hidden="true"><i data-bar-' + id + '></i></span>' +
+        '</div>' +
+        '<div class="ring-phone__tempo" data-tempo-' + id + ' hidden>demo tempo</div>' +
+        '<div class="ring-phone__next" data-next-' + id + '></div>' +
+      '</div></div>';
+  }
+  mount.innerHTML =
+    '<div class="ring-stage">' +
+      '<div class="ring-stage__scene">' +
+        '<span class="ring-stage__glow" aria-hidden="true"></span>' +
+        '<div class="ring-stage__row">' +
+          phoneHTML('a') +
+          '<div class="ring-stage__mid">' +
+            '<div class="ring-card ring-card--topic" data-topic hidden></div>' +
+            '<div class="ring-duel" data-duel hidden>' +
+              '<span class="ring-duel__side">MIA &mdash; FOR</span>' +
+              '<span class="ring-duel__vs">VS</span>' +
+              '<span class="ring-duel__side">JONAS &mdash; AGAINST</span>' +
+            '</div>' +
+            '<div class="ring-card ring-card--end" data-end hidden><b>Time. Shake hands.</b>' +
+              '<p class="ring-quote">The phone just tells them whose turn it is. The debating itself, my students do face to face.</p>' +
+            '</div>' +
+          '</div>' +
+          phoneHTML('b') +
+        '</div>' +
+      '</div>' +
+      '<div class="ring-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>' +
+      '<p class="ring-note" data-note></p>' +
+      '<div class="ring-ctrl">' +
+        '<button class="btn btn--primary" type="button" data-start>Start the round</button>' +
+        '<button class="ring-skip" type="button" data-skip>Skip &rarr;</button>' +
+        '<button class="btn btn--primary" type="button" data-replay hidden>Run it again &middot; new topic</button>' +
+      '</div>' +
+    '</div>';
+  ring.classList.add('ring--live');
+
+  function q(s) { return mount.querySelector(s); }
+  var stage = q('.ring-stage');
+  var els = {
+    phoneA: q('.ring-phone--a'), phoneB: q('.ring-phone--b'),
+    topA: q('[data-top-a]'), topB: q('[data-top-b]'),
+    turnA: q('[data-turn-a]'), turnB: q('[data-turn-b]'),
+    cdA: q('[data-cd-a]'), cdB: q('[data-cd-b]'),
+    numA: q('[data-num-a]'), numB: q('[data-num-b]'),
+    barA: q('[data-bar-a]'), barB: q('[data-bar-b]'),
+    tempoA: q('[data-tempo-a]'), tempoB: q('[data-tempo-b]'),
+    nextA: q('[data-next-a]'), nextB: q('[data-next-b]'),
+    topic: q('[data-topic]'), duel: q('[data-duel]'), end: q('[data-end]'),
+    note: q('[data-note]'),
+    dots: mount.querySelectorAll('.ring-dots i'),
+    start: q('[data-start]'), skip: q('[data-skip]'), replay: q('[data-replay]')
+  };
+
+  /* Demo tempo: the whole round in under 25 seconds, honestly labelled */
+  var D = [4000, 7000, 1500, 7000];
+  var TOTAL = D[0] + D[1] + D[2] + D[3];
+  var topicIdx = 0, rafId = 0, t0 = 0, acc = 0, running = false, paused = false, beat = -1;
+
+  function say(t) { if (live) live.textContent = t; }
+  function setDot(n) { for (var k = 0; k < els.dots.length; k++) els.dots[k].classList.toggle('is-on', k === n); }
+  function fmt(s) { return '0:' + (s < 10 ? '0' : '') + s; }
+  function stamp(el) { el.classList.remove('is-stamped'); void el.offsetWidth; el.classList.add('is-stamped'); }
+
+  function applyBeat(n) {
+    beat = n;
+    stage.classList.remove('ring-stage--a', 'ring-stage--b', 'ring-stage--mid-open');
+    els.topic.hidden = true; els.duel.hidden = true; els.end.hidden = true;
+    els.cdA.hidden = true; els.cdB.hidden = true;
+    els.tempoA.hidden = true; els.tempoB.hidden = true;
+    els.phoneA.classList.remove('is-live'); els.phoneB.classList.remove('is-live');
+    els.topA.textContent = ''; els.topB.textContent = '';
+    els.turnA.textContent = ''; els.turnB.textContent = '';
+    els.nextA.textContent = ''; els.nextB.textContent = '';
+    var topic = TOPICS[topicIdx];
+    var head = 'ROUND 1 · ' + topic;
+    if (n === -1) {
+      setDot(-1);
+      els.note.textContent = '';
+      els.start.hidden = false; els.skip.hidden = false; els.replay.hidden = true;
+      return;
+    }
+    els.start.hidden = true;
+    els.skip.hidden = (n === 4);
+    els.replay.hidden = (n !== 4);
+    setDot(n);
+    if (n === 0) {
+      stage.classList.add('ring-stage--mid-open');
+      els.topic.textContent = topic; els.topic.hidden = false; stamp(els.topic);
+      els.duel.hidden = false;
+      els.note.innerHTML = NOTE0;
+      say('Match-up: ' + topic + '. Mia argues for, Jonas argues against.');
+    } else if (n === 1) {
+      stage.classList.add('ring-stage--a');
+      els.phoneA.classList.add('is-live');
+      els.topA.textContent = head;
+      els.turnA.textContent = 'YOUR TURN, MIA';
+      els.cdA.hidden = false; els.tempoA.hidden = false;
+      els.nextA.textContent = 'Next: Jonas answers.';
+      els.turnB.textContent = 'YOU’RE NEXT, JONAS';
+      els.nextB.textContent = 'Mia is speaking. Your turn comes right after.';
+      els.note.textContent = NOTE1;
+      say('Your turn, Mia. Sixty seconds on the clock.');
+    } else if (n === 2) {
+      stage.classList.add('ring-stage--b');
+      els.topA.textContent = head;
+      els.turnA.textContent = 'Time.';
+      els.turnB.textContent = 'YOU’RE NEXT, JONAS';
+      els.note.textContent = NOTE1;
+    } else if (n === 3) {
+      stage.classList.add('ring-stage--b');
+      els.phoneB.classList.add('is-live');
+      els.topB.textContent = head;
+      els.turnB.textContent = 'YOUR TURN, JONAS';
+      els.cdB.hidden = false; els.tempoB.hidden = false;
+      els.nextB.textContent = 'Next: shake hands.';
+      els.turnA.textContent = 'JONAS IS SPEAKING';
+      els.nextA.textContent = 'Listen. The round ends after his turn.';
+      els.note.textContent = NOTE3;
+      say('Your turn, Jonas. Sixty seconds on the clock.');
+    } else if (n === 4) {
+      stage.classList.add('ring-stage--mid-open');
+      els.end.hidden = false; stamp(els.end);
+      els.note.textContent = NOTE4;
+      say('Time. Shake hands. The round is over.');
+      stage.classList.remove('is-running');
+      running = false;
+      if (document.activeElement === els.skip) els.replay.focus();
+    }
+  }
+
+  function tick(cd, num, bar, p) {
+    if (p < 0) p = 0;
+    if (p > 1) p = 1;
+    var s = Math.ceil(60 * (1 - p));
+    if (p >= 1) s = 0;
+    num.textContent = fmt(s);
+    cd.style.setProperty('--p', String(1 - p));
+    bar.style.width = ((1 - p) * 100) + '%';
+  }
+
+  function loop(now) {
+    if (!running || paused) return;
+    var el = acc + (now - t0);
+    var n = el < D[0] ? 0 : el < D[0] + D[1] ? 1 : el < D[0] + D[1] + D[2] ? 2 : el < TOTAL ? 3 : 4;
+    if (n !== beat) applyBeat(n);
+    if (n === 1) tick(els.cdA, els.numA, els.barA, (el - D[0]) / D[1]);
+    if (n === 3) tick(els.cdB, els.numB, els.barB, (el - (D[0] + D[1] + D[2])) / D[3]);
+    if (n === 4) return;
+    rafId = requestAnimationFrame(loop);
+  }
+
+  var introPlayed = false;
+  function beginRound() {
+    /* The intro video may outlive the tour (Escape closes both): only a
+       visible ring starts a round. */
+    if (!ring.offsetParent) { reset(); return; }
+    if (rafId) cancelAnimationFrame(rafId);
+    acc = 0; t0 = performance.now(); running = true; paused = false;
+    stage.classList.add('is-running');
+    applyBeat(0);
+    els.skip.focus();
+    rafId = requestAnimationFrame(loop);
+  }
+  function start() {
+    /* Match intro, once per visit: the two students bow and step up,
+       then the round begins. Replays go straight in. */
+    if (!introPlayed && typeof window.dojoPlayMoment === 'function') {
+      introPlayed = true;
+      window.dojoPlayMoment('assets/belt-start-demo.mp4', 'assets/belt-start-poster.webp', beginRound);
+      return;
+    }
+    beginRound();
+  }
+  function skipToEnd() {
+    if (rafId) cancelAnimationFrame(rafId);
+    running = false; paused = false;
+    stage.classList.remove('is-running');
+    applyBeat(4);
+    els.replay.focus();
+  }
+  function replay() {
+    topicIdx = (topicIdx + 1) % TOPICS.length;
+    start();
+  }
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    running = false; paused = false;
+    stage.classList.remove('is-running');
+    applyBeat(-1);
+  }
+
+  els.start.addEventListener('click', start);
+  els.skip.addEventListener('click', skipToEnd);
+  els.replay.addEventListener('click', replay);
+  document.addEventListener('dojo:ringreset', reset);
+  document.addEventListener('visibilitychange', function() {
+    if (!running) return;
+    if (document.hidden && !paused) {
+      paused = true; acc += performance.now() - t0;
+      if (rafId) cancelAnimationFrame(rafId);
+    } else if (!document.hidden && paused) {
+      paused = false; t0 = performance.now();
+      rafId = requestAnimationFrame(loop);
+    }
+  });
+  applyBeat(-1);
+})();
+
+/* --- GUIDED TOUR ---------------------------------------------- */
+(function() {
+  var tour = document.getElementById('tour');
+  if (!tour) return;
+  var steps = tour.querySelectorAll('.tour__step');
+  if (!steps.length) return;
+  var meter = tour.querySelector('.tour__meter i');
+  var prog = tour.querySelector('.tour__progress');
+  var i = 0;
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+
+  /* Scene videos inside steps: only the active step plays, everything else pauses */
+  function syncStepVideos() {
+    for (var k = 0; k < steps.length; k++) {
+      var v = steps[k].querySelector('video');
+      if (!v) continue;
+      if (k === i && tour.classList.contains('tour--open') && !reduceMotion && !saveData) {
+        v.muted = true;
+        var p = v.play();
+        if (p && p.catch) p.catch(function() {});
+      } else if (!v.paused) {
+        v.pause();
+      }
+    }
+  }
+
+  function ringReset() {
+    try { document.dispatchEvent(new CustomEvent('dojo:ringreset')); } catch (err) {}
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(steps.length - 1, n));
+    for (var k = 0; k < steps.length; k++) steps[k].classList.toggle('is-active', k === i);
+    if (meter) meter.style.width = ((i + 1) / steps.length * 100) + '%';
+    if (prog) prog.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+    syncStepVideos();
+    /* Leaving step 3 stops and resets a running ring simulation */
+    if (i !== 2) ringReset();
+  }
+  /* Keep Tab inside the open tour: it covers the page, so focus must not
+     wander into the content behind it. */
+  function trapTab(e) {
+    if (e.key !== 'Tab') return;
+    var f = tour.querySelectorAll('button, a[href]');
+    var vis = [];
+    for (var k = 0; k < f.length; k++) if (f[k].offsetParent !== null) vis.push(f[k]);
+    if (!vis.length) return;
+    var first = vis[0], last = vis[vis.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (document.activeElement === last || !tour.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+  }
+  /* --- Browser history integration (added on the borgwardt.me move) ---
+     Every tour step is a real history entry: the Back button walks back
+     through the tour, then out of it - it never dumps the reader off the
+     page. Entering at step n (a tile door) lays down entries for steps
+     0..n, so the path back is always the linear tour path. `histDepth`
+     counts our own entries; closing with the X, Escape or the final belt
+     unwinds them all in one go, so the entries never linger behind a
+     closed tour. */
+  var histDepth = 0;
+  var fromHistory = false;
+  function pushStep(n) {
+    histDepth += 1;
+    try { history.pushState({ dojoTour: n, depth: histDepth }, '', ''); } catch (err) {}
+  }
+  function stepBack() {
+    if (i > 0 && histDepth > 0) history.back();
+  }
+  function leaveTour() {
+    if (histDepth > 0) {
+      history.go(-histDepth);
+      /* Safety net: if the entries are gone (edge cases), still close. */
+      setTimeout(function () {
+        if (tour.classList.contains('tour--open')) { histDepth = 0; closeTour(); }
+      }, 400);
+    } else closeTour();
+  }
+  window.addEventListener('popstate', function (e) {
+    var s = e.state;
+    fromHistory = true;
+    if (s && typeof s.dojoTour === 'number') {
+      histDepth = s.depth || 1;
+      if (tour.classList.contains('tour--open')) show(s.dojoTour);
+      else openTour(null, s.dojoTour);
+    } else {
+      histDepth = 0;
+      if (tour.classList.contains('tour--open')) closeTour();
+    }
+    fromHistory = false;
+  });
+
+  var lastOpener = null;
+  function openTour(e, startAt) {
+    if (e) e.preventDefault();
+    tour.classList.add('tour--open');
+    tour.setAttribute('role', 'dialog');
+    tour.setAttribute('aria-modal', 'true');
+    document.addEventListener('keydown', trapTab, true);
+    document.body.style.overflow = 'hidden';
+    show(startAt || 0);
+    if (!fromHistory) { for (var h = 0; h <= i; h++) pushStep(h); }
+    tour.scrollTop = 0;
+    var c = tour.querySelector('.tour__close');
+    if (c) c.focus();
+  }
+  function closeTour() {
+    tour.classList.remove('tour--open');
+    tour.removeAttribute('role');
+    tour.removeAttribute('aria-modal');
+    document.removeEventListener('keydown', trapTab, true);
+    document.body.style.overflow = '';
+    syncStepVideos();
+    ringReset();
+    /* Focus goes back to whoever opened the tour: a tile door or a button. */
+    var m = (lastOpener && document.body.contains(lastOpener)) ? lastOpener : document.getElementById('enter-main');
+    if (m) m.focus();
+  }
+
+  /* One full-screen video moment: the door on the way in, the belt on the way out.
+     Skipped on reduced motion, data saver, or any video problem. */
+  function playMoment(src, poster, onDone) {
+    if (reduceMotion || saveData) { onDone(); return; }
+
+    var overlay = document.createElement('div');
+    overlay.className = 'gate-video';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Video');
+    /* Skip is the only focusable element: just keep Tab from leaving. */
+    overlay.addEventListener('keydown', function(ev) { if (ev.key === 'Tab') ev.preventDefault(); });
+    var video = document.createElement('video');
+    video.src = src;
+    video.poster = poster;
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('aria-hidden', 'true');
+    var skip = document.createElement('button');
+    skip.type = 'button';
+    skip.className = 'gate-video__skip';
+    skip.textContent = 'Skip →';
+    overlay.appendChild(video);
+    overlay.appendChild(skip);
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() { overlay.classList.add('is-on'); });
+    skip.focus();
+
+    var done = false;
+    var safety = setTimeout(finish, 12000);
+    function finish() {
+      if (done) return;
+      done = true;
+      clearTimeout(safety);
+      document.removeEventListener('keydown', onEsc);
+      onDone();
+      overlay.classList.remove('is-on');
+      setTimeout(function() { overlay.remove(); }, 500);
+    }
+    function onEsc(ev) { if (ev.key === 'Escape') finish(); }
+    video.addEventListener('ended', finish);
+    video.addEventListener('error', finish);
+    overlay.addEventListener('click', finish);
+    document.addEventListener('keydown', onEsc);
+  }
+  /* The ring simulation borrows this for its match intro */
+  window.dojoPlayMoment = playMoment;
+
+  var gatePlayed = false;
+  function enterDojo(e) {
+    if (e) e.preventDefault();
+    if (e && e.currentTarget) lastOpener = e.currentTarget;
+    if (gatePlayed) { openTour(); return; }
+    gatePlayed = true;
+    playMoment('assets/gate-opens-demo.mp4', 'assets/gate-opens-poster.webp', function() { openTour(); });
+  }
+  function finishTour() {
+    playMoment('assets/belt-earned-demo.mp4', 'assets/belt-earned-poster.webp', leaveTour);
+  }
+
+  var openers = document.querySelectorAll('#enter-main, #enter-sensei');
+  for (var a = 0; a < openers.length; a++) openers[a].addEventListener('click', enterDojo);
+
+  /* The three tiles are doors: each opens the tour right at its own step,
+     with no gate video. Whoever clicks a tile has already chosen what to
+     see. A door into step 2 nudges the chat scene to play again, so the
+     door never opens on a finished, silent chat. */
+  var doors = document.querySelectorAll('.step__door');
+  function armDoor(btn) {
+    var n = parseInt(btn.getAttribute('data-door'), 10) || 0;
+    btn.addEventListener('click', function() {
+      lastOpener = btn;
+      openTour(null, n);
+      if (n === 1) {
+        var win = steps[1] && steps[1].querySelector('.chat-window[data-animate]');
+        if (win) {
+          try { win.dispatchEvent(new CustomEvent('dojo:replay')); } catch (err) {}
+        }
+      }
+    });
+  }
+  for (var d = 0; d < doors.length; d++) armDoor(doors[d]);
+
+  tour.addEventListener('click', function(e) {
+    var t = e.target.closest ? e.target.closest('[data-next],[data-back],.tour__close') : null;
+    if (!t) return;
+    if (t.classList.contains('tour__close')) { leaveTour(); return; }
+    if (t.hasAttribute('data-back')) { stepBack(); return; }
+    if (t.hasAttribute('data-next')) { if (i === steps.length - 1) finishTour(); else { show(i + 1); pushStep(i); } }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!tour.classList.contains('tour--open')) return;
+    if (e.key === 'Escape') leaveTour();
+    else if (e.key === 'ArrowRight') { if (i < steps.length - 1) { show(i + 1); pushStep(i); } }
+    else if (e.key === 'ArrowLeft') stepBack();
+  });
+})();
+</script>
+<script>
+/* BELT GUIDES: each belt tile opens its guide as a dialog. Without JS the
+   guides are a normal stacked section; the dialog role is set on open and
+   removed on close, Tab stays inside, Escape closes, focus goes back to
+   the tile that opened it. */
+(function () {
+  var docs = document.getElementById('beltdocs');
+  if (!docs) return;
+  var cards = docs.querySelectorAll('.beltdoc');
+  var barTitle = document.getElementById('beltdocs-bartitle');
+  var closeBtn = docs.querySelector('.beltdocs__close');
+  var tiles = document.querySelectorAll('.belt[data-beltdoc]');
+  var lastTile = null;
+
+  function trapTab(e) {
+    if (e.key !== 'Tab') return;
+    var f = docs.querySelectorAll('button, a[href]');
+    var vis = [];
+    for (var k = 0; k < f.length; k++) if (f[k].offsetParent !== null) vis.push(f[k]);
+    if (!vis.length) return;
+    var first = vis[0], last = vis[vis.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (document.activeElement === last || !docs.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+  }
+  function onEsc(e) { if (e.key === 'Escape') closeDocs(); }
+
+  function openDocs(n) {
+    for (var k = 0; k < cards.length; k++) {
+      var active = cards[k].getAttribute('data-doc') === String(n);
+      cards[k].classList.toggle('is-active', active);
+      if (active && barTitle) {
+        var name = cards[k].querySelector('.beltdoc__name');
+        barTitle.textContent = 'Belt 0' + n + (name ? ' · ' + name.textContent : '');
+      }
+    }
+    docs.classList.add('beltdocs--open');
+    docs.setAttribute('role', 'dialog');
+    docs.setAttribute('aria-modal', 'true');
+    document.addEventListener('keydown', trapTab, true);
+    document.addEventListener('keydown', onEsc);
+    document.body.style.overflow = 'hidden';
+    docs.scrollTop = 0;
+    if (closeBtn) closeBtn.focus();
+  }
+  function closeDocs() {
+    docs.classList.remove('beltdocs--open');
+    docs.removeAttribute('role');
+    docs.removeAttribute('aria-modal');
+    document.removeEventListener('keydown', trapTab, true);
+    document.removeEventListener('keydown', onEsc);
+    document.body.style.overflow = '';
+    if (lastTile && document.body.contains(lastTile)) lastTile.focus();
+  }
+
+  function armTile(tile) {
+    var n = parseInt(tile.getAttribute('data-beltdoc'), 10) || 1;
+    tile.addEventListener('click', function () { lastTile = tile; openDocs(n); });
+    tile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault(); lastTile = tile; openDocs(n);
+      }
+    });
+  }
+  for (var t = 0; t < tiles.length; t++) armTile(tiles[t]);
+  if (closeBtn) closeBtn.addEventListener('click', closeDocs);
+})();
+</script>
+</body>
+</html>
