@@ -180,8 +180,10 @@ body::before {
   align-items: center;
 }
 .hero__kicker {
-  font-family: var(--font-mono); font-size: 0.85em; letter-spacing: .2em;
-  text-transform: uppercase; color: var(--cinnabar);
+  /* The sensei's spoken greeting — italic serif so it doesn't read as a twin
+     of the red mono CTA caption that sits right above it on phones. */
+  font-family: var(--font-edit); font-style: italic; font-size: 1.15em;
+  color: var(--ink);
   display: inline-flex; align-items: center; gap: 0.6em; margin-bottom: 0.8em;
 }
 .hero__kicker::before { content: ""; width: 1.6em; height: 2px; background: var(--cinnabar); }
