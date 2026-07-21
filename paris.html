@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debate Dojo · Founder House Paris — Svenja Borgwardt</title>
+<meta name="description" content="The live demo my students train with, the full study, and how to reach me.">
+<link rel="canonical" href="https://borgwardt.me/paris">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://borgwardt.me/paris">
+<meta property="og:title" content="Debate Dojo · Founder House Paris">
+<meta property="og:description" content="The live demo my students train with, the full study, and how to reach me.">
+<meta property="og:image" content="https://borgwardt.me/dojo/demo/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2'%20y='4'%20width='28'%20height='4'%20fill='%23C62C16'/%3E%3Crect%20x='5'%20y='10'%20width='22'%20height='2'%20fill='%23C62C16'/%3E%3Crect%20x='8'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3Crect%20x='21'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F4EEE0">
+<!-- Light-only palette; opt out of Chrome's Android auto-dark (same as every page here). -->
+<meta name="color-scheme" content="light">
+<!-- DOJO/OS look, fonts shared with the demo one folder down (self-hosted, zero external requests).
+     Only the faces this page uses get downloaded — small first load for event wifi. -->
+<link rel="preload" href="dojo/demo/assets/fonts/anton-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="dojo/demo/assets/fonts/instrument-serif-italic-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="dojo/demo/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="dojo/demo/assets/fonts/fonts.css">
+<style>
+  /* QR landing page for the Founder House Paris talk (22.07.2026).
+     A hub, not an experience: the slide-7 headline, three cards, one mail line.
+     Look = DOJO/OS (the demo's design system + slide 7 of the deck).
+     No JS, no tracking, no cookies. */
+  :root{
+    --ink:#0E0E0C;
+    --ink-soft:#1B1B18;
+    --paper:#F4EEE0;
+    --paper-tint:#ECE4D2;
+    --cinnabar:#C62C16;      /* white on cinnabar: 5.57:1 — AA */
+    --cinnabar-deep:#9E2213;
+    --muted:#5F6573;         /* 5.05:1 on --paper — AA for small text */
+    --card-line:#0E0E0C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:'Instrument Serif',Georgia,serif;
+    font-size:20px;line-height:1.5;
+    min-height:100svh;display:flex;flex-direction:column;
+    -webkit-font-smoothing:antialiased;
+  }
+  main{flex:1;width:100%;max-width:34em;margin:0 auto;padding:1.9em 1em 0.6em}
+  a:focus-visible{outline:2px solid var(--cinnabar);outline-offset:3px}
+  ::selection{background:rgba(198,44,22,.16);color:var(--ink)}
+
+  .kicker{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--cinnabar);
+    display:flex;align-items:center;gap:0.8em;margin-bottom:1em;
+  }
+  .kicker::before{content:"";width:1.9em;height:4px;background:var(--cinnabar);flex:none}
+
+  h1{
+    font-family:'Anton',Impact,sans-serif;font-weight:400;
+    font-size:clamp(46px,13vw,74px);line-height:0.98;
+    text-transform:uppercase;letter-spacing:.01em;
+    margin-bottom:0.28em;
+  }
+  h1 .red{color:var(--cinnabar)}
+  .lead{
+    font-style:italic;font-size:22px;color:var(--ink-soft);
+    margin-bottom:1.35em;
+  }
+
+  .cards{display:flex;flex-direction:column;gap:0.72em}
+  a.card{
+    display:block;text-decoration:none;color:var(--ink);
+    background:#fff;border:2px solid var(--card-line);border-radius:12px;
+    padding:0.95em 1.05em;
+    box-shadow:0 2px 0 var(--card-line);
+    transition:transform .06s ease;
+  }
+  a.card:active{transform:scale(.985)}
+  .card .t{
+    font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;
+    display:flex;align-items:center;gap:0.65em;
+  }
+  .card .t::before{content:"";width:0.35em;height:1.15em;background:var(--cinnabar);flex:none}
+  .card .t::after{content:"\2192" / "";margin-left:auto;color:var(--cinnabar);flex:none}
+  .card .s{
+    display:block;font-size:17.5px;font-style:italic;color:var(--ink-soft);
+    margin-top:0.4em;line-height:1.4;padding-left:1em;
+  }
+  a.card.primary{
+    background:var(--cinnabar);border-color:var(--cinnabar-deep);color:#fff;
+    box-shadow:0 2px 0 var(--cinnabar-deep);
+  }
+  a.card.primary .s{color:#FBEFE9}      /* 4.94:1 on cinnabar — AA */
+  a.card.primary .t::before{background:#fff}
+  a.card.primary .t::after{color:#fff}
+
+  .mail{
+    margin-top:1.5em;text-align:center;
+    font-size:18.5px;font-style:italic;color:var(--ink-soft);
+  }
+  .mail a{
+    font-style:normal;color:var(--ink);text-decoration:none;
+    border-bottom:2px solid var(--cinnabar);white-space:nowrap;
+  }
+  .mail a:hover{color:var(--cinnabar)}
+
+  .seal{
+    width:44px;height:44px;margin:1.35em auto 0;
+    background:var(--cinnabar);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif;
+    font-size:26px;color:#fff;line-height:1;
+  }
+
+  footer{
+    width:100%;max-width:34em;margin:0 auto;padding:0.9em 1em 1.6em;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    letter-spacing:.1em;color:var(--muted);
+    display:flex;flex-wrap:wrap;justify-content:center;gap:0.6em 1.5em;
+  }
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--paper-tint)}
+  footer a:hover{color:var(--cinnabar)}
+
+  @media (min-width:480px){
+    main{padding-top:2.8em}
+    .cards{gap:0.8em}
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">Debate Dojo · Founder House Paris</p>
+  <h1>The dojo <span class="red">is open.</span></h1>
+  <p class="lead">Welcome in. Pick a door:</p>
+
+  <nav class="cards" aria-label="Main">
+    <a class="card primary" href="/dojo/demo/">
+      <span class="t">Try the demo here</span>
+      <span class="s">the arena my students train in, three guided steps</span>
+    </a>
+    <a class="card" href="/">
+      <span class="t">Visit my page</span>
+      <span class="s">the full study, Ohm City, and everything else I build</span>
+    </a>
+    <a class="card" href="https://www.linkedin.com/in/svenja-borgwardt">
+      <span class="t">Connect via LinkedIn</span>
+      <span class="s">let&rsquo;s keep in touch</span>
+    </a>
+  </nav>
+
+  <p class="mail">Or just write me: <a href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a></p>
+
+  <p class="seal" aria-hidden="true">道</p>
+</main>
+<footer>
+  <a href="https://debate-dojo.vercel.app/under-the-hood.html">Under the hood</a>
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+</footer>
+</body>
+</html>
