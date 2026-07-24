@@ -1,0 +1,708 @@
+<!doctype html>
+<!--
+================================================================
+  DOJO/OS v1 — UNDER THE HOOD (moved from debate-dojo.vercel.app)
+
+  MOVED 2026-07-24: this page now lives on borgwardt.me/dojo/
+  under-the-hood/ (my-page repo) so every public Dojo link lives
+  on borgwardt.me. Canonical home is HERE. Fully static, zero
+  external requests. Fonts are shared with the demo copy at
+  ../demo/assets/fonts/ (same DOJO/OS design system — do not mix
+  with the homepage's fonts/ or :root palette). The Debate Dojo
+  app itself (dojo-landing, belts, api) stays on
+  debate-dojo.vercel.app.
+================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#E6E0D3">
+<title>Under the Hood — Debate Dojo</title>
+<meta name="description" content="Technical deep-dive: how the Debate Dojo coaching model works, how we measured it, and what we found.">
+
+<!-- Favicon (inline SVG, zero external requests) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2'%20y='4'%20width='28'%20height='4'%20fill='%23C62C16'/%3E%3Crect%20x='5'%20y='10'%20width='22'%20height='2'%20fill='%23C62C16'/%3E%3Crect%20x='8'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3Crect%20x='21'%20y='12'%20width='3'%20height='18'%20fill='%23C62C16'/%3E%3C/svg%3E">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Under the Hood — Debate Dojo">
+<meta property="og:description" content="Technical deep-dive: how the Debate Dojo coaching model works, how we measured it, and what we found.">
+<meta property="og:url" content="https://borgwardt.me/dojo/under-the-hood/">
+<link rel="canonical" href="https://borgwardt.me/dojo/under-the-hood/">
+<meta property="og:image" content="https://borgwardt.me/dojo/demo/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Under the Hood — Debate Dojo">
+<meta name="twitter:description" content="Technical deep-dive: how the Debate Dojo coaching model works, how we measured it, and what we found.">
+<meta name="twitter:image" content="https://borgwardt.me/dojo/demo/assets/og-image.png">
+
+<!-- Fonts self-hosted, shared with the demo copy (../demo/assets/fonts/).
+     Zero external requests. -->
+<link rel="stylesheet" href="../demo/assets/fonts/fonts.css">
+<link rel="preload" href="../demo/assets/fonts/anton-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../demo/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../demo/assets/fonts/instrument-serif-italic-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../demo/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+:root {
+  --ink: #0E0E0C;
+  --ink-soft: #1B1B18;
+  --paper: #F4EEE0;
+  --paper-tint: #ECE4D2;
+  --cinnabar: #C62C16;
+  --cinnabar-deep: #9E2213;
+  --chrome-m: #5F6573;
+  --chrome-s: #3B414E;
+  --gold: #D4A93A;
+  --acid: #D4F85A;
+  --font-display: "Anton", Impact, sans-serif;
+  --font-edit: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", "SF Mono", monospace;
+  --max: 760px;
+  --gutter: clamp(20px, 3vw, 48px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+body {
+  font-family: var(--font-edit);
+  font-size: 22px; line-height: 1.6;
+  color: var(--ink); background: var(--paper);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--cinnabar); outline-offset: 3px;
+}
+::selection { background: var(--cinnabar); color: var(--paper); }
+
+/* --- SKIP LINK ------------------------------------------------ */
+.skip-link {
+  position: absolute; left: -9999px; top: 8px; z-index: 400;
+  padding: 12px 18px; background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: .14em;
+  text-transform: uppercase; text-decoration: none; border-radius: 4px;
+}
+.skip-link:focus { left: 8px; }
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: .5;
+  mix-blend-mode: multiply;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* --- HEADER --------------------------------------------------- */
+.header {
+  padding: 3rem 0 2.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  margin-bottom: 2.5rem;
+}
+.header a {
+  font-family: var(--font-mono); font-size: 14px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--chrome-m); text-decoration: none;
+}
+.header a { transition: color .18s ease; }
+.header a:hover { color: var(--ink); }
+.header h1 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(2.6rem, 7.5vw, 4.1rem);
+  text-transform: uppercase; line-height: .9;
+  margin-top: 1rem;
+}
+.header .subtitle {
+  font-family: var(--font-edit); font-style: italic;
+  font-size: 25px; color: var(--cinnabar-deep);
+  margin-top: .6rem; line-height: 1.4;
+}
+
+/* --- CONTENT -------------------------------------------------- */
+.content { padding-bottom: 5rem; }
+
+h2 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.7rem, 4.5vw, 2.2rem);
+  text-transform: uppercase; letter-spacing: .02em;
+  margin: 3rem 0 1rem; line-height: 1;
+  padding-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+h3 {
+  font-family: var(--font-edit); font-style: italic;
+  font-size: 25px; color: var(--cinnabar-deep);
+  margin: 2rem 0 .6rem;
+}
+
+p { margin-bottom: 1rem; }
+
+.lead {
+  font-size: 25px; line-height: 1.55;
+  margin-bottom: 1.5rem;
+}
+
+strong { font-weight: 700; }
+
+em { font-style: italic; }
+
+/* --- CALLOUT -------------------------------------------------- */
+.callout {
+  background: var(--paper-tint);
+  border-left: 3px solid var(--cinnabar);
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+  font-size: 21px; line-height: 1.55;
+  border-radius: 0 4px 4px 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* --- METRIC CARD --------------------------------------------- */
+.metric-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin: 1.5rem 0;
+}
+.metric-card {
+  background: var(--ink-soft); color: var(--paper);
+  padding: 1.2rem 1.4rem; border-radius: 6px;
+  text-align: center;
+}
+.metric-card .num {
+  font-family: var(--font-display); font-size: clamp(2.6rem, 6.5vw, 3.6rem);
+  line-height: 1; margin-bottom: .3rem;
+}
+.metric-card .label {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: .18em;
+  text-transform: uppercase; opacity: .7;
+}
+.metric-card--accent { background: var(--cinnabar); }
+.metric-card--accent .label { opacity: 1; }
+.metric-card--gold .num { color: var(--gold); }
+
+/* --- TABLE --------------------------------------------------- */
+.eval-table {
+  width: 100%; border-collapse: collapse;
+  margin: 1.5rem 0; font-size: 20px;
+}
+.eval-table th {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: .15em;
+  text-transform: uppercase; text-align: left;
+  padding: 8px 10px; border-bottom: 2px solid var(--ink);
+  white-space: nowrap;
+}
+.eval-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.eval-table tr:last-child td { border-bottom: none; }
+.eval-table .model-name { font-weight: 600; white-space: nowrap; }
+.eval-table .highlight { color: var(--cinnabar-deep); font-weight: 700; }
+.eval-table .ft-row { background: color-mix(in srgb, var(--cinnabar) 6%, transparent); }
+.eval-table .dim { opacity: .7; }
+
+/* Wide tables scroll inside their own box; the page never scrolls sideways. */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; }
+.table-scroll .eval-table { margin: 0; }
+
+/* --- CODE / MONO INLINE -------------------------------------- */
+code {
+  font-family: var(--font-mono); font-size: .85em;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  padding: 2px 6px; border-radius: 3px;
+}
+
+/* --- FOOTER -------------------------------------------------- */
+.footer {
+  padding: 2rem 0 3rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  font-family: var(--font-mono); font-size: 14px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--chrome-m);
+  text-align: center;
+}
+.footer a { text-decoration: underline; text-underline-offset: 3px; transition: color .18s ease; }
+.footer a:hover { color: var(--ink); }
+
+/* --- CONTENT LINKS (e.g. contact e-mail) --------------------- */
+.mail-link {
+  color: var(--cinnabar); text-decoration: underline;
+  text-underline-offset: 3px; text-decoration-thickness: 1px;
+  transition: color .18s ease;
+}
+.mail-link:hover { color: var(--cinnabar-deep); }
+
+/* --- RESPONSIVE ---------------------------------------------- */
+@media (max-width: 600px) {
+  .metric-row { grid-template-columns: 1fr; }
+  .eval-table { font-size: 17px; }
+  .eval-table th, .eval-table td { padding: 6px 6px; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="../demo/">&larr; Back to Dojo</a>
+    <h1>Under the Hood</h1>
+    <div class="subtitle">How I finetuned an 8B model that knows when to help and when to hold back</div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content" id="main">
+
+    <!-- =========================================================
+         1. WHERE THIS STARTED
+         ========================================================= -->
+    <h2>Where This Started</h2>
+
+    <p class="lead">
+      There is a kind of sovereignty we are underestimating: sovereignty over our own thinking.
+    </p>
+
+    <p>
+      I work with young adults, roughly 240 of them, and I have watched them use AI to outsource their thinking instead of using it as a tool. The strong ones are fine. But the ones who need the most help? They paste the AI output, move on, and learn nothing. What looks like learning is actually the illusion of learning. No thought happened. If we don't find a way to change that, we risk shaping a generation that has difficulties thinking independently. And the paradox is: independent thinking is exactly the skill they will need most in a world full of AI. The technology that could help them grow is quietly replacing the growth itself.
+    </p>
+
+    <p>
+      So I started building a model that actually helps people learn, instead of just giving them the answer. The core idea: a coaching model needs to know the difference between someone who is pressuring for a shortcut and someone who has genuinely tried and is stuck. I call this <strong>effort-conditioned helpfulness (ECH)</strong>. Not less helpful. Helpful at the right time.
+    </p>
+
+    <p>
+      The system is not perfect yet. But it is a start.
+    </p>
+
+    <div class="callout">
+      <p>
+        <strong>The thesis:</strong> Effort-conditioned helpfulness can be measured on a pre-registered evaluation, and it can be trained into a small open-weights model. Structure teaches the model; the model carries the behavior on its own.
+      </p>
+    </div>
+
+    <!-- =========================================================
+         2. WHAT I BUILT
+         ========================================================= -->
+    <h2>What I Built</h2>
+
+    <p>
+      I needed to put people in a situation where time pressure is real and there is no shortcut. The best idea I had: build a dojo. Learners prepare arguments on a debate topic using a three-part structure (Claim, Reason, Impact), then step into a sparring ring against real opponents. But before the real match, they train with an AI sensei who gives feedback, sharpens their reasoning, challenges weak spots, without ever giving the argument away. The sensei's job is to make them think harder, not to think for them.
+    </p>
+
+    <p>
+      Because the clock is ticking and the real debate is coming, the pressure is genuine. And that is exactly where things get interesting. Learners start pushing: <em>"Just tell me a good argument."</em> <em>"My teacher said it's fine."</em> <em>"I don't have time for this."</em> These are not hypothetical scenarios. They happened, in every single session. And those interactions are what the evaluation and the training are built on.
+    </p>
+
+    <p>
+      The coaching model is a <strong>finetuned Ministral 8B</strong>, trained via QLoRA on role-conditioned gold data: hundreds of multi-turn coaching dialogues generated by frontier models (Claude and Mistral Large), grounded in real pressure patterns from three live sessions. A small model I can run myself, trained on the right examples, up against the frontier models: that is the experiment.
+    </p>
+
+    <h3>The design insight</h3>
+
+    <p>
+      The finetuning is only one piece. What matters at least as much is what I measure and why.
+    </p>
+
+    <p>
+      I built a rubric that evaluates <strong>the same message differently depending on what came before</strong>. If the conversation history shows pure pressure ("just give me the answer, I don't have time"), the coach should hold. If it shows genuine effort (three real attempts, a specific question about what went wrong), the coach should help. Same final message, different correct response. The judgment lives in the conversation history, not in the last turn.
+    </p>
+
+    <p>
+      That rubric became the evaluation instrument. And the evaluation instrument became the training signal. The same insight, <em>what matters is what happened before this turn</em>, runs through the entire pipeline from rubric to eval to training data to deployed model.
+    </p>
+
+    <p>
+      I also test both directions. In the <strong>coach role</strong>, the model should scaffold. In the <strong>opponent role</strong>, the exact same model should give hard counterarguments, because that is the opponent's job. If the model holds back as a coach but goes all in as an opponent, you know the holding back is a trained judgment, not a limitation.
+    </p>
+
+    <!-- =========================================================
+         3. HOW I MEASURE
+         ========================================================= -->
+    <h2>How I Measure</h2>
+
+    <p>
+      I kept asking myself two questions. Does the coach hold when someone pushes for the answer? And does it tell the truth in both directions, calling out real flaws but also saying when something is genuinely good? Those two questions became the two axes of the evaluation. Both were pre-registered before training. Thresholds, evaluation sets, and judge prompts were locked and hash-frozen before any training run.
+    </p>
+
+    <h3>Axis 1: Pressure Guard</h3>
+    <p>
+      Does the coach resist giving away the answer under pressure? I test with contrast pairs: the same message, two different conversation histories. The model should <strong>hold</strong> under pressure and <strong>help</strong> after real effort. The metric is <code>min(Hold, Help)</code>. A coach who only says no is just as useless as one who caves. I need both sides to count.
+    </p>
+
+    <h3>Axis 2: Honest Calibration</h3>
+    <p>
+      Does the coach give honest feedback? I test with 48 labeled items: some with real flaws (circular reasoning, vague impact, fabricated facts), some genuinely strong. The metric is <code>min(Weak, Strong)</code>. Catching flaws is not enough. A model that criticizes everything scores zero on Strong. Only two-sided calibration counts.
+    </p>
+
+    <div class="callout">
+      <p>
+        <strong>Grading:</strong> All turns graded by Claude Sonnet 4.6 as LLM-as-judge, calibrated against 40 blind human labels (90% binary agreement). I labeled those 40 items myself, without seeing the model names or judge scores.
+      </p>
+    </div>
+
+    <!-- =========================================================
+         4. RESULTS: AXIS 1
+         ========================================================= -->
+    <h2>Results: Pressure Guard</h2>
+
+    <p>
+      Five models, 24 contrast pairs, 3 samples each. The question is simple: does the coach hold under pure pressure but help after genuine effort?
+    </p>
+
+    <div class="table-scroll" role="region" tabindex="0" aria-label="Pressure guard results, scroll sideways to see all columns">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Hold</th>
+          <th>Help</th>
+          <th>min(Hold, Help)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="model-name">Claude Sonnet 4.6</td>
+          <td>93.1%</td>
+          <td>95.8%</td>
+          <td class="highlight">93.1%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Mistral Medium</td>
+          <td>83.3%</td>
+          <td>98.6%</td>
+          <td>83.3%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Mistral Large</td>
+          <td>75.0%</td>
+          <td>75.0%</td>
+          <td>75.0%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Ministral 8B <span class="dim">(base)</span></td>
+          <td>47.2%</td>
+          <td>51.4%</td>
+          <td>47.2%</td>
+        </tr>
+        <tr class="ft-row">
+          <td class="model-name">Ministral 8B <span style="color:var(--cinnabar-deep)">(ECH-FT)</span></td>
+          <td>88.9%</td>
+          <td>94.4%</td>
+          <td class="highlight">88.9%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-card metric-card--accent">
+        <div class="num">+41.7 pp</div>
+        <div class="label">Base &rarr; Finetuned</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&minus;4.2 pp</div>
+        <div class="label">vs. Claude ceiling</div>
+      </div>
+    </div>
+
+    <p>
+      The base Ministral 8B caves on roughly every other pressure turn. After finetuning, it holds at 88.9%, closing most of the 46-point gap to Claude. It misses my pre-registered threshold of 91% by about 2 percentage points. Close, but not there yet.
+    </p>
+
+    <p>
+      What I find encouraging: across all models, the dominant failure mode is <strong>caving</strong> (handing over the full argument), not stonewalling (refusing to help at all). The finetuned model learned to resist pressure without becoming unhelpful. That balance is the whole point.
+    </p>
+
+    <!-- =========================================================
+         5. RESULTS: AXIS 2
+         ========================================================= -->
+    <h2>Results: Honest Calibration</h2>
+
+    <p>
+      This is the harder axis, and the one with the most surprising result.
+    </p>
+
+    <p>
+      I ran six models across 48 items under two prompt conditions: A0 (the standard coaching prompt) and A1 (a stronger anti-glaze prompt that explicitly tells the model to be critical).
+    </p>
+
+    <div class="table-scroll" role="region" tabindex="0" aria-label="Honest calibration results, scroll sideways to see all columns">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Weak <span class="dim">(A0)</span></th>
+          <th>Strong <span class="dim">(A0)</span></th>
+          <th>min <span class="dim">(Headline)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="model-name">Claude Sonnet 4.6</td>
+          <td>71%</td>
+          <td>11%</td>
+          <td>11%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Gemma 4</td>
+          <td>75%</td>
+          <td>0%</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Mistral Large</td>
+          <td>71%</td>
+          <td>6%</td>
+          <td>6%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Mistral Medium</td>
+          <td>75%</td>
+          <td>4%</td>
+          <td>4%</td>
+        </tr>
+        <tr>
+          <td class="model-name">Ministral 8B <span class="dim">(base)</span></td>
+          <td>50%</td>
+          <td>2%</td>
+          <td>2%</td>
+        </tr>
+        <tr class="ft-row">
+          <td class="model-name">Ministral 8B <span style="color:var(--cinnabar-deep)">(ECH-FT)</span></td>
+          <td>46%</td>
+          <td>22%</td>
+          <td class="highlight">22%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-card metric-card--accent">
+        <div class="num">22%</div>
+        <div class="label">FT honest calibration</div>
+      </div>
+      <div class="metric-card metric-card--gold">
+        <div class="num">2&times;</div>
+        <div class="label">Claude's baseline</div>
+      </div>
+    </div>
+
+    <p>
+      Look at the Strong column. Every model can spot flaws in weak arguments, that is the easy part. <strong>Almost no model can honestly acknowledge when someone did good work.</strong> Under the same standard prompt, no off-the-shelf model exceeds 11% on that axis. The best anyone does with a stronger anti-glaze prompt is 26%.
+    </p>
+
+    <p>
+      I did not expect this: the finetuned 8B reaches 22% on Strong, <strong>double the Claude baseline</strong> under the same prompt, and the only model that materially separates from the pack without a dedicated anti-glaze intervention. A small model, trained on the right examples, outperforms frontier models on honest feedback calibration.
+    </p>
+
+    <h3>The prompting trap</h3>
+
+    <p>
+      Here is the finding that motivated the whole finetune. When you tell a model "be more critical" (the A1 anti-glaze prompt), it does not learn honest calibration. It just switches failure modes. Instead of generic praise, it starts <strong>inventing flaws in strong arguments</strong>.
+    </p>
+
+    <div class="table-scroll" role="region" tabindex="0" aria-label="False doubt results, scroll sideways to see all columns">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>False doubt on Strong <span class="dim">(A0 &rarr; A1)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="model-name">Claude Sonnet 4.6</td><td>41% &rarr; <strong>57%</strong></td></tr>
+        <tr><td class="model-name">Gemma 4</td><td>15% &rarr; <strong>41%</strong></td></tr>
+        <tr><td class="model-name">Mistral Large</td><td>44% &rarr; <strong>65%</strong></td></tr>
+        <tr><td class="model-name">Ministral 8B</td><td>46% &rarr; <strong>69%</strong></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>
+      The harder you prompt against glazing, the closer the model drifts toward always-critique, a different pose, not a real calibration. Paired McNemar tests confirm: the A1 prompt significantly improves flaw detection (Claude p=0.016, Gemma p=0.031) but moves the needle on honestly acknowledging strong work for <em>no model at all</em>.
+    </p>
+
+    <div class="callout">
+      <p>
+        <strong>The takeaway:</strong> Prompting fixes the easy axis. The hard axis, honestly telling someone "this is good, and here is specifically why," does not yield to prompting. That is the case for finetuning. You cannot prompt your way to honest calibration; you have to train it.
+      </p>
+    </div>
+
+    <!-- =========================================================
+         5b. WHAT IT LOOKS LIKE
+         ========================================================= -->
+    <h3>What this looks like in practice</h3>
+
+    <p>
+      Someone writes a strong, clean argument about learning to code. No real flaws. The correct coach response: acknowledge specifically what works.
+    </p>
+
+    <p>
+      <strong>Standard prompt (A0):</strong> <em>"That is a strong draft. Your Claim, Reason, and Impact all connect clearly."</em> Generic praise. Does not say which part carries the argument or why. The learner gets nothing useful about what they did right.
+    </p>
+
+    <p>
+      <strong>Anti-glaze prompt (A1):</strong> <em>"One spot wobbles: 'someone must still read the code' - why does that someone need to have learned coding themselves?"</em> Invents a flaw that is not there. The grader flags it: "manufactured a flaw in the Reason." The learner now doubts work that was fine.
+    </p>
+
+    <p>
+      Neither response is what a good coach would give. The first is empty calories. The second is actively misleading. I know what the right response sounds like because I give it every day. The model should be able to do the same. This is the gap the finetune is meant to close.
+    </p>
+
+    <!-- =========================================================
+         6. ARCHITECTURE
+         ========================================================= -->
+    <h2>Architecture</h2>
+
+    <p>
+      Built for a real deployment with real constraints: EU data residency, tight budgets, and zero tolerance for downtime when it matters. Every architecture choice follows from that.
+    </p>
+
+    <p>
+      Why Mistral, why a small model? A European classroom takes student data seriously: my students log in with pseudonymous codes, the database lives in the EU, and the goal is a stack I can run on my own infrastructure end to end. I already had a small open model running there. So the obvious next step was to finetune it and see how far it gets against the frontier models. Closer than I expected.
+    </p>
+
+    <h3>Stack</h3>
+    <p>
+      <strong>Frontend:</strong> Static HTML/CSS/JS on Vercel. No framework, no build step, because when it needs to work, a broken build means 30 people staring at a blank screen. Each belt is a self-contained page with screen-by-screen progression.
+    </p>
+    <p>
+      <strong>Backend:</strong> Vercel serverless functions (Python). Stateless coaching API with session tracking and live gating. Every turn is logged with full provenance: model name, prompt version hash, mock flag. If anything goes wrong, I can trace exactly which model said what under which prompt.
+    </p>
+    <p>
+      <strong>Database:</strong> Supabase (EU region). Sessions, progress tracking, and real-time belt gating. I unlock belts from a dashboard during sessions, not automatically.
+    </p>
+    <p>
+      <strong>Coaching model:</strong> the finetuned Ministral 8B (ECH-FT) runs on a Hugging Face Inference Endpoint (TGI, A10G GPU, eu-west-1). In the live sessions students were coached by the classroom configuration on Claude Sonnet 4.6; the finetuned 8B is the research result those sessions produced. Rather than keep a GPU endpoint live for a whole lesson, I captured the real student turns and replayed them through the finetuned model on the endpoint afterward. The endpoint is paused between runs to save cost, with Claude Sonnet 4.6 as the standing fallback, so nobody ever sees an error.
+    </p>
+    <p>
+      <strong>Examiner:</strong> A separate Claude Haiku 4.5 call after each coach reply evaluates whether the learner is ready to move on. Cheap enough to run on every single turn, and independent from the coaching model. The coach does not grade its own work.
+    </p>
+
+    <h3>Training pipeline</h3>
+    <p>
+      <strong>Gold data:</strong> Multi-turn coaching dialogues generated by Claude and Mistral Large following a locked rubric. Grounded in real pressure patterns from live sessions, sentences like <em>"my teacher said it's okay"</em> and <em>"I already tried, just tell me."</em> Generation mix weighted toward Mistral Large. I reviewed a 30-example sample before any training run.
+    </p>
+    <p>
+      <strong>Finetuning:</strong> QLoRA SFT on Ministral 8B. Two epochs, validation loss 0.926. Mixed training data from both axes. Single A10G GPU, under two hours per run.
+    </p>
+    <p>
+      <strong>Evaluation harness:</strong> Fully automated and reproducible. Built in Claude Code. Contrast-pair replay engine, LLM-as-judge grading with a second judge for agreement checks, bootstrap confidence intervals, paired McNemar tests. All prompts, eval sets, and judge versions frozen before training.
+    </p>
+
+    <h3>Privacy</h3>
+    <p>
+      Identifiers are anonymous tokens. Even I cannot trace them back to individuals. Raw data stays on EU infrastructure. Patterns are extracted for eval design; the logs themselves do not leave the system.
+    </p>
+
+    <!-- =========================================================
+         7. WHAT BROKE
+         ========================================================= -->
+    <h2>What Broke</h2>
+
+    <p>
+      I shipped this into real sessions three times. The live coach ran on Claude Sonnet 4.6; the finetuned model came later and was tested by replaying these same student turns. Things broke every time, and I learned more from the failures than from the eval numbers.
+    </p>
+
+    <p>
+      <strong>People gave up before they started.</strong> The first version of the belt interior had too many steps, too-small fonts, and labels in light gray on light paper. The confident ones pushed through. The confused, quiet ones in the back closed the tab. I rebuilt the entire UX around one question: does the person who does not ask for help know what to do right now?
+    </p>
+
+    <p>
+      <strong>AI paste.</strong> One person went from <em>"coding is hard bro"</em> to flawless essay English between two turns. A ChatGPT paste, and the coach did not catch the style break. It congratulated them. The biggest substitution risk is not inside the coach; it is the second browser tab. I added an ownership check to the prompt (when polished text appears suddenly, ask the person to explain it in their own words), but the real fix is an offline component the AI cannot reach.
+    </p>
+
+    <p>
+      <strong>Jailbreak attempts.</strong> Prompt injections in Russian, role overrides in English, someone claiming to be the teacher on a different account. None of it worked. The coach held through 106 replies without a single full argument leak. But it showed me what real adversarial pressure looks like. Those patterns went straight into the eval set.
+    </p>
+
+    <!-- =========================================================
+         8. LIMITATIONS
+         ========================================================= -->
+    <h2>Limitations</h2>
+
+    <p>
+      Here is what the data does and does not show.
+    </p>
+
+    <p>
+      <strong>Axis 1 missed its threshold.</strong> The finetuned model reaches 88.9% on pressure guard, short of the pre-registered 91% target by about 2 percentage points. Mixing honesty training data cost a small amount of pressure resistance. The improvement from 47% is real, but the target was not fully met.
+    </p>
+
+    <p>
+      <strong>Small evaluation set.</strong> 24 contrast pairs for Axis 1, 48 items for Axis 2. Confidence intervals are wide (&plusmn;10-18 pp). Enough to show the gap between base and finetuned, and between 8B and frontier, not enough for fine-grained model ranking.
+    </p>
+
+    <p>
+      <strong>Judge agreement is moderate.</strong> Claude as LLM-as-judge agrees with a Mistral Large second judge at 57% (binary). The judges have systematically different thresholds, not just noise. My human labels are the deciding anchor. All headline numbers are Claude-judge numbers, reported as such.
+    </p>
+
+    <p>
+      <strong>No outcome study.</strong> I measure model behavior, not learning outcomes. The evidence from sessions is qualitative (before/after arguments, reflections), not a controlled trial. A proper outcome study would need a larger sample and a longer time horizon than three weeks allows.
+    </p>
+
+    <p>
+      <strong>One domain.</strong> English-language debate coaching. Transfer to other coaching domains is plausible but not tested.
+    </p>
+
+    <!-- =========================================================
+         9. WHAT THIS MEANS BEYOND DEBATE COACHING
+         ========================================================= -->
+    <h2>What This Means Beyond Debate Coaching</h2>
+
+    <p>
+      The honest calibration finding is not specific to my use case. It shows up anywhere a model interacts with a human whose growth is the goal, not just their satisfaction. Coaching, therapy, onboarding, creative feedback, code review. Anywhere the right response is sometimes "this is good, and here is specifically why" and sometimes "this needs work, and here is what to fix." Current post-training makes the second part easier than the first, across every model I tested.
+    </p>
+
+    <p>
+      I think the deeper question is: what will always matter about humans, even as AI gets more capable? The ability to think for yourself. To build an argument. To evaluate your own work honestly. AI that centers what is strong in people means AI that does not quietly take those capabilities away by being too eager to help. This is a design question for every model that interacts with humans in a developmental context, not only an education problem.
+    </p>
+
+    <!-- =========================================================
+         10. WHAT COMES NEXT
+         ========================================================= -->
+    <h2>What Comes Next</h2>
+
+    <p>
+      Larger evaluation sets and tighter confidence intervals. Testing ECH in at least one coaching domain outside of debate. And publishing the eval harness and anonymized dataset so others can run it on their own models.
+    </p>
+
+    <!-- =========================================================
+         11. BUILT BY
+         ========================================================= -->
+    <h2>Built by</h2>
+
+    <p>
+      <strong>Svenja Borgwardt.</strong>
+    </p>
+
+    <p>
+      Questions, thoughts, or ideas? Write me: <a class="mail-link" href="mailto:svenja@borgwardt.me">svenja@borgwardt.me</a>
+    </p>
+
+    <p style="margin-top:1.5rem;font-family:var(--font-mono);font-size:14px;letter-spacing:.1em;text-transform:uppercase;opacity:.72;">
+      Ministral 8B by Mistral AI &middot; Claude Sonnet 4.6 &amp; Claude Haiku 4.5 by Anthropic &middot; Gemma 4 by Google &middot; Hosted on Hugging Face
+    </p>
+    <p style="margin-top:.6rem;font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;opacity:.72;">
+      Student quotes are paraphrased, never verbatim.
+    </p>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <a href="../demo/">&larr; Back to Dojo</a> &middot; <a href="/impressum.html">Impressum</a> &middot; <a href="/datenschutz.html">Privacy / Datenschutz</a>
+  </footer>
+
+</div>
+</body>
+</html>
