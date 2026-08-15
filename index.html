@@ -1825,11 +1825,8 @@
     <figcaption class="photo-quote" id="photo-quote" hidden>&ldquo;I&nbsp;like real conversations, spontaneous plans, and saying yes to things that scare me a&nbsp;little.&rdquo;</figcaption>
   </figure>
   <div class="masthead-bio">
-    <p class="masthead-subline reveal">I build AI systems for learning: tools that help without doing the thinking for you, from the interface down to the model’s weights.</p>
-    <p class="masthead-intro reveal">The route here ran through economics, linguistics, and literature and cultural studies, through education research, classrooms in several institutions and countries, EU-funded projects across Europe, and early years thinking in risk and compliance at a bank.</p>
-    <p class="masthead-intro reveal">The teaching itself spans fifteen years and very different rooms: lecture halls abroad, a prison, refugee classes, and now IT apprentices in Cologne.</p>
+    <p class="masthead-subline reveal">I build AI systems for learning: tools that help without doing the thinking for you, from the interface down to the model’s weights. All of it built for my own classroom: I teach IT apprentices in Cologne.</p>
   </div>
-  <p class="masthead-location reveal">Currently based in Cologne, Germany</p>
 </header>
 
 <!-- CREED — the through-line, before the work -->
@@ -1863,7 +1860,7 @@
 <h2 class="sr-only">What I Build</h2>
 
 <section class="build-intro reveal">
-  <p class="masthead-intro">Everything here asks the same question: how do we build AI that finds what's strong in people and helps them grow? In practice that means multi-agent systems, fine-tuned small models, and pre-registered evals, all of it tested with my own students, in class, under time pressure.</p>
+  <p class="masthead-intro">Everything here asks the same question: how do we build AI that finds what's strong in people and helps them grow? In practice that means multi-agent systems, fine-tuned small models, and pre-registered evals, all of it grown out of real classroom practice.</p>
 </section>
 
 <!-- Flagship-result teaser: the strongest measured numbers, surfaced above the
@@ -2005,7 +2002,7 @@
 
         <figure class="et-figure">
           <img src="img/story/gemmpen-review.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="GemmPen review screen for one student: the scanned handwritten exam above the transcript with highlighted errors, and next to it the editable feedback with score sliders and approve, edit and regenerate controls.">
-          <figcaption>The review screen: the scanned exam next to the transcript, every error category highlighted, and the feedback I can still edit before it goes out.</figcaption>
+          <figcaption>The review screen: the scanned exam next to the transcript, every error category highlighted, and the feedback I can still edit before it goes out. All data in these screenshots is synthesised; no student work appears here.</figcaption>
         </figure>
 
         <p>I've been building toward this for a while. It started with MATE, a Python pipeline for my own classroom: it took student work, anonymised it against my rubrics, and wrote individual feedback with exercises around each student's mistakes. MATE grew into Kaleido, a multi-agent version that analysed each exam across separate steps. Both worked, but every round cost real money. And in Europe, with GDPR and the EU AI Act, you can't just send student writing to a cloud model. Even anonymised, the data still leaves the room. When Google DeepMind announced the Gemma 4 hackathon, I saw the moment: fine-tune a local model that does all of it on one device. It would run for free, keep the data in the building, and take the compliance problem off the table.</p>
@@ -2016,12 +2013,12 @@
 
         <figure class="et-figure">
           <img src="img/story/gemmpen-class-overview.webp" width="1600" height="944" loading="lazy" decoding="async" alt="GemmPen class overview: the grade distribution of 21 students as a dot plot with the class average marked, class insights, and the first row of the sortable student table.">
-          <figcaption>The class view: 21 students, the grade distribution, and the one insight that decides what next week's lesson is about.</figcaption>
+          <figcaption>The class view: 21 students, the grade distribution, and the one insight that decides what next week's lesson is about. Synthetic class, synthetic grades.</figcaption>
         </figure>
 
         <p>It runs on-device. But the cool part is: I can compare a student's progress across exams and show them exactly how they got better. I can also see whether the individualised exercises I built around their mistakes were actually effective. I started building a whole system around that. You can read more under <a href="#spa">Student Progress Analytics</a>.</p>
 
-        <p>It's open source: the code is on GitHub and the fine-tuned weights are on Hugging Face, so any teacher can run it or build on it.</p>
+        <p>It's open source: the code is on GitHub and the fine-tuned weights are on Hugging Face, so any teacher can run it or build on it. The training data itself stays private: only the weights are published, never the exams behind them.</p>
 
         <p>Since July 2026 you can install it yourself: <a href="https://github.com/SvenjaBorgwardt/gemmpen-teacher" target="_blank" rel="noopener">GemmPen Teacher</a>, an early desktop version that runs entirely on your own computer, shared while it's still early because I want honest feedback from other teachers who try it.</p>
 
@@ -2486,7 +2483,7 @@
     <li>
       <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/gemmpen-turning-handwritten-exams-into-personaliz" target="_blank" rel="noopener">
         <span class="link-label">Gemma 4 Good Hackathon · Google DeepMind · June 2026</span>
-        GemmPen: a LoRA-fine-tuned Gemma 4 trained on 883 pairs from real handwritten exams. Reads student handwriting via built-in vision, scores against the teacher's rubric, and generates individual feedback with exercises built around each student's actual mistakes. Fully on-device and open source.
+        GemmPen: a LoRA-fine-tuned Gemma 4 trained on 883 anonymised pairs from real handwritten exams. Reads student handwriting via built-in vision, scores against the teacher's rubric, and generates individual feedback with exercises built around each student's actual mistakes. Fully on-device and open source.
       </a>
       <div class="link-proof">
         <a href="https://gemmpen.vercel.app" target="_blank" rel="noopener">demo</a><span class="sep">·</span>
