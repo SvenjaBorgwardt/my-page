@@ -1860,7 +1860,7 @@
 <h2 class="sr-only">What I Build</h2>
 
 <section class="build-intro reveal">
-  <p class="masthead-intro">Everything here asks the same question: how do we build AI that finds what's strong in people and helps them grow? In practice that means multi-agent systems, fine-tuned small models, and pre-registered evals, all of it grown out of real classroom practice.</p>
+  <p class="masthead-intro">Multi-agent systems, fine-tuned small models, pre-registered evals, all of it grown out of my own classroom. The question underneath every project: what does an AI have to leave undone so that a person actually learns?</p>
 </section>
 
 <!-- Flagship-result teaser: the strongest measured numbers, surfaced above the
@@ -2191,7 +2191,7 @@
         </div>
         <p>Naming real flaws in weak arguments is the easy half. Claude finds them 71% of the time under the standard prompt, and the be-more-critical instruction pushes that toward 96%.</p>
         <p>Honestly acknowledging genuinely strong work is the hard half. In this coaching setup, graded by a judge that only accepts specific acknowledgment, it was a weak spot for every model I tested, including the best ones. Under the standard coaching prompt no model I tested exceeded Claude's 11% on Strong. Even with the dedicated be-more-critical prompt, the best any model reached was about 26%. This says something about models in a coaching role under my rubric. It does not say these models cannot give good feedback elsewhere.</p>
-        <p>The fine-tuned 8B reaches 22% on Strong under the standard prompt, with no special instruction. That is roughly double Claude's 11% under the same prompt, and it makes the fine-tune the only model in this test that even begins to pull away from the field without a dedicated anti-sycophancy intervention. The sample is small: 48 items, with confidence intervals of plus or minus 10 to 18 percentage points, meaning the true values could sit noticeably higher or lower. I treat the gap between 22% and 11% as a signal worth following up. Settling it would take a larger sample.</p>
+        <p>The fine-tuned 8B reaches 22% on Strong under the standard prompt, with no special instruction. That is higher than Claude's 11% under the same prompt, on a sample too small to call it a clear lead, and it is the only model in this test that moves on Strong without a dedicated anti-sycophancy instruction. The sample is small: 48 items, with confidence intervals of plus or minus 10 to 18 percentage points, meaning the true values could sit noticeably higher or lower. I treat the gap between 22% and 11% as a signal worth following up. Settling it would take a larger sample.</p>
         <p class="uth-sub">The prompting trap</p>
         <p>This is the part that changed how I think about prompts. In my tests, telling a model "be more critical" (the A1 prompt) does not teach it honest judgment. It swaps one failure for another. Under the standard prompt, models drown strong work in generic praise. Under the be-more-critical prompt, they start doubting strong work instead of confirming it. I call that <em>false doubt</em>: the learner brings work that deserved a clear yes and gets doubt instead.</p>
         <div class="uth-table-wrap">
